@@ -24,6 +24,9 @@ const homepageUrl = computed(() => {
   return homepage
 })
 
+const pypiUrl = computed(() => `https://pypi.org/project/${props.pkg.name}/`)
+const socketUrl = computed(() => `https://socket.dev/pypi/package/${props.pkg.name}`)
+
 const PROVIDER_ICONS: Record<string, IconClass> = {
   github: 'i-simple-icons:github',
   gitlab: 'i-simple-icons:gitlab',
@@ -121,18 +124,18 @@ useCommandPaletteContextCommands(
       id: 'package-link-socket.dev',
       group: 'links',
       label: 'socket.dev',
-      keywords: [...packageKeywords, 'socket.dev'],
+      keywords: [...packageKeywords, 'socket.dev', 'pypi'],
       iconClass: 'i-simple-icons:socket',
-      href: `https://socket.dev/npm/package/${props.pkg.name}`,
+      href: socketUrl.value,
     })
 
     commands.push({
-      id: 'package-link-npm',
+      id: 'package-link-pypi',
       group: 'links',
-      label: 'npm',
-      keywords: [...packageKeywords, $t('common.view_on.npm')],
-      iconClass: 'i-simple-icons:npm',
-      href: `https://www.npmjs.com/package/${props.pkg.name}`,
+      label: 'PyPI',
+      keywords: [...packageKeywords, 'PyPI'],
+      iconClass: 'i-simple-icons:pypi',
+      href: pypiUrl.value,
     })
 
     if (props.jsrInfo?.exists && props.jsrInfo.url) {
@@ -184,7 +187,7 @@ useCommandPaletteContextCommands(
     </li>
     <li>
       <LinkBase
-        :to="`https://socket.dev/npm/package/${pkg.name}`"
+        :to="socketUrl"
         :title="$t('common.view_on.socket_dev')"
         classicon="i-simple-icons:socket"
       >
@@ -192,13 +195,7 @@ useCommandPaletteContextCommands(
       </LinkBase>
     </li>
     <li>
-      <LinkBase
-        :to="`https://www.npmjs.com/package/${pkg.name}`"
-        :title="$t('common.view_on.npm')"
-        classicon="i-simple-icons:npm"
-      >
-        npm
-      </LinkBase>
+      <LinkBase :to="pypiUrl" title="View on PyPI" classicon="i-simple-icons:pypi"> PyPI </LinkBase>
     </li>
     <li v-if="jsrInfo?.exists && jsrInfo.url">
       <LinkBase :to="jsrInfo.url" :title="$t('badges.jsr.title')" classicon="i-simple-icons:jsr">

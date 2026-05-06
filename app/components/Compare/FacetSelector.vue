@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { debounce } from 'perfect-debounce'
+import type { FacetInfoWithLabels } from '~/composables/useFacetSelection'
 const {
   isFacetSelected,
   toggleFacet,
@@ -10,17 +11,25 @@ const {
   getCategoryLabel,
 } = useFacetSelection()
 
-// Check if all non-comingSoon facets in a category are selected
+function isFacetUnavailable(facet: FacetInfoWithLabels): boolean {
+  return !!facet.comingSoon || !!facet.unsupported
+}
+
+function getUnavailableLabel(facet: FacetInfoWithLabels): string {
+  return facet.unsupported ? $t('compare.facets.not_supported') : $t('compare.facets.coming_soon')
+}
+
+// Check if all selectable facets in a category are selected
 function isCategoryAllSelected(category: string): boolean {
   const facets = facetsByCategory.value[category] ?? []
-  const selectableFacets = facets.filter(f => !f.comingSoon)
+  const selectableFacets = facets.filter(f => !isFacetUnavailable(f))
   return selectableFacets.length > 0 && selectableFacets.every(f => isFacetSelected(f.id))
 }
 
 // Check if no facets in a category are selected
 function isCategoryNoneSelected(category: string): boolean {
   const facets = facetsByCategory.value[category] ?? []
-  const selectableFacets = facets.filter(f => !f.comingSoon)
+  const selectableFacets = facets.filter(f => !isFacetUnavailable(f))
   return selectableFacets.length > 0 && selectableFacets.every(f => !isFacetSelected(f.id))
 }
 
@@ -106,14 +115,14 @@ function deselectAllFacet(category: string) {
           :key="facet.id"
           size="sm"
           role="checkbox"
-          :title="facet.comingSoon ? $t('compare.facets.coming_soon') : facet.description"
-          :disabled="facet.comingSoon"
+          :title="isFacetUnavailable(facet) ? getUnavailableLabel(facet) : facet.description"
+          :disabled="isFacetUnavailable(facet)"
           :aria-checked="isFacetSelected(facet.id)"
           :aria-label="facet.label"
           class="gap-1 px-1.5 rounded transition-colors text-fg-subtle bg-bg-subtle border-border-subtle enabled:hover:(text-fg-muted border-border) aria-checked:(text-fg-muted bg-fg/10 border-fg/20 hover:enabled:(bg-fg/20 text-fg/50)) focus-visible:outline-accent/70 disabled:(text-fg-subtle/50 bg-bg-subtle border-border-subtle)"
-          @click="!facet.comingSoon && toggleFacet(facet.id)"
+          @click="!isFacetUnavailable(facet) && toggleFacet(facet.id)"
           :classicon="
-            facet.comingSoon
+            isFacetUnavailable(facet)
               ? undefined
               : isFacetSelected(facet.id)
                 ? 'i-lucide:check'
@@ -121,9 +130,9 @@ function deselectAllFacet(category: string) {
           "
         >
           {{ facet.label }}
-          <span v-if="facet.comingSoon" class="text-4xs"
-            >({{ $t('compare.facets.coming_soon') }})</span
-          >
+          <span v-if="isFacetUnavailable(facet)" class="text-4xs">
+            ({{ getUnavailableLabel(facet) }})
+          </span>
         </ButtonBase>
       </div>
     </div>

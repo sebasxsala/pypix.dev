@@ -192,3 +192,16 @@ describe('renderDocNodes ordering', () => {
     expect(alphaIndex).toBeLessThan(betaIndex)
   })
 })
+
+describe('renderDocNodes output limits', () => {
+  it('limits rendered symbols per kind to keep large docs pages responsive', async () => {
+    const symbols = Array.from({ length: 51 }, (_, index) => createFunctionSymbol(`fn${index}`))
+
+    const html = await renderDocNodes(symbols, new Map())
+
+    expect(html).toContain('id="function-fn0"')
+    expect(html).toContain('id="function-fn49"')
+    expect(html).not.toContain('id="function-fn50"')
+    expect(html).toContain('Showing first 50 of 51 functions')
+  })
+})

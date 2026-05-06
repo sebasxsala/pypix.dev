@@ -21,7 +21,7 @@ const buildTime = computed(() => new Date(buildInfo.value.time))
     <span>&middot;</span>
     <LinkBase
       v-if="buildInfo.env === 'release'"
-      :to="`https://github.com/npmx-dev/npmx.dev/releases/tag/v${buildInfo.version}`"
+      :to="`https://github.com/sebasxsala/pypix.dev/releases/tag/v${buildInfo.version}`"
     >
       v{{ buildInfo.version }}
     </LinkBase>
@@ -29,7 +29,7 @@ const buildTime = computed(() => new Date(buildInfo.value.time))
 
     <template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
       <span>&middot;</span>
-      <LinkBase :to="`https://github.com/npmx-dev/npmx.dev/commit/${buildInfo.commit}`">
+      <LinkBase :to="`https://github.com/sebasxsala/pypix.dev/commit/${buildInfo.commit}`">
         {{ buildInfo.shortCommit }}
       </LinkBase>
     </template>

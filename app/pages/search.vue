@@ -3,7 +3,6 @@ import type { FilterChip, SortKey } from '#shared/types/preferences'
 import { parseSortOption, PROVIDER_SORT_KEYS } from '#shared/types/preferences'
 import { onKeyDown } from '@vueuse/core'
 import { debounce } from 'perfect-debounce'
-import { isValidNewPackageName } from '~/utils/package-name'
 import { isPlatformSpecificPackage } from '~/utils/platform-packages'
 import { normalizeSearchParam } from '#shared/utils/url'
 
@@ -205,7 +204,6 @@ const {
   fetchMore,
   isRateLimited,
   suggestions: validatedSuggestions,
-  packageAvailability,
 } = useSearch(
   committedQuery,
   searchProvider,
@@ -299,80 +297,6 @@ watch(query, (newQuery, oldQuery) => {
   currentPage.value = 1
   hasInteracted.value = true
 })
-
-// Check if current query could be a valid package name
-const isValidPackageName = computed(() => isValidNewPackageName(query.value.trim()))
-
-// Get connector state
-const { isConnected, npmUser, listOrgUsers } = useConnector()
-
-// Check if this is a scoped package and extract scope
-const packageScope = computed(() => {
-  const q = query.value.trim()
-  if (!q.startsWith('@')) return null
-  const match = q.match(/^@([^/]+)\//)
-  return match ? match[1] : null
-})
-
-// Track org membership for scoped packages
-const orgMembership = ref<Record<string, boolean>>({})
-
-// Check org membership when scope changes
-watch(
-  [packageScope, isConnected, npmUser],
-  async ([scope, connected, user]) => {
-    if (!scope || !connected || !user) return
-    // Skip if already checked
-    if (scope in orgMembership.value) return
-
-    try {
-      const users = await listOrgUsers(scope)
-      // Check if current user is in the org's user list
-      if (users && user in users) {
-        orgMembership.value[scope] = true
-      } else {
-        orgMembership.value[scope] = false
-      }
-    } catch {
-      orgMembership.value[scope] = false
-    }
-  },
-  { immediate: true },
-)
-
-// Check if user can publish to scope (either their username or an org they're a member of)
-const canPublishToScope = computed(() => {
-  const scope = packageScope.value
-  if (!scope) return true // Unscoped package
-  if (!npmUser.value) return false
-  // Can publish if scope matches username
-  if (scope.toLowerCase() === npmUser.value.toLowerCase()) return true
-  // Can publish if user is a member of the org
-  return orgMembership.value[scope] === true
-})
-
-// Temporarily hidden until PyPI project claim logic is implemented.
-const isClaimPromptEnabled = shallowRef(false)
-
-// Show claim prompt when valid name, available, either not connected or connected and has permission
-const showClaimPrompt = computed(() => {
-  if (!isClaimPromptEnabled.value) return false
-  if (!isValidPackageName.value) return false
-  if (isConnected.value && !canPublishToScope.value) return false
-
-  const avail = packageAvailability.value
-
-  // Confirmed: availability result matches current committed query
-  if (avail?.available === true && avail.name === committedQuery.value.trim()) return true
-
-  // Pending: a new fetch is in flight — keep the claim visible if the last known
-  // result was "available" so it doesn't flicker until new data arrives
-  if (status.value === 'pending' && avail?.available === true) return true
-
-  return false
-})
-
-const claimPackageModalRef = useTemplateRef('claimPackageModalRef')
 
 /** Check if there's an exact package match in results */
 const hasExactPackageMatch = computed(() => {
@@ -717,9 +641,14 @@ onBeforeUnmount(() => {
       />
 
       <section v-else-if="committedQuery" class="results-layout">
-        <LoadingSpinner v-if="showSearching" :text="$t('search.searching')" />
+        <SearchResultsSkeleton
+          v-if="showSearching"
+          :view-mode="viewMode"
+          :pagination-mode="paginationMode"
+        />
 
         <div
+          v-else
           v-show="
             results ||
             displayResults.length > 0 ||
@@ -750,26 +679,6 @@ onBeforeUnmount(() => {
               />
             </div>
           </Transition>
-
-          <div
-            v-if="showClaimPrompt && visibleResults && displayResults.length > 0"
-            class="mb-6 p-4 bg-bg-subtle border border-border rounded-lg sm:flex hidden flex-row sm:items-center gap-3 sm:gap-4"
-          >
-            <div class="flex-1 min-w-0">
-              <p class="font-mono text-sm text-fg">
-                {{ $t('search.not_taken', { name: query }) }}
-              </p>
-              <p class="text-xs text-fg-muted mt-0.5">{{ $t('search.claim_prompt') }}</p>
-            </div>
-            <button
-              type="button"
-              class="shrink-0 px-4 py-2 font-mono text-sm text-bg bg-fg rounded-md motion-safe:transition-[color,background-color,opacity] motion-safe:duration-200 hover:bg-fg/90 focus-visible:outline-accent/70 disabled:opacity-85 disabled:cursor-not-allowed"
-              :disabled="status === 'pending'"
-              @click="claimPackageModalRef?.open()"
-            >
-              {{ $t('search.claim_button', { name: query }) }}
-            </button>
-          </div>
 
           <div v-if="isRateLimited" class="py-12">
             <p class="text-fg-muted font-mono mb-6 text-center">
@@ -866,19 +775,6 @@ onBeforeUnmount(() => {
                 />
               </div>
             </Transition>
-
-            <div v-if="showClaimPrompt" class="max-w-md mx-auto text-center hidden sm:block">
-              <div class="p-4 bg-bg-subtle border border-border rounded-lg">
-                <p class="text-sm text-fg-muted mb-3">{{ $t('search.want_to_claim') }}</p>
-                <button
-                  type="button"
-                  class="px-4 py-2 font-mono text-sm text-bg bg-fg rounded-md transition-colors duration-200 hover:bg-fg/90 focus-visible:outline-accent/70"
-                  @click="claimPackageModalRef?.open()"
-                >
-                  {{ $t('search.claim_button', { name: query }) }}
-                </button>
-              </div>
-            </div>
           </div>
 
           <PackageList
@@ -918,13 +814,6 @@ onBeforeUnmount(() => {
         <p class="text-fg-subtle font-mono text-sm">{{ $t('search.start_typing') }}</p>
       </section>
     </div>
-
-    <PackageClaimPackageModal
-      ref="claimPackageModalRef"
-      :package-name="query"
-      :package-scope="packageScope"
-      :can-publish-to-scope="canPublishToScope"
-    />
 
     <div role="status" class="sr-only">
       {{ debouncedLiveRegionMessage }}

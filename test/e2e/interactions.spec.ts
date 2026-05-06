@@ -193,6 +193,26 @@ test.describe('Search Pages', () => {
     await expect(headerSearchInput).toBeFocused()
   })
 
+  test('/ (homepage) → clearing search before debounce does not navigate', async ({
+    page,
+    goto,
+  }) => {
+    await goto('/', { waitUntil: 'hydration' })
+
+    const homeSearchInput = page.locator('#home-search')
+    await homeSearchInput.click()
+    await page.keyboard.type('requests')
+    for (let i = 0; i < 'requests'.length; i += 1) {
+      await page.keyboard.press('Backspace')
+    }
+
+    await page.waitForTimeout(300)
+
+    await expect(page).toHaveURL(/\/$/)
+    await expect(homeSearchInput).toBeVisible()
+    await expect(homeSearchInput).toHaveValue('')
+  })
+
   test('/settings → search, keeps focus on search input', async ({ page, goto }) => {
     await goto('/settings', { waitUntil: 'hydration' })
 

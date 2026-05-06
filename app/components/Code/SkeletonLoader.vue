@@ -1,5 +1,10 @@
 <template>
-  <div class="flex min-h-full" role="status" aria-busy="true" :aria-label="$t('common.loading')">
+  <div
+    class="flex h-full min-h-0 overflow-hidden"
+    role="status"
+    aria-busy="true"
+    :aria-label="$t('common.loading')"
+  >
     <!-- Fake line numbers column -->
     <div class="shrink-0 bg-bg-subtle border-ie border-border w-14 py-0">
       <div v-for="n in 20" :key="n" class="px-3 h-6 flex items-center justify-end">
@@ -7,7 +12,7 @@
       </div>
     </div>
     <!-- Fake code content -->
-    <div class="flex-1 p-4 space-y-1.5">
+    <div class="flex-1 min-w-0 overflow-hidden p-4 space-y-1.5">
       <SkeletonBlock class="h-4 w-32 rounded-sm" />
       <SkeletonBlock class="h-4 w-48 rounded-sm" />
       <SkeletonBlock class="h-4 w-24 rounded-sm" />

@@ -16,10 +16,6 @@ const currentLang = locale.value.split('-')[0] ?? 'en'
 const localeSubPath = ['ko', 'pt', 'ja'].includes(currentLang) ? currentLang : ''
 const atprotoLink = `https://atproto.com/${localeSubPath}`
 
-async function handleBlueskySignIn() {
-  await authRedirect('https://bsky.social', { redirectTo: route.fullPath, locale: locale.value })
-}
-
 async function handleCreateAccount() {
   await authRedirect('https://npmx.social', {
     create: true,
@@ -132,9 +128,6 @@ watch(user, async newUser => {
               <template #atproto>
                 <LinkBase :to="atprotoLink"> AT Protocol </LinkBase>
               </template>
-              <template #bluesky>
-                <LinkBase to="https://bsky.app"> Bluesky </LinkBase>
-              </template>
               <template #tangled>
                 <LinkBase to="https://tangled.org"> Tangled </LinkBase>
               </template>
@@ -148,15 +141,6 @@ watch(user, async newUser => {
       </ButtonBase>
       <ButtonBase type="button" class="w-full" @click="handleCreateAccount">
         {{ $t('auth.modal.create_account') }}
-      </ButtonBase>
-      <hr class="color-border" />
-      <ButtonBase
-        type="button"
-        class="w-full"
-        @click="handleBlueskySignIn"
-        classicon="i-simple-icons:bluesky"
-      >
-        {{ $t('auth.modal.connect_bluesky') }}
       </ButtonBase>
     </form>
   </Modal>

@@ -169,7 +169,7 @@ watch(
     :aria-expanded="isOpen"
     aria-haspopup="listbox"
     :aria-label="$t('package.readme.toc_title')"
-    :aria-controls="listboxId"
+    :aria-controls="isOpen ? listboxId : undefined"
     @click="toggle"
     @keydown="handleKeydown"
     classicon="i-lucide:list"

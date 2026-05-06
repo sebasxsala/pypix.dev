@@ -169,9 +169,7 @@ async function getTypesUrl(packageName: string, version: string): Promise<string
       timeout: FETCH_TIMEOUT_MS,
     })
     return response.headers.get('x-typescript-types')
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e)
+  } catch {
     return null
   }
 }

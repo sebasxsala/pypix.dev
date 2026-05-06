@@ -278,6 +278,18 @@ describe('enrichLikesLeaderboardEntries', () => {
 })
 
 describe('getTopLikedRank', () => {
+  it('does not fetch the legacy npmx leaderboard for pypix package refs', async () => {
+    const cachedFetch = vi.fn()
+
+    const rank = await getTopLikedRank(
+      createEvent(cachedFetch),
+      'https://pypix.dev/package/requests',
+    )
+
+    expect(rank).toBeNull()
+    expect(cachedFetch).not.toHaveBeenCalled()
+  })
+
   it('returns the matching top liked rank for a subject ref', async () => {
     const cachedFetch = vi.fn().mockResolvedValue(
       cachedResult({

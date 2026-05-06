@@ -5,7 +5,6 @@ const route = useRoute()
 const isHome = computed(() => route.name === 'index')
 const { t } = useI18n()
 
-const discord = useDiscordLink()
 const { commandPaletteShortcutLabel } = usePlatformModifierKey()
 const modalRef = useTemplateRef('modalRef')
 const showModal = () => modalRef.value?.showModal?.()
@@ -19,20 +18,8 @@ const socialLinks = computed(() => [
   {
     id: 'github',
     label: 'GitHub',
-    href: 'https://repo.npmx.dev',
+    href: 'https://github.com/sebasxsala/pypix.dev',
     icon: 'i-simple-icons:github',
-  },
-  {
-    id: 'discord',
-    label: 'Discord',
-    href: discord.value.url,
-    icon: 'i-simple-icons:discord',
-  },
-  {
-    id: 'bluesky',
-    label: 'Bluesky',
-    href: 'https://social.npmx.dev',
-    icon: 'i-simple-icons:bluesky',
   },
 ])
 

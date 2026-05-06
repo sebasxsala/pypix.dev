@@ -22,7 +22,7 @@ const remainingCount = computed(() => props.status.missingKeys.length - INITIAL_
 
 // Generate a GitHub URL that pre-fills the edit with guidance
 const contributionGuideUrl =
-  'https://github.com/npmx-dev/npmx.dev/blob/main/CONTRIBUTING.md#localization-i18n'
+  'https://github.com/sebasxsala/pypix.dev/blob/main/CONTRIBUTING.md#localization-i18n'
 
 // Copy missing keys as JSON template to clipboard
 const { copy, copied } = useClipboard()

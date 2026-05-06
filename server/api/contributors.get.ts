@@ -11,10 +11,20 @@ export interface GitHubContributor {
 }
 
 type GitHubAPIContributor = Omit<GitHubContributor, 'role' | 'sponsors_url'>
+type GitHubCommitAuthor = Pick<GitHubContributor, 'avatar_url' | 'html_url' | 'id' | 'login'>
 
-// Fallback when no GitHub token is available (e.g. preview environments).
-// Only stewards are shown as maintainers; everyone else is a contributor.
-const FALLBACK_STEWARDS = new Set(['danielroe', 'patak-cat'])
+interface GitHubCommit {
+  author: GitHubCommitAuthor | null
+}
+
+interface GitHubRepo {
+  created_at?: string
+  owner?: { login?: string }
+}
+
+const REPO_OWNER = 'sebasxsala'
+const REPO_NAME = 'pypix.dev'
+const FALLBACK_STEWARDS = new Set(['sebasxsala'])
 
 interface TeamMembers {
   steward: Set<string>
@@ -22,42 +32,85 @@ interface TeamMembers {
 }
 
 async function fetchTeamMembers(token: string): Promise<TeamMembers | null> {
-  const teams: Record<keyof TeamMembers, string> = {
-    steward: 'stewards',
-    maintainer: 'maintainers',
-  }
-
   try {
-    const result: TeamMembers = { steward: new Set(), maintainer: new Set() }
+    const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Authorization': `Bearer ${token}`,
+        'User-Agent': 'pypix',
+      },
+    })
 
-    for (const [role, slug] of Object.entries(teams) as [keyof TeamMembers, string][]) {
-      const response = await fetch(
-        `https://api.github.com/orgs/npmx-dev/teams/${slug}/members?per_page=100`,
-        {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'Authorization': `Bearer ${token}`,
-            'User-Agent': 'npmx',
-          },
-        },
-      )
-
-      if (!response.ok) {
-        console.warn(`Failed to fetch ${slug} team members: ${response.status}`)
-        return null
-      }
-
-      const members = (await response.json()) as { login: string }[]
-      for (const member of members) {
-        result[role].add(member.login)
-      }
+    if (!response.ok) {
+      console.warn(`Failed to fetch repository owner: ${response.status}`)
+      return null
     }
 
-    return result
+    const repo = (await response.json()) as GitHubRepo
+    return {
+      steward: new Set(repo.owner?.login ? [repo.owner.login] : ['sebasxsala']),
+      maintainer: new Set<string>(),
+    }
   } catch (error) {
-    console.warn('Failed to fetch team members from GitHub:', error)
+    console.warn('Failed to fetch repository owner from GitHub:', error)
     return null
   }
+}
+
+async function fetchRepoCreatedAt(headers: HeadersInit): Promise<string | null> {
+  const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+    headers,
+  })
+
+  if (!response.ok) {
+    console.warn(`Failed to fetch repository metadata: ${response.status}`)
+    return null
+  }
+
+  const repo = (await response.json()) as GitHubRepo
+  return repo.created_at ?? null
+}
+
+async function fetchContributorsFromForkCommits(
+  headers: HeadersInit,
+): Promise<GitHubAPIContributor[]> {
+  const since = await fetchRepoCreatedAt(headers)
+  if (!since) return []
+
+  const contributors = new Map<string, GitHubAPIContributor>()
+  let page = 1
+  const perPage = 100
+
+  while (true) {
+    const response = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?since=${encodeURIComponent(since)}&per_page=${perPage}&page=${page}`,
+      { headers },
+    )
+
+    if (!response.ok) {
+      console.warn(`Failed to fetch commits for ${REPO_OWNER}/${REPO_NAME}: ${response.status}`)
+      break
+    }
+
+    const commits = (await response.json()) as GitHubCommit[]
+    if (commits.length === 0) break
+
+    for (const commit of commits) {
+      const author = commit.author
+      if (!author || author.login.includes('[bot]')) continue
+
+      const existing = contributors.get(author.login)
+      contributors.set(author.login, {
+        ...author,
+        contributions: (existing?.contributions ?? 0) + 1,
+      })
+    }
+
+    if (commits.length < perPage) break
+    page++
+  }
+
+  return [...contributors.values()]
 }
 
 /**
@@ -79,7 +132,7 @@ async function fetchSponsorable(token: string, logins: string[]): Promise<Set<st
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
-        'User-Agent': 'npmx',
+        'User-Agent': 'pypix',
       },
       body: JSON.stringify({ query }),
     })
@@ -127,45 +180,13 @@ export default defineCachedEventHandler(
       return { steward: FALLBACK_STEWARDS, maintainer: new Set<string>() }
     })()
 
-    const allContributors: GitHubAPIContributor[] = []
-    let page = 1
-    const perPage = 100
-
-    while (true) {
-      const response = await fetch(
-        `https://api.github.com/repos/npmx-dev/npmx.dev/contributors?per_page=${perPage}&page=${page}`,
-        {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'npmx',
-            ...(githubToken && { Authorization: `Bearer ${githubToken}` }),
-          },
-        },
-      )
-
-      if (!response.ok) {
-        throw createError({
-          statusCode: response.status,
-          message: 'Failed to fetch contributors',
-        })
-      }
-
-      const contributors = (await response.json()) as GitHubAPIContributor[]
-
-      if (contributors.length === 0) {
-        break
-      }
-
-      allContributors.push(...contributors)
-
-      if (contributors.length < perPage) {
-        break
-      }
-
-      page++
+    const headers = {
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'pypix',
+      ...(githubToken && { Authorization: `Bearer ${githubToken}` }),
     }
 
-    const filtered = allContributors.filter(c => !c.login.includes('[bot]'))
+    const filtered = await fetchContributorsFromForkCommits(headers)
 
     // Identify maintainers (stewards + maintainers) and check their sponsors status
     const maintainerLogins = filtered
@@ -190,7 +211,7 @@ export default defineCachedEventHandler(
   },
   {
     maxAge: 3600, // Cache for 1 hour
-    name: 'github-contributors',
-    getKey: () => 'contributors',
+    name: 'pypix-github-contributors',
+    getKey: () => `${REPO_OWNER}/${REPO_NAME}:contributors`,
   },
 )

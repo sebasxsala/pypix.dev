@@ -1,5 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { mountSuspended } from '@nuxt/test-utils/runtime'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
+import type { SlimPackument } from '#shared/types/npm-registry'
 import type * as NpmApi from '~/utils/npm/api'
 import VersionsPage from '~/pages/package/[[org]]/[name]/versions.vue'
 
@@ -18,38 +19,41 @@ vi.mock('~/utils/npm/api', async importOriginal => {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
- * Build a mock response payload matching the fast-npm-meta /versions/ API shape.
+ * Build a mock response payload matching the local PyPI package endpoint shape.
  */
 function makeVersionData(
   versions: string[],
   distTags: Record<string, string>,
   time?: Record<string, string>,
 ) {
+  const versionTimes =
+    time ?? Object.fromEntries(versions.map((v, i) => [v, new Date(2024, 0, 15 - i).toISOString()]))
+
   return {
-    distTags,
-    versions,
-    time:
-      time ??
-      Object.fromEntries(versions.map((v, i) => [v, new Date(2024, 0, 15 - i).toISOString()])),
-  }
+    '_id': 'test-package',
+    'name': 'test-package',
+    'dist-tags': distTags,
+    'time': versionTimes,
+    'requestedVersion': null,
+    'versions': Object.fromEntries(
+      versions.map(version => [
+        version,
+        {
+          version,
+          tags: [],
+          hasProvenance: false,
+          trustLevel: 'none',
+        },
+      ]),
+    ),
+  } as SlimPackument
 }
 
 /**
- * Next response to return from the fast-npm-meta fetch mock.
+ * Next response to return from the PyPI package endpoint mock.
  * Set this before mounting the page.
  */
 let nextFetchResponse: ReturnType<typeof makeVersionData> | null = null
-
-const originalFetch = globalThis.fetch
-
-function mockFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
-  if (url.includes('npm.antfu.dev/versions/')) {
-    const body = nextFetchResponse ?? { distTags: {}, versions: [], time: {} }
-    return Promise.resolve(Response.json(body))
-  }
-  return originalFetch(input, init)
-}
 
 async function mountPage(route = '/package/test-package/versions') {
   return mountSuspended(VersionsPage, { route })
@@ -61,13 +65,12 @@ describe('package versions page', () => {
   beforeEach(() => {
     nextFetchResponse = null
     mockFetchAllPackageVersions.mockReset()
-    globalThis.fetch = mockFetch as typeof globalThis.fetch
     mockFetchAllPackageVersions.mockResolvedValue([])
+    registerEndpoint(
+      '/api/pypi/package/test-package',
+      () => nextFetchResponse ?? makeVersionData([], {}),
+    )
     clearNuxtData()
-  })
-
-  afterEach(() => {
-    globalThis.fetch = originalFetch
   })
 
   describe('basic rendering', () => {

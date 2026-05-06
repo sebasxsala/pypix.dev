@@ -14,6 +14,8 @@ export interface PypiProjectFile {
     md5?: string
     blake2b_256?: string
   }
+  yanked?: boolean
+  yanked_reason?: string | null
 }
 
 export interface PypiProjectJson {
@@ -44,6 +46,12 @@ function getUploadTime(file: PypiProjectFile | undefined): string | undefined {
 
 function getReleasePublishedAt(files: PypiProjectFile[] | undefined): string | undefined {
   return files?.map(getUploadTime).filter(Boolean).sort().at(-1)
+}
+
+export function getReleaseYankedReason(files: PypiProjectFile[] | undefined): string | undefined {
+  const yankedFile = files?.find(file => file.yanked)
+  if (!yankedFile) return undefined
+  return yankedFile.yanked_reason?.trim() || 'Yanked release'
 }
 
 function pickDistributionFile(files: PypiProjectFile[] | undefined): PypiProjectFile | undefined {
@@ -122,12 +130,14 @@ export function transformPypiProject(
 
   const versions: SlimPackument['versions'] = {}
   for (const version of sortedVersions) {
+    const deprecated = getReleaseYankedReason(releases[version])
     versions[version] = {
       version,
       tags: [],
       hasProvenance: false,
       trustLevel: 'none',
       license: info.license || undefined,
+      deprecated,
     }
   }
 
@@ -143,11 +153,13 @@ export function transformPypiProject(
 
   let requestedVersionData: SlimPackumentVersion | null = null
   if (selectedFiles?.length) {
+    const deprecated = getReleaseYankedReason(selectedFiles)
     requestedVersionData = {
       _id: `${info.name}@${selectedVersion}`,
       _npmVersion: '',
       name: info.name,
       version: selectedVersion,
+      deprecated,
       description: info.summary || undefined,
       readme: info.description || undefined,
       keywords,
@@ -191,6 +203,7 @@ export function transformPypiProject(
       time: time[version],
       hasProvenance: false,
       trustLevel: 'none',
+      deprecated: getReleaseYankedReason(releases[version]),
     })),
   }
 }

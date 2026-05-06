@@ -6,8 +6,6 @@ import LogoVlt from './vlt.svg'
 import LogoVltLight from './vlt-light.svg'
 import LogoNetlify from './netlify.svg'
 import LogoNetlifyLight from './netlify-light.svg'
-import LogoBluesky from './bluesky.svg'
-import LogoBlueskyLight from './bluesky-light.svg'
 import LogoBadrap from './badrap.svg'
 import LogoBadrapLight from './badrap-light.svg'
 import LogoChromatic from './chromatic.svg'
@@ -56,15 +54,6 @@ export const SPONSORS = [
     },
     normalisingIndent: '0.25rem',
     url: 'https://netlify.com/',
-  },
-  {
-    name: 'Bluesky',
-    logo: {
-      dark: LogoBluesky,
-      light: LogoBlueskyLight,
-    },
-    normalisingIndent: '0.625rem',
-    url: 'https://bsky.app/',
   },
   {
     name: 'Chromatic',

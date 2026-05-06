@@ -91,13 +91,6 @@ const icons = [
           </template>
         </i18n-t>
       </header>
-      <!-- Bluesky post embed -->
-      <div class="my-8">
-        <BlueskyPostEmbed
-          uri="at://did:plc:u5zp7npt5kpueado77kuihyz/app.bsky.feed.post/3mejzn5mrcc2g"
-        />
-      </div>
-
       <section class="max-w-none space-y-8">
         <!-- What happened -->
         <div>
@@ -131,7 +124,7 @@ const icons = [
                 <LinkBase class="font-sans" to="/">npmx.dev</LinkBase>
               </template>
               <template #repo>
-                <LinkBase class="font-sans" to="https://repo.npmx.dev">
+                <LinkBase class="font-sans" to="https://github.com/sebasxsala/pypix.dev">
                   {{ $t('vacations.meantime.repo_link') }}
                 </LinkBase>
               </template>
@@ -180,13 +173,7 @@ const icons = [
             {{ $t('vacations.return.title') }}
           </h2>
           <p class="text-fg-muted leading-relaxed mb-6">
-            <i18n-t keypath="vacations.return.p1" tag="span" scope="global">
-              <template #social>
-                <LinkBase class="font-sans" to="https://social.npmx.dev">
-                  {{ $t('vacations.return.social_link') }}
-                </LinkBase>
-              </template>
-            </i18n-t>
+            {{ $t('vacations.return.p1') }}
           </p>
         </div>
 

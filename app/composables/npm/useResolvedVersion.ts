@@ -11,8 +11,8 @@ export function useResolvedVersion(
       const data = await $fetch<{ version: string | null }>(
         `/api/pypi/version/${encodeURIComponent(name)}${query}`,
       )
-      return data.version ?? undefined
+      return data.version ?? null
     },
-    { default: () => undefined },
+    { default: () => null },
   )
 }

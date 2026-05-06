@@ -4,17 +4,17 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => `${$t('privacy_policy.title')} - npmx`,
-  description: () => $t('privacy_policy.welcome', { app: 'npmx' }),
+  title: () => `${$t('privacy_policy.title')} - pypix`,
+  description: () => $t('privacy_policy.welcome', { app: 'pypix' }),
 })
 
 defineOgImage(
   'Page.takumi',
   {
     title: () => $t('privacy_policy.title'),
-    description: () => $t('privacy_policy.welcome', { app: 'npmx' }),
+    description: () => $t('privacy_policy.welcome', { app: 'pypix' }),
   },
-  { alt: () => `${$t('privacy_policy.title')} — npmx` },
+  { alt: () => `${$t('privacy_policy.title')} - pypix` },
 )
 
 const buildInfo = useAppConfig().buildInfo
@@ -52,7 +52,7 @@ const { locale } = useI18n()
         <p class="text-fg-muted leading-relaxed">
           <i18n-t keypath="privacy_policy.welcome" tag="span" scope="global">
             <template #app>
-              <strong class="text-fg">npmx</strong>
+              <strong class="text-fg">pypix</strong>
             </template>
           </i18n-t>
         </p>
@@ -245,32 +245,6 @@ const { locale } = useI18n()
           </p>
         </div>
 
-        <!-- Authenticated Users -->
-        <div>
-          <h2 class="text-lg text-fg-subtle uppercase tracking-wider mb-4">
-            {{ $t('privacy_policy.authenticated.title') }}
-          </h2>
-          <p class="text-fg-muted leading-relaxed mb-4">
-            <i18n-t keypath="privacy_policy.authenticated.p1" tag="span" scope="global">
-              <template #bold>
-                <strong class="text-fg">{{ $t('privacy_policy.authenticated.bold') }}</strong>
-              </template>
-            </i18n-t>
-          </p>
-          <p class="text-fg-muted leading-relaxed">
-            <i18n-t keypath="privacy_policy.authenticated.p2" tag="span" scope="global">
-              <template #settings>
-                <NuxtLink
-                  :to="{ name: 'settings' }"
-                  class="text-fg-muted hover:text-fg underline decoration-fg-subtle/50 hover:decoration-fg"
-                >
-                  {{ $t('privacy_policy.authenticated.settings') }}
-                </NuxtLink>
-              </template>
-            </i18n-t>
-          </p>
-        </div>
-
         <!-- Data Retention -->
         <div>
           <h2 class="text-lg text-fg-subtle uppercase tracking-wider mb-4">
@@ -321,7 +295,7 @@ const { locale } = useI18n()
             <i18n-t keypath="privacy_policy.contact.p1" tag="span" scope="global">
               <template #link>
                 <a
-                  href="https://github.com/npmx-dev/npmx.dev/issues"
+                  href="https://github.com/sebasxsala/pypix.dev/issues"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-1 text-fg-muted hover:text-fg underline decoration-fg-subtle/50 hover:decoration-fg"

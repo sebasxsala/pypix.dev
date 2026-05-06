@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.stubGlobal('defineCachedFunction', (fn: Function) => fn)
+const defineCachedFunctionMock = vi.fn((fn: Function) => fn)
+
+vi.stubGlobal('defineCachedFunction', defineCachedFunctionMock)
 vi.stubGlobal('PYPI_JSON_API', 'https://pypi.org/pypi')
 vi.stubGlobal('PYPI_SIMPLE_API', 'https://pypi.org/simple')
 
@@ -51,7 +53,83 @@ describe('searchPypiProjects', () => {
     fetchMock.mockReset()
   })
 
-  it('hydrates PyPI search results with keywords, maintainers, ownership and weekly downloads', async () => {
+  it('caches the PyPI Simple project index through Nitro storage', () => {
+    expect(defineCachedFunctionMock).toHaveBeenCalledWith(expect.any(Function), {
+      maxAge: 86400,
+      swr: true,
+      name: 'pypi-simple-projects',
+      getKey: expect.any(Function),
+    })
+  })
+
+  it('puts exact package name matches first while keeping additional results', async () => {
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url === 'https://pypi.org/simple/') {
+        return {
+          projects: [{ name: 'requests' }, { name: 'requests-cache' }, { name: 'types-requests' }],
+        }
+      }
+
+      if (url === 'https://pypi.org/pypi/requests/json') {
+        return {
+          info: {
+            name: 'requests',
+            version: '2.32.5',
+            summary: 'Python HTTP for Humans.',
+            keywords: ['http', 'requests'],
+          },
+          urls: [{ upload_time_iso_8601: '2026-01-01T00:00:00.000Z' }],
+        }
+      }
+
+      if (url === 'https://pypi.org/pypi/requests-cache/json') {
+        return {
+          info: {
+            name: 'requests-cache',
+            version: '1.2.1',
+            summary: 'Persistent cache for requests.',
+            keywords: ['http', 'cache'],
+          },
+          urls: [{ upload_time_iso_8601: '2026-01-02T00:00:00.000Z' }],
+        }
+      }
+
+      if (url === 'https://pypi.org/pypi/types-requests/json') {
+        return {
+          info: {
+            name: 'types-requests',
+            version: '2.32.4',
+            summary: 'Typing stubs for requests.',
+            keywords: ['types', 'requests'],
+          },
+          urls: [{ upload_time_iso_8601: '2026-01-03T00:00:00.000Z' }],
+        }
+      }
+
+      throw new Error(`Unexpected URL: ${url}`)
+    })
+
+    const result = await searchPypiProjects('requests', 25)
+
+    expect(result.objects.map(item => item.package.name)).toEqual([
+      'requests',
+      'requests-cache',
+      'types-requests',
+    ])
+    expect(result.total).toBe(3)
+    expect(result.objects[0]).toMatchObject({
+      package: {
+        name: 'requests',
+        version: '2.32.5',
+      },
+    })
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      'https://pypistats.org/api/packages/requests/recent',
+      expect.anything(),
+    )
+  })
+
+  it('hydrates PyPI search results with keywords, maintainers and ownership without downloads', async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === 'https://pypi.org/simple/') {
         return { projects: [{ name: 'better-auth' }] }
@@ -81,10 +159,6 @@ describe('searchPypiProjects', () => {
         }
       }
 
-      if (url === 'https://pypistats.org/api/packages/better-auth/recent') {
-        return { data: { last_week: 1234 } }
-      }
-
       throw new Error(`Unexpected URL: ${url}`)
     })
 
@@ -92,7 +166,6 @@ describe('searchPypiProjects', () => {
 
     expect(result.objects).toHaveLength(1)
     expect(result.objects[0]).toMatchObject({
-      downloads: { weekly: 1234 },
       package: {
         name: 'better-auth',
         keywords: ['auth', 'sdk', 'openapi'],
@@ -103,18 +176,20 @@ describe('searchPypiProjects', () => {
         ],
       },
     })
+    expect(result.objects[0]?.downloads).toBeUndefined()
   })
 
-  it('keeps search results when pypistats is unavailable', async () => {
+  it('does not fetch PyPIStats while building search results', async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === 'https://pypi.org/simple/') {
-        return { projects: [{ name: 'better-auth' }] }
+        return { projects: [{ name: 'better-auth' }, { name: 'better-auth-extra' }] }
       }
 
-      if (url === 'https://pypi.org/pypi/better-auth/json') {
+      if (url.startsWith('https://pypi.org/pypi/') && url.endsWith('/json')) {
+        const name = url.split('/').at(-2)
         return {
           info: {
-            name: 'better-auth',
+            name,
             version: '0.0.1b12',
             summary: 'Python SDK for better-auth',
             keywords: ['auth', 'sdk'],
@@ -123,22 +198,12 @@ describe('searchPypiProjects', () => {
         }
       }
 
-      if (url === 'https://pypistats.org/api/packages/better-auth/recent') {
-        throw new Error('rate limited')
-      }
-
       throw new Error(`Unexpected URL: ${url}`)
     })
 
     const result = await searchPypiProjects('better auth', 25)
 
-    expect(result.objects).toHaveLength(1)
-    expect(result.objects[0]).toMatchObject({
-      package: {
-        name: 'better-auth',
-        keywords: ['auth', 'sdk'],
-      },
-    })
-    expect(result.objects[0]?.downloads).toBeUndefined()
+    expect(result.objects).toHaveLength(2)
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('pypistats.org'))).toBe(false)
   })
 })

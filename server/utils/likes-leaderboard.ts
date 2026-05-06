@@ -248,6 +248,10 @@ export async function enrichLikesLeaderboardEntries(
 }
 
 export async function getTopLikedRank(event: H3Event, subjectRef: string): Promise<number | null> {
+  if (!extractPackageNameFromSubjectRef(subjectRef)) {
+    return null
+  }
+
   const leaderboard = await getLikesLeaderboard(event)
   return leaderboard?.find(entry => entry.subjectRef === subjectRef)?.rank ?? null
 }

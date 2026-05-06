@@ -73,6 +73,16 @@ describe('PackageLikes', () => {
     expect(wrapper.find('[data-testid="top-liked-badge"]').exists()).toBe(false)
   })
 
+  it('does not request likes when the package name is empty', async () => {
+    wrapper = await mountSuspended(Likes, {
+      props: { packageName: '' },
+      attachTo: document.body,
+    })
+
+    expect(wrapper.find('[data-testid="top-liked-badge"]').exists()).toBe(false)
+    expect(wrapper.text()).toBe('')
+  })
+
   it('keeps the top liked badge when a like response omits the rank', async () => {
     let likeRequests = 0
 

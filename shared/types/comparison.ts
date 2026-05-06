@@ -26,6 +26,7 @@ export interface FacetInfo {
   id: ComparisonFacet
   category: 'performance' | 'health' | 'compatibility' | 'security'
   comingSoon?: boolean
+  unsupported?: boolean
 }
 
 /** Category display order */
@@ -39,16 +40,20 @@ export const FACET_INFO: Record<ComparisonFacet, Omit<FacetInfo, 'id'>> = {
   },
   installSize: {
     category: 'performance',
+    unsupported: true,
   },
   dependencies: {
     category: 'performance',
+    unsupported: true,
   },
   totalDependencies: {
     category: 'performance',
+    unsupported: true,
   },
   // Health
   downloads: {
     category: 'health',
+    unsupported: true,
   },
   totalLikes: {
     category: 'health',
@@ -58,6 +63,7 @@ export const FACET_INFO: Record<ComparisonFacet, Omit<FacetInfo, 'id'>> = {
   },
   deprecated: {
     category: 'health',
+    unsupported: true,
   },
   githubStars: {
     category: 'health',
@@ -74,9 +80,11 @@ export const FACET_INFO: Record<ComparisonFacet, Omit<FacetInfo, 'id'>> = {
   },
   types: {
     category: 'compatibility',
+    unsupported: true,
   },
   moduleFormat: {
     category: 'compatibility',
+    unsupported: true,
   },
   // Security
   license: {
@@ -84,6 +92,7 @@ export const FACET_INFO: Record<ComparisonFacet, Omit<FacetInfo, 'id'>> = {
   },
   vulnerabilities: {
     category: 'security',
+    unsupported: true,
   },
 }
 
@@ -103,8 +112,10 @@ export const FACETS_BY_CATEGORY: Record<FacetInfo['category'], ComparisonFacet[]
     >,
   )
 
-/** Default facets - all non-comingSoon facets */
-export const DEFAULT_FACETS: ComparisonFacet[] = ALL_FACETS.filter(f => !FACET_INFO[f].comingSoon)
+/** Default facets - all selectable facets */
+export const DEFAULT_FACETS: ComparisonFacet[] = ALL_FACETS.filter(
+  f => !FACET_INFO[f].comingSoon && !FACET_INFO[f].unsupported,
+)
 
 /** Facet value that can be compared */
 export interface FacetValue<T = unknown> {

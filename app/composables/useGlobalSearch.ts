@@ -73,6 +73,9 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
     void provider
     const submittedValue = normalizeSubmittedSearchQuery(value)
     const isSameQuery = normalizeSearchParam(route.query.q) === submittedValue && !route.query.p
+    if (!submittedValue && route.name !== 'search') {
+      return
+    }
     // Don't navigate away from pages that use ?q for local filtering
     if ((pagesWithLocalFilter.has(route.name as string) && place === 'content') || isSameQuery) {
       return
@@ -115,8 +118,13 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
       // Only explicitly called flushUpdateUrlQuery commits and navigates
       if (!settings.value.instantSearch) return
 
+      if (!normalizeSubmittedSearchQuery(value) && route.name !== 'search') {
+        updateUrlQuery.cancel()
+        return
+      }
+
       // Leading debounce implementation as it doesn't work properly out of the box (https://github.com/unjs/perfect-debounce/issues/43)
-      if (!updateUrlQuery.isPending()) {
+      if (route.name === 'search' && !updateUrlQuery.isPending()) {
         updateUrlQueryImpl(value, searchProvider.value)
       }
       updateUrlQuery(value, searchProvider.value)

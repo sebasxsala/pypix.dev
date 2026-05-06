@@ -90,7 +90,7 @@ useCommandPaletteVersionCommands(commandPalettePackageContext, versionUrlPattern
 
 // Fetch file tree
 const { data: fileTree, status: treeStatus } = useFetch<PackageFileTreeResponse>(
-  () => `/api/registry/files/${packageName.value}/v/${version.value}`,
+  () => `/api/pypi/files/${packageName.value}/v/${version.value}`,
   {
     immediate: !!version.value,
   },
@@ -149,7 +149,7 @@ const fileContentUrl = computed<string | null>(() => {
   if (!filePath.value || !fileTree.value || isFileTooLarge.value || !isViewingFile.value) {
     return null
   }
-  return `/api/registry/file/${packageName.value}/v/${version.value}/${filePath.value}`
+  return `/api/pypi/file/${packageName.value}/v/${version.value}/${filePath.value}`
 })
 
 const {
@@ -274,6 +274,8 @@ const { copy: copyFileContent } = useClipboard({
   copiedDuring: 2000,
 })
 
+const rawFileUrl = computed<string | null>(() => null)
+
 // Canonical URL for this code page
 const canonicalUrl = computed(() => `https://npmx.dev${getCodeUrl(route.params)}`)
 
@@ -341,14 +343,14 @@ useCommandPaletteContextCommands(
 
     const commands: CommandPaletteContextCommandInput[] = []
 
-    if (filePath.value) {
+    if (filePath.value && rawFileUrl.value) {
       commands.push({
         id: 'code-open-raw',
         group: 'links',
         label: $t('code.view_raw'),
         keywords: [packageName.value, filePath.value],
         iconClass: 'i-lucide:file-output',
-        href: `https://cdn.jsdelivr.net/npm/${packageName.value}@${version.value}/${filePath.value}`,
+        href: rawFileUrl.value,
       })
     }
 
@@ -438,10 +440,7 @@ onPrehydrate(el => {
     </div>
 
     <!-- Loading state -->
-    <div v-else-if="treeStatus === 'pending'" class="container py-20 text-center">
-      <div class="i-svg-spinners:ring-resize w-8 h-8 mx-auto text-fg-muted" />
-      <p class="mt-4 text-fg-muted">{{ $t('code.loading_tree') }}</p>
-    </div>
+    <CodePageSkeleton v-else-if="treeStatus === 'pending'" />
 
     <!-- Error state -->
     <div v-else-if="treeStatus === 'error'" class="container py-20 text-center" role="alert">
@@ -533,10 +532,7 @@ onPrehydrate(el => {
               })
             }}
           </p>
-          <LinkBase
-            variant="button-secondary"
-            :to="`https://cdn.jsdelivr.net/npm/${packageName}@${version}/${filePath}`"
-          >
+          <LinkBase v-if="rawFileUrl" variant="button-secondary" :to="rawFileUrl">
             {{ $t('code.view_raw') }}
           </LinkBase>
         </div>
@@ -550,10 +546,7 @@ onPrehydrate(el => {
               $t('code.file_size_warning', { size: bytesFormatter.format(currentNode?.size ?? 0) })
             }}
           </p>
-          <LinkBase
-            variant="button-secondary"
-            :to="`https://cdn.jsdelivr.net/npm/${packageName}@${version}/${filePath}`"
-          >
+          <LinkBase v-if="rawFileUrl" variant="button-secondary" :to="rawFileUrl">
             {{ $t('code.view_raw') }}
           </LinkBase>
         </div>
@@ -563,10 +556,7 @@ onPrehydrate(el => {
           <div class="i-lucide:circle-alert w-8 h-8 mx-auto text-fg-subtle mb-4" />
           <p class="text-fg-muted mb-2">{{ $t('code.failed_to_load') }}</p>
           <p class="text-fg-subtle text-sm mb-4">{{ $t('code.unavailable_hint') }}</p>
-          <LinkBase
-            variant="button-secondary"
-            :to="`https://cdn.jsdelivr.net/npm/${packageName}@${version}/${filePath}`"
-          >
+          <LinkBase v-if="rawFileUrl" variant="button-secondary" :to="rawFileUrl">
             {{ $t('code.view_raw') }}
           </LinkBase>
         </div>

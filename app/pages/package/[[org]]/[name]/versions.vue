@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { WindowVirtualizer } from 'virtua/vue'
-import { getVersions } from 'fast-npm-meta'
-import { compare, validRange } from 'semver'
+import type { SlimPackument } from '#shared/types/npm-registry'
+import { validRange } from 'semver'
 import {
   buildVersionToTagsMap,
   buildTaggedVersionRows,
@@ -22,13 +22,6 @@ interface NpmWebsiteVersionDownload {
   downloads: number
 }
 
-interface NpmWebsiteVersionsResponse {
-  packages: Array<{
-    packageName: string
-    versions: NpmWebsiteVersionDownload[]
-  }>
-}
-
 /** Number of flat items (headers + version rows) to render statically during SSR */
 const SSR_COUNT = 20
 
@@ -37,9 +30,6 @@ const route = useRoute('package-versions')
 const packageName = computed(() => {
   const { org, name } = route.params
   return org ? `${org}/${name}` : name
-})
-const packageNameQueryParam = computed(() => {
-  return packageName.value ? { packages: packageName.value } : {}
 })
 const orgName = computed(() => route.params.org?.replace('@', '') ?? null)
 
@@ -50,11 +40,13 @@ const orgName = computed(() => route.params.org?.replace('@', '') ?? null)
 const { data: versionSummary } = useLazyAsyncData(
   () => `package-version-summary:${packageName.value}`,
   async () => {
-    const data = await getVersions(packageName.value)
+    const data = await $fetch<SlimPackument>(
+      `/api/pypi/package/${encodeURIComponent(packageName.value)}`,
+    )
     return {
-      distTags: data.distTags as Record<string, string>,
-      versions: data.versions,
-      time: data.time as Record<string, string>,
+      distTags: data['dist-tags'],
+      versions: Object.keys(data.versions),
+      time: data.time,
     }
   },
   { deep: false },
@@ -64,25 +56,7 @@ const distTags = computed(() => versionSummary.value?.distTags ?? {})
 const versionStrings = computed(() => versionSummary.value?.versions ?? [])
 const versionTimes = computed(() => versionSummary.value?.time ?? {})
 
-const { data: npmWebsiteVersions } = useLazyFetch<NpmWebsiteVersionsResponse>(
-  () => '/api/registry/downloads/versions',
-  {
-    key: () => `downloads-versions:${packageName.value}`,
-    query: packageNameQueryParam,
-    deep: false,
-    default: () => ({ packages: [] }),
-    getCachedData(key, nuxtApp) {
-      return nuxtApp.static.data[key] ?? nuxtApp.payload.data[key]
-    },
-  },
-)
-
-const packageVersions = computed(() => {
-  return (
-    npmWebsiteVersions.value?.packages.find(pkg => pkg.packageName === packageName.value)
-      ?.versions ?? []
-  )
-})
+const packageVersions = computed<NpmWebsiteVersionDownload[]>(() => [])
 
 const numberFormatter = useNumberFormatter()
 const { t } = useI18n()
@@ -170,7 +144,9 @@ const versionGroups = computed(() => {
     .map(groupKey => ({
       groupKey,
       label: getVersionGroupLabel(groupKey),
-      versions: byKey.get(groupKey)!.sort((a, b) => compare(b, a)),
+      versions: byKey
+        .get(groupKey)!
+        .sort((a, b) => (versionTimes.value[b] ?? '').localeCompare(versionTimes.value[a] ?? '')),
     }))
 })
 

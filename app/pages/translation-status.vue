@@ -111,7 +111,7 @@ ${template}`
         <i18n-t keypath="translation_status.p2" scope="global" tag="span">
           <template #guide>
             <LinkBase
-              to="https://github.com/npmx-dev/npmx.dev/blob/main/CONTRIBUTING.md#localization-i18n"
+              to="https://github.com/sebasxsala/pypix.dev/blob/main/CONTRIBUTING.md#localization-i18n"
               class="font-sans"
             >
               {{ $t('translation_status.guide') }}

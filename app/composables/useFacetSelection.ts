@@ -12,7 +12,7 @@ export interface FacetInfoWithLabels extends Omit<FacetInfo, 'id'> {
 function getFacetsInCategory(category: string): ComparisonFacet[] {
   return ALL_FACETS.filter(f => {
     const info = FACET_INFO[f]
-    return info.category === category && !info.comingSoon
+    return info.category === category && !info.comingSoon && !info.unsupported
   })
 }
 
@@ -168,14 +168,15 @@ export function useFacetSelection(queryParam = 'facets') {
         return DEFAULT_FACETS
       }
 
-      // Parse comma-separated facets and filter valid, non-comingSoon ones
+      // Parse comma-separated facets and filter valid, selectable ones
       const parsed = facetsParam.value
         .split(',')
         .map(f => f.trim())
         .filter(
           (f): f is ComparisonFacet =>
             ALL_FACETS.includes(f as ComparisonFacet) &&
-            !FACET_INFO[f as ComparisonFacet].comingSoon,
+            !FACET_INFO[f as ComparisonFacet].comingSoon &&
+            !FACET_INFO[f as ComparisonFacet].unsupported,
         )
 
       return parsed.length > 0 ? parsed : DEFAULT_FACETS

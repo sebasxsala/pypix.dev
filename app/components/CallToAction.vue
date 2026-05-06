@@ -1,29 +1,12 @@
 <script setup lang="ts">
-const discord = useDiscordLink()
 const socialLinks = computed(() => [
   {
     id: 'github',
-    href: 'https://repo.npmx.dev',
+    href: 'https://github.com/sebasxsala/pypix.dev',
     icon: 'i-simple-icons:github',
     titleKey: $t('about.get_involved.contribute.title'),
     descriptionKey: $t('about.get_involved.contribute.description'),
     ctaKey: $t('about.get_involved.contribute.cta'),
-  },
-  {
-    id: 'discord',
-    href: discord.value.url,
-    icon: 'i-lucide:message-circle',
-    titleKey: discord.value.title,
-    descriptionKey: discord.value.description,
-    ctaKey: discord.value.cta,
-  },
-  {
-    id: 'bluesky',
-    href: 'https://social.npmx.dev',
-    icon: 'i-simple-icons:bluesky',
-    titleKey: $t('about.get_involved.follow.title'),
-    descriptionKey: $t('about.get_involved.follow.description'),
-    ctaKey: $t('about.get_involved.follow.cta'),
   },
 ])
 
@@ -46,7 +29,7 @@ function handleCardClick(event: MouseEvent) {
       {{ $t('about.get_involved.title') }}
     </h2>
 
-    <div class="grid gap-4 sm:grid-cols-3 sm:items-stretch sm:grid-rows-[auto,1fr,auto]">
+    <div class="grid gap-4 sm:grid-cols-1 sm:items-stretch sm:grid-rows-[auto,1fr,auto]">
       <div
         v-for="link in socialLinks"
         :key="link.id"

@@ -85,6 +85,7 @@ const canCopyTable = computed(
 
 const comparisonView = usePermalink<'table' | 'charts'>('view', 'table')
 const hasChartableFacets = computed(() => selectedFacets.value.some(facet => facet.chartable))
+const supportsDownloadTrends = false
 
 // Extract headers from columns for facet rows
 const gridHeaders = computed(() =>
@@ -464,14 +465,16 @@ useSeoMeta({
             </TabPanel>
           </TabRoot>
 
-          <h2
-            id="trends-comparison-heading"
-            class="text-xs text-fg-subtle uppercase tracking-wider mb-4 mt-10"
-          >
-            {{ $t('compare.facets.trends.title') }}
-          </h2>
+          <template v-if="supportsDownloadTrends">
+            <h2
+              id="trends-comparison-heading"
+              class="text-xs text-fg-subtle uppercase tracking-wider mb-4 mt-10"
+            >
+              {{ $t('compare.facets.trends.title') }}
+            </h2>
 
-          <CompareLineChart :packages="packages.filter(p => p !== NO_DEPENDENCY_ID)" />
+            <CompareLineChart :packages="packages.filter(p => p !== NO_DEPENDENCY_ID)" />
+          </template>
         </div>
 
         <div v-else-if="status === 'error'" class="text-center py-12" role="alert">

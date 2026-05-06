@@ -338,12 +338,8 @@ const effectivePackageNames = computed<string[]>(() => {
   return single ? [single] : []
 })
 
-const {
-  fetchPackageDownloadEvolution,
-  fetchPackageLikesEvolution,
-  fetchRepoContributorsEvolution,
-  fetchRepoRefsForPackages,
-} = useCharts()
+const { fetchPackageDownloadEvolution, fetchRepoContributorsEvolution, fetchRepoRefsForPackages } =
+  useCharts()
 
 const repoRefsByPackage = shallowRef<Record<string, RepoRef | null>>({})
 const repoRefsRequestToken = shallowRef(0)
@@ -619,7 +615,7 @@ function applyDateRange<T extends Record<string, unknown>>(base: T): T & DateRan
   return next
 }
 
-type MetricId = 'downloads' | 'likes' | 'contributors'
+type MetricId = 'downloads' | 'contributors'
 const DEFAULT_METRIC_ID: MetricId = 'downloads'
 
 type MetricContext = {
@@ -653,12 +649,6 @@ const METRICS = computed<MetricDef[]>(() => {
           props.createdIso ?? null,
           opts,
         ) as Promise<EvolutionData>,
-      supportsMulti: true,
-    },
-    {
-      id: 'likes',
-      label: $t('package.trends.items.likes'),
-      fetch: ({ packageName }, opts) => fetchPackageLikesEvolution(packageName, opts),
       supportsMulti: true,
     },
   ]
@@ -740,12 +730,6 @@ const metricStates = reactive<
   downloads: {
     pending: false,
     evolution: props.weeklyDownloads ?? [],
-    evolutionsByPackage: {},
-    requestToken: 0,
-  },
-  likes: {
-    pending: false,
-    evolution: [],
     evolutionsByPackage: {},
     requestToken: 0,
   },
@@ -1849,7 +1833,7 @@ const isSparklineLayout = computed({
                         </p>
                         <div class="flex justify-end">
                           <LinkBase
-                            to="https://github.com/npmx-dev/npmx.dev/edit/main/app/utils/download-anomalies.data.ts"
+                            to="https://github.com/sebasxsala/pypix.dev/edit/main/app/utils/download-anomalies.data.ts"
                             class="text-xs text-accent"
                           >
                             {{ $t('package.trends.known_anomalies_contribute') }}

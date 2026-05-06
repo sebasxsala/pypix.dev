@@ -61,7 +61,7 @@ export default defineNitroPlugin(nitroApp => {
    * Includes the build ID to prevent serving stale payloads after deploys.
    */
   function getCacheKey(routePath: string): string {
-    return `${buildId}:${routePath}`
+    return `${buildId}:${encodeURIComponent(routePath)}`
   }
 
   // -------------------------------------------------------------------------

@@ -42,7 +42,7 @@ export default defineCachedEventHandler(
         html: '',
         toc: null,
         status: 'missing',
-        message: 'Docs are not available for this package. It may not have TypeScript types.',
+        message: 'Docs are not available for this package version.',
       } satisfies DocsResponse
     }
 
@@ -59,7 +59,7 @@ export default defineCachedEventHandler(
     swr: true,
     getKey: event => {
       const pkg = getRouterParam(event, 'pkg') ?? ''
-      return `docs:v2:${pkg}`
+      return `docs:v3:${pkg}`
     },
   },
 )

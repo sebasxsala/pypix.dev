@@ -5,6 +5,19 @@ export const noCorrect = {
   spellcheck: 'false',
 } as const
 
+export function restoreDoubleSpacePeriod(value: string, previousValue: string): string {
+  if (!previousValue.endsWith(' ')) {
+    return value
+  }
+
+  const doubleSpaceReplacement = `${previousValue.slice(0, -1)}. `
+  if (value !== doubleSpaceReplacement) {
+    return value
+  }
+
+  return `${previousValue} `
+}
+
 /**
  * Check if an event target is an editable element (input, textarea, or contenteditable).
  * Useful for keyboard shortcut handlers that should not trigger when the user is typing.

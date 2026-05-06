@@ -4,6 +4,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import 'axe-core'
 import type { AxeResults, RunOptions } from 'axe-core'
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
+import { nextTick } from 'vue'
 import { createLikesLeaderboardEntry } from '~~/test/fixtures/likes-leaderboard'
 
 // axe-core is a UMD module that exposes itself as window.axe in the browser
@@ -165,6 +166,7 @@ import {
   CodeFileTree,
   CodeHeader,
   CodeMobileTreeDrawer,
+  CodePageSkeleton,
   CodeSkeletonLoader,
   CodeViewer,
   CopyToClipboardButton,
@@ -216,6 +218,7 @@ import {
   PackageSkillsCard,
   PackageTable,
   PackageTableRow,
+  PackageTimelineSkeleton,
   PackageVersions,
   PackageVulnerabilityTree,
   PaginationControls,
@@ -864,6 +867,14 @@ describe('component accessibility audits', () => {
     })
   })
 
+  describe('PackageTimelineSkeleton', () => {
+    it('should have no accessibility violations', async () => {
+      const component = await mountSuspended(PackageTimelineSkeleton)
+      const results = await runAxe(component)
+      expect(results.violations).toEqual([])
+    })
+  })
+
   describe('PackageExternalLinks', () => {
     it('should have no accessibility violations', async () => {
       const component = await mountSuspended(PackageExternalLinks, {
@@ -1008,6 +1019,27 @@ describe('component accessibility audits', () => {
       })
       const results = await runAxe(component)
       expect(results.violations).toEqual([])
+    })
+
+    it('does not render as a document banner landmark', async () => {
+      const component = await mountSuspended(PackageHeader, {
+        props: {
+          pkg: {
+            'name': 'vue',
+            'dist-tags': {},
+            'versions': {},
+          },
+          resolvedVersion: '3.5.0',
+          displayVersion: null,
+          latestVersion: { version: '3.5.0', tags: [] },
+          provenanceData: null,
+          provenanceStatus: 'idle',
+          page: 'docs',
+          versionUrlPattern: '/package/vue/v/{version}',
+        },
+      })
+
+      expect(component.find('header').exists()).toBe(false)
     })
   })
 
@@ -1551,6 +1583,23 @@ describe('component accessibility audits', () => {
       const component = await mountSuspended(CodeSkeletonLoader)
       const results = await runAxe(component)
       expect(results.violations).toEqual([])
+    })
+  })
+
+  describe('CodePageSkeleton', () => {
+    it('should have no accessibility violations', async () => {
+      const component = await mountSuspended(CodePageSkeleton)
+      const results = await runAxe(component)
+      expect(results.violations).toEqual([])
+    })
+
+    it('uses a constrained flex layout for the loading viewport', async () => {
+      const component = await mountSuspended(CodePageSkeleton)
+
+      expect(component.classes()).toEqual(expect.arrayContaining(['flex-1', 'min-h-0']))
+      expect(component.find('section').classes()).toEqual(
+        expect.arrayContaining(['flex', 'flex-col', 'overflow-hidden']),
+      )
     })
   })
 
@@ -3015,6 +3064,20 @@ describe('component accessibility audits', () => {
       })
       const results = await runAxe(component)
       expect(results.violations).toEqual([])
+    })
+
+    it('only references the listbox while it is rendered', async () => {
+      const component = await mountSuspended(ReadmeTocDropdown, {
+        props: { toc: mockToc },
+      })
+
+      const button = component.find('button')
+      expect(button.attributes('aria-controls')).toBeUndefined()
+
+      await button.trigger('click')
+      await nextTick()
+
+      expect(button.attributes('aria-controls')).toMatch(/toc-listbox$/)
     })
 
     it('should have no accessibility violations with active item', async () => {

@@ -1,10 +1,5 @@
 import type { NpmPerson, NpmSearchResponse, NpmSearchResult } from '#shared/types/npm-registry'
-import {
-  CACHE_MAX_AGE_ONE_DAY,
-  PYPI_JSON_API,
-  PYPI_SIMPLE_API,
-  PYPISTATS_API,
-} from '#shared/utils/constants'
+import { CACHE_MAX_AGE_ONE_DAY, PYPI_JSON_API, PYPI_SIMPLE_API } from '#shared/utils/constants'
 
 interface PypiSimpleProject {
   name: string
@@ -28,14 +23,6 @@ interface PypiProjectJson {
   ownership?: {
     roles?: Array<{ role: string; user: string }>
     organization?: string | null
-  }
-}
-
-interface PypiStatsRecentResponse {
-  data?: {
-    last_day?: number
-    last_month?: number
-    last_week?: number
   }
 }
 
@@ -97,26 +84,6 @@ function getPypiMaintainers(project: PypiProjectJson) {
   return maintainers.length ? maintainers : undefined
 }
 
-export const fetchPypiRecentDownloads = defineCachedFunction(
-  async (name: string): Promise<PypiStatsRecentResponse> => {
-    return await $fetch<PypiStatsRecentResponse>(
-      `${PYPISTATS_API}/packages/${encodeURIComponent(name)}/recent`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'pypix.dev search download stats',
-        },
-      },
-    )
-  },
-  {
-    maxAge: CACHE_MAX_AGE_ONE_DAY,
-    swr: true,
-    name: 'pypi-downloads-recent',
-    getKey: (name: string) => name,
-  },
-)
-
 export function filterPypiProjectNames(
   projects: PypiSimpleProject[],
   query: string,
@@ -140,43 +107,40 @@ export function filterPypiProjectNames(
   return scored.slice(from, from + size).map(({ project }) => project.name)
 }
 
-let simpleProjectsCache: { expiresAt: number; projects: PypiSimpleProject[] } | null = null
+const fetchCachedPypiSimpleProjects = defineCachedFunction(
+  async (): Promise<PypiSimpleProject[]> => {
+    const response = await $fetch<{ projects: PypiSimpleProject[] }>(`${PYPI_SIMPLE_API}/`, {
+      headers: {
+        'Accept': 'application/vnd.pypi.simple.v1+json',
+        'User-Agent': 'pypix.dev search migration MVP',
+      },
+    })
+
+    return response.projects
+  },
+  {
+    maxAge: CACHE_MAX_AGE_ONE_DAY,
+    swr: true,
+    name: 'pypi-simple-projects',
+    getKey: () => 'all',
+  },
+)
 
 export async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
-  if (simpleProjectsCache && simpleProjectsCache.expiresAt > Date.now()) {
-    return simpleProjectsCache.projects
-  }
+  return await fetchCachedPypiSimpleProjects()
+}
 
-  const response = await $fetch<{ projects: PypiSimpleProject[] }>(`${PYPI_SIMPLE_API}/`, {
+async function fetchPypiProjectJson(name: string): Promise<PypiProjectJson> {
+  return await $fetch<PypiProjectJson>(`${PYPI_JSON_API}/${encodeURIComponent(name)}/json`, {
     headers: {
-      'Accept': 'application/vnd.pypi.simple.v1+json',
+      'Accept': 'application/json',
       'User-Agent': 'pypix.dev search migration MVP',
     },
   })
-
-  simpleProjectsCache = {
-    expiresAt: Date.now() + 60 * 60 * 1000,
-    projects: response.projects,
-  }
-
-  return response.projects
 }
 
 async function fetchPypiProjectResult(name: string): Promise<NpmSearchResult> {
-  const [data, downloads] = await Promise.all([
-    $fetch<PypiProjectJson>(`${PYPI_JSON_API}/${encodeURIComponent(name)}/json`, {
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'pypix.dev search migration MVP',
-      },
-    }),
-    fetchPypiRecentDownloads(name).catch(() => null),
-  ])
-
-  const weeklyDownloads = downloads?.data?.last_week
-  const normalizedWeeklyDownloads =
-    typeof weeklyDownloads === 'number' && weeklyDownloads >= 0 ? weeklyDownloads : undefined
-
+  const data = await fetchPypiProjectJson(name)
   const keywords = normalizeKeywords(data.info.keywords)
   const maintainers = getPypiMaintainers(data)
   const info = data.info
@@ -191,11 +155,6 @@ async function fetchPypiProjectResult(name: string): Promise<NpmSearchResult> {
   const bugs = info.project_urls?.Issues ?? info.project_urls?.Tracker
 
   return {
-    ...(normalizedWeeklyDownloads !== undefined && {
-      downloads: {
-        weekly: normalizedWeeklyDownloads,
-      },
-    }),
     package: {
       name: info.name || name,
       version: info.version || '',
@@ -221,24 +180,43 @@ async function fetchPypiProjectResult(name: string): Promise<NpmSearchResult> {
   }
 }
 
+function shouldUseExactPackageFastPath(query: string, from: number): boolean {
+  const trimmed = query.trim()
+  if (from > 0 || !trimmed || /\s/.test(trimmed)) return false
+  return normalizePypiSearchTerm(trimmed).length > 0
+}
+
 export async function searchPypiProjects(
   query: string,
   size: number,
   from = 0,
 ): Promise<NpmSearchResponse> {
+  let exactResult: NpmSearchResult | null = null
+  if (shouldUseExactPackageFastPath(query, from)) {
+    const normalizedQuery = normalizePypiSearchTerm(query)
+    exactResult = await fetchPypiProjectResult(normalizedQuery).catch(() => null)
+  }
+
   const projects = await fetchPypiSimpleProjects()
-  const names = filterPypiProjectNames(projects, query, size, from)
+  const exactName = normalizePypiSearchTerm(exactResult?.package.name ?? '')
+  const names = filterPypiProjectNames(projects, query, size, from).filter(
+    name => normalizePypiSearchTerm(name) !== exactName,
+  )
   const settled = await Promise.allSettled(names.map(name => fetchPypiProjectResult(name)))
-  const objects = settled
-    .filter(
-      (result): result is PromiseFulfilledResult<NpmSearchResult> => result.status === 'fulfilled',
-    )
-    .map(result => result.value)
+  const objects = [
+    ...(exactResult && size > 0 ? [exactResult] : []),
+    ...settled
+      .filter(
+        (result): result is PromiseFulfilledResult<NpmSearchResult> =>
+          result.status === 'fulfilled',
+      )
+      .map(result => result.value),
+  ].slice(0, size)
 
   return {
     isStale: false,
     objects,
-    total: names.length,
+    total: names.length + (exactResult ? 1 : 0),
     time: new Date().toISOString(),
   }
 }

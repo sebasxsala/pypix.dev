@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import type { Role } from '#server/api/contributors.get'
-import { SPONSORS } from '~/assets/logos/sponsors'
-import { OSS_PARTNERS } from '~/assets/logos/oss-partners'
 
 useSeoMeta({
   title: () => `${$t('about.title')} - pypix`,
@@ -22,31 +20,26 @@ defineOgImage(
 )
 
 const pmLinks = {
-  npm: 'https://pypi.org/',
-  pnpm: 'https://pnpm.io/',
-  yarn: 'https://yarnpkg.com/',
-  bun: 'https://bun.sh/',
-  deno: 'https://deno.com/',
-  vlt: 'https://www.vlt.sh/',
+  pip: 'https://pip.pypa.io/',
+  uv: 'https://docs.astral.sh/uv/',
+  poetry: 'https://python-poetry.org/',
+  pdm: 'https://pdm-project.org/',
+  pipenv: 'https://pipenv.pypa.io/',
+  conda: 'https://docs.conda.io/',
+  pixi: 'https://pixi.sh/',
 }
 
-const { data: contributors, status: contributorsStatus } = useLazyFetch('/api/contributors')
-
-const governanceMembers = computed(
-  () => contributors.value?.filter(c => c.role !== 'contributor') ?? [],
-)
-
-const communityContributors = computed(
-  () => contributors.value?.filter(c => c.role === 'contributor') ?? [],
-)
-
-const roleLabels = computed(
-  () =>
-    ({
-      steward: $t('about.team.role_steward'),
-      maintainer: $t('about.team.role_maintainer'),
-    }) as Partial<Record<Role, string>>,
-)
+const governanceMembers = [
+  {
+    name: 'Sebastian',
+    login: 'sebasxsala',
+    id: 166746975,
+    avatar_url: 'https://avatars.githubusercontent.com/sebasxsala?s=160',
+    html_url: 'https://github.com/sebasxsala',
+    role: 'steward' as Role,
+    sponsors_url: null,
+  },
+]
 </script>
 
 <template>
@@ -105,34 +98,38 @@ const roleLabels = computed(
                   tag="span"
                   scope="global"
                 >
-                  <template #already>{{ $t('about.what_we_are_not.words.already') }}</template>
+                  <template #already>
+                    <LinkBase :to="pmLinks.pip" class="font-sans" no-new-tab-icon>{{
+                      $t('about.what_we_are_not.words.already')
+                    }}</LinkBase>
+                  </template>
                   <template #people>
-                    <LinkBase :to="pmLinks.npm" class="font-sans" no-new-tab-icon>{{
+                    <LinkBase :to="pmLinks.uv" class="font-sans" no-new-tab-icon>{{
                       $t('about.what_we_are_not.words.people')
                     }}</LinkBase>
                   </template>
                   <template #building>
-                    <LinkBase :to="pmLinks.pnpm" class="font-sans" no-new-tab-icon>{{
+                    <LinkBase :to="pmLinks.poetry" class="font-sans" no-new-tab-icon>{{
                       $t('about.what_we_are_not.words.building')
                     }}</LinkBase>
                   </template>
                   <template #really>
-                    <LinkBase :to="pmLinks.yarn" class="font-sans" no-new-tab-icon>{{
+                    <LinkBase :to="pmLinks.pdm" class="font-sans" no-new-tab-icon>{{
                       $t('about.what_we_are_not.words.really')
                     }}</LinkBase>
                   </template>
                   <template #cool>
-                    <LinkBase :to="pmLinks.bun" class="font-sans" no-new-tab-icon>{{
+                    <LinkBase :to="pmLinks.pipenv" class="font-sans" no-new-tab-icon>{{
                       $t('about.what_we_are_not.words.cool')
                     }}</LinkBase>
                   </template>
                   <template #package>
-                    <LinkBase :to="pmLinks.deno" class="font-sans" no-new-tab-icon>{{
+                    <LinkBase :to="pmLinks.conda" class="font-sans" no-new-tab-icon>{{
                       $t('about.what_we_are_not.words.package')
                     }}</LinkBase>
                   </template>
                   <template #managers>
-                    <LinkBase :to="pmLinks.vlt" class="font-sans" no-new-tab-icon>{{
+                    <LinkBase :to="pmLinks.pixi" class="font-sans" no-new-tab-icon>{{
                       $t('about.what_we_are_not.words.managers')
                     }}</LinkBase>
                   </template>
@@ -149,28 +146,6 @@ const roleLabels = computed(
           </ul>
         </div>
 
-        <!-- Sponsors -->
-        <div class="sponsors-logos">
-          <h2 class="text-lg text-fg uppercase tracking-wider mb-4">
-            {{ $t('about.sponsors.title') }}
-          </h2>
-          <AboutLogoList
-            :list="SPONSORS"
-            class="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 grid-flow-row-dense"
-          />
-        </div>
-
-        <!-- OSS partners -->
-        <div>
-          <h2 class="text-lg text-fg uppercase tracking-wider mb-4">
-            {{ $t('about.oss_partners.title') }}
-          </h2>
-          <AboutLogoList
-            :list="OSS_PARTNERS"
-            class="grid grid-cols-[repeat(auto-fill,minmax(64px,1fr))] gap-4 grid-flow-row-dense"
-          />
-        </div>
-
         <div>
           <h2 class="text-lg uppercase tracking-wider mb-4">
             {{ $t('about.team.title') }}
@@ -180,11 +155,7 @@ const roleLabels = computed(
           </p>
 
           <!-- Governance: stewards + maintainers -->
-          <section
-            v-if="governanceMembers.length"
-            class="mb-12"
-            aria-labelledby="governance-heading"
-          >
+          <section class="mb-12" aria-labelledby="governance-heading">
             <h3 id="governance-heading" class="text-sm text-fg uppercase tracking-wider mb-4">
               {{ $t('about.team.governance') }}
             </h3>
@@ -196,13 +167,13 @@ const roleLabels = computed(
                 class="relative flex items-center gap-3 p-3 border border-border rounded-lg hover:border-border-hover hover:bg-bg-muted transition-[border-color,background-color] duration-200 cursor-pointer focus-within:ring-2 focus-within:ring-offset-bg focus-within:ring-offset-2 focus-within:ring-fg/50"
               >
                 <img
-                  :src="`${person.avatar_url}&s=80`"
+                  :src="person.avatar_url"
                   :alt="`${person.login}'s avatar`"
                   class="w-12 h-12 rounded-md ring-1 ring-border shrink-0"
                   loading="lazy"
                 />
                 <div class="min-w-0 flex-1">
-                  <div class="font-mono text-sm text-fg truncate">
+                  <div class="text-sm text-fg truncate">
                     <NuxtLink
                       :to="person.html_url"
                       target="_blank"
@@ -213,7 +184,7 @@ const roleLabels = computed(
                     </NuxtLink>
                   </div>
                   <div class="text-xs text-fg-muted tracking-tight">
-                    {{ roleLabels[person.role] ?? person.role }}
+                    {{ person.name }}
                   </div>
                   <LinkBase
                     v-if="person.sponsors_url"
@@ -231,63 +202,6 @@ const roleLabels = computed(
                   class="i-lucide:external-link rtl-flip w-3.5 h-3.5 text-fg-muted opacity-50 shrink-0 self-start mt-0.5 pointer-events-none"
                   aria-hidden="true"
                 />
-              </li>
-            </ul>
-          </section>
-
-          <!-- Contributors cloud -->
-          <section aria-labelledby="contributors-heading">
-            <h3 id="contributors-heading" class="text-sm uppercase tracking-wider mb-4">
-              {{
-                $t(
-                  'about.contributors.title',
-                  { count: $n(communityContributors.length) },
-                  communityContributors.length,
-                )
-              }}
-            </h3>
-
-            <div
-              v-if="contributorsStatus === 'pending'"
-              class="text-fg-subtle text-sm"
-              role="status"
-            >
-              {{ $t('about.contributors.loading') }}
-            </div>
-            <div
-              v-else-if="contributorsStatus === 'error'"
-              class="text-fg-subtle text-sm"
-              role="alert"
-            >
-              {{ $t('about.contributors.error') }}
-            </div>
-            <ul
-              v-else-if="communityContributors.length"
-              class="grid grid-cols-[repeat(auto-fill,48px)] justify-center gap-2 list-none p-0"
-            >
-              <li
-                v-for="contributor in communityContributors"
-                :key="contributor.id"
-                class="block group relative"
-              >
-                <TooltipApp :text="`@${contributor.login}`" class="block" position="top">
-                  <a
-                    :href="contributor.html_url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('about.contributors.view_profile', { name: contributor.login })"
-                    class="block rounded-lg"
-                  >
-                    <img
-                      :src="`${contributor.avatar_url}&s=64`"
-                      :alt="`${contributor.login}'s avatar`"
-                      width="48"
-                      height="48"
-                      class="w-12 h-12 rounded-lg ring-2 ring-transparent group-hover:ring-accent transition-all duration-200 ease-out group-hover:scale-125 will-change-transform"
-                      loading="lazy"
-                    />
-                  </a>
-                </TooltipApp>
               </li>
             </ul>
           </section>

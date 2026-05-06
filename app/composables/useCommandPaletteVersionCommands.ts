@@ -5,13 +5,24 @@ import type {
   CommandPaletteContextCommandInput,
   CommandPalettePackageContext,
 } from '~/types/command-palette'
-import { compare, satisfies, validRange } from 'semver'
+import { compare, satisfies, valid, validRange } from 'semver'
+
+function compareVersionsDesc(a: string, b: string) {
+  const aIsSemver = valid(a) !== null
+  const bIsSemver = valid(b) !== null
+
+  if (aIsSemver && bIsSemver) {
+    return compare(b, a)
+  }
+
+  return b.localeCompare(a, undefined, { numeric: true })
+}
 
 function getSortedVersions(context: CommandPalettePackageContext) {
   return [...context.versions].sort((a, b) => {
     if (a === context.resolvedVersion) return -1
     if (b === context.resolvedVersion) return 1
-    return compare(b, a)
+    return compareVersionsDesc(a, b)
   })
 }
 
@@ -54,8 +65,9 @@ export function useCommandPaletteVersionCommands(
     const semverRange = validRange(query)
     if (!semverRange) return null
 
-    const matchingVersions = getSortedVersions(resolvedContext).filter(version =>
-      satisfies(version, semverRange, { includePrerelease: true }),
+    const matchingVersions = getSortedVersions(resolvedContext).filter(
+      version =>
+        valid(version) !== null && satisfies(version, semverRange, { includePrerelease: true }),
     )
 
     return createVersionCommands(resolvedContext, t, matchingVersions, toValue(urlPattern))

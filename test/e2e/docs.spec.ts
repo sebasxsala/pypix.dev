@@ -86,6 +86,7 @@ test.describe('API Documentation Pages', () => {
 
     // One of these should be visible
     await expect(errorState.or(docsContent)).toBeVisible()
+    await expect(page.getByText('TypeScript types')).toHaveCount(0)
   })
 })
 

@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { posts } from '#blog/posts'
-
-const placeHolder = ['atproto', 'nuxt']
-
 definePageMeta({
   name: 'blog',
 })
 
 useSeoMeta({
-  title: () => `${$t('blog.title')} - npmx`,
-  ogTitle: () => `${$t('blog.title')} - npmx`,
-  twitterTitle: () => `${$t('blog.title')} - npmx`,
+  title: () => `${$t('blog.title')} - pypix`,
+  ogTitle: () => `${$t('blog.title')} - pypix`,
+  twitterTitle: () => `${$t('blog.title')} - pypix`,
   description: () => $t('blog.meta_description'),
   ogDescription: () => $t('blog.meta_description'),
   twitterDescription: () => $t('blog.meta_description'),
@@ -28,26 +24,10 @@ useSeoMeta({
           {{ $t('tagline') }}
         </p>
       </header>
-      <article v-if="posts && posts.length > 0" class="flex flex-col gap-8">
-        <template
-          v-for="(post, idx) in posts"
-          :key="`${post.authors.map(a => a.name).join('-')}-${post.title}`"
-        >
-          <BlogPostListCard
-            :authors="post.authors"
-            :title="post.title"
-            :path="post.slug"
-            :excerpt="post.excerpt || post.description"
-            :topics="Array.isArray(post.tags) ? post.tags : placeHolder"
-            :published="post.date"
-            :index="idx"
-            :draft="post.draft"
-          />
-          <hr v-if="idx < posts.length - 1" class="border-border-subtle" />
-        </template>
-      </article>
-
-      <p v-else class="text-center py-20 text-fg-subtle">{{ $t('blog.no_posts') }}</p>
+      <div class="border border-border rounded-lg bg-bg-subtle p-8 text-center">
+        <p class="font-mono text-lg text-fg mb-2">{{ $t('blog.empty_title') }}</p>
+        <p class="text-fg-subtle">{{ $t('blog.no_posts') }}</p>
+      </div>
     </article>
   </main>
 </template>

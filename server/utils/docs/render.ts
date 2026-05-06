@@ -20,6 +20,9 @@ import type { MergedSymbol, SymbolLookup } from './types'
 /** Maximum number of overload signatures to display per symbol */
 const MAX_OVERLOAD_SIGNATURES = 5
 
+/** Maximum number of symbols to render per category before truncating */
+const MAX_RENDERED_SYMBOLS_PER_KIND = 50
+
 /** Maximum number of items to show in TOC per category before truncating */
 const MAX_TOC_ITEMS_PER_KIND = 50
 
@@ -77,12 +80,19 @@ async function renderKindSection(
 ): Promise<string> {
   const title = KIND_TITLES[kind] || kind
   const lines: string[] = []
+  const renderedSymbolsList = symbols.slice(0, MAX_RENDERED_SYMBOLS_PER_KIND)
+  const remainingSymbols = symbols.length - renderedSymbolsList.length
   const renderedSymbols = await Promise.all(
-    symbols.map(symbol => renderMergedSymbol(symbol, symbolLookup)),
+    renderedSymbolsList.map(symbol => renderMergedSymbol(symbol, symbolLookup)),
   )
 
   lines.push(`<section class="docs-section" id="section-${kind}">`)
   lines.push(`<h2 class="docs-section-title">${title}</h2>`)
+  if (remainingSymbols > 0) {
+    lines.push(
+      `<p class="docs-truncated">Showing first ${MAX_RENDERED_SYMBOLS_PER_KIND} of ${symbols.length} ${title.toLowerCase()} to keep this page responsive.</p>`,
+    )
+  }
   lines.push(...renderedSymbols)
 
   lines.push(`</section>`)

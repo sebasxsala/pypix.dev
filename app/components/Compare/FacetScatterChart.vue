@@ -9,6 +9,7 @@ import {
 } from 'vue-data-ui/vue-ui-scatter'
 import { buildCompareScatterChartDataset } from '~/utils/compare-scatter-chart'
 import { loadFile, copyAltTextForCompareScatterChart } from '~/utils/charts'
+import { FACET_INFO } from '#shared/types/comparison'
 
 import('vue-data-ui/style.css')
 
@@ -80,13 +81,13 @@ const chartableFacets = computed(() =>
       name,
       label: facet.label,
       description: facet.description,
-      chartable: facet.chartable_scatter,
+      chartable: facet.chartable_scatter && !FACET_INFO[name].unsupported,
     }))
     .filter(facet => facet.chartable),
 )
 
-const selectedFacetX = ref<ComparisonFacet>('downloads')
-const selectedFacetY = ref<ComparisonFacet>('installSize')
+const selectedFacetX = ref<ComparisonFacet>('packageSize')
+const selectedFacetY = ref<ComparisonFacet>('totalLikes')
 
 const dataset = computed<VueUiScatterDatasetItem[]>(() =>
   buildCompareScatterChartDataset(

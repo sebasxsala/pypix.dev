@@ -164,6 +164,42 @@ describe('Playground Link Extraction', () => {
   })
 })
 
+describe('frontmatter table rendering', () => {
+  it('adds table header scopes for generated frontmatter tables', async () => {
+    const result = await renderReadmeHtml(
+      '---\nauthor: PyPI\nlicense: MIT\n---\n# Package',
+      'test-pkg',
+    )
+
+    expect(result.html).toContain('<th scope="col">Key</th>')
+    expect(result.html).toContain('<th scope="col">Value</th>')
+    expect(result.html).toContain('<th scope="row">author</th>')
+    expect(result.html).toContain('<th scope="row">license</th>')
+  })
+})
+
+describe('README table accessibility', () => {
+  it('adds column scopes to Markdown table headers', async () => {
+    const result = await renderReadmeHtml(
+      '| Name | Version |\n| --- | --- |\n| requests | 2.32.5 |',
+      'test-pkg',
+    )
+
+    expect(result.html).toContain('<th scope="col">Name</th>')
+    expect(result.html).toContain('<th scope="col">Version</th>')
+  })
+
+  it('adds a default column scope to raw HTML table headers', async () => {
+    const result = await renderReadmeHtml(
+      '<table><thead><tr><th>Name</th><th>Version</th></tr></thead></table>',
+      'test-pkg',
+    )
+
+    expect(result.html).toContain('<th scope="col">Name</th>')
+    expect(result.html).toContain('<th scope="col">Version</th>')
+  })
+})
+
 describe('Markdown File URL Resolution', () => {
   describe('with repository info', () => {
     it('resolves relative .md links to blob URL for rendered viewing', async () => {
@@ -625,12 +661,21 @@ describe('HTML output', () => {
     })
   })
 
-  it('preserves supported attributes on raw HTML headings', async () => {
+  it('drops deprecated align attributes on raw HTML headings', async () => {
     const md = '<h1 align="center">My Package</h1>'
     const result = await renderReadmeHtml(md, 'test-pkg')
 
     expect(result.html).toContain('id="user-content-my-package"')
-    expect(result.html).toContain('align="center"')
+    expect(result.html).not.toContain('align=')
+  })
+
+  it('drops deprecated align attributes on Markdown table cells', async () => {
+    const md = '| Name | Version |\n| :--- | ---: |\n| Flask | 3.1.3 |'
+    const result = await renderReadmeHtml(md, 'test-pkg')
+
+    expect(result.html).toContain('<th scope="col">Name</th>')
+    expect(result.html).toContain('<td>Flask</td>')
+    expect(result.html).not.toContain('align=')
   })
 
   it('preserves inline code heading content and generates encoded slugs', async () => {

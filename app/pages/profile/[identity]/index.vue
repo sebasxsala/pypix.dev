@@ -91,10 +91,6 @@ const showInviteSection = computed(() => {
   )
 })
 
-const inviteUrl = computed(() => {
-  const text = $t('profile.invite.compose_text', { handle: profile.value.handle })
-  return `https://bsky.app/intent/compose?text=${encodeURIComponent(text)}`
-})
 const safeProfileWebsiteUrl = computed(() => getSafeHttpUrl(profile.value.website))
 
 useCommandPaletteContextCommands(
@@ -122,17 +118,6 @@ useCommandPaletteContextCommands(
         keywords: [profile.value.website ?? '', profile.value.handle ?? identity.value],
         iconClass: 'i-lucide:link',
         href: safeProfileWebsiteUrl.value,
-      })
-    }
-
-    if (showInviteSection.value) {
-      commands.push({
-        id: 'profile-share-invite',
-        group: 'actions',
-        label: $t('profile.invite.share_button'),
-        keywords: [profile.value.handle ?? identity.value, $t('profile.invite.message')],
-        iconClass: 'i-lucide:send',
-        href: inviteUrl.value,
       })
     }
 
@@ -259,9 +244,6 @@ defineOgImage(
         <p class="text-fg-muted">
           {{ $t('profile.invite.message') }}
         </p>
-        <LinkBase variant="button-secondary" classicon="i-simple-icons:bluesky" :to="inviteUrl">
-          {{ $t('profile.invite.share_button') }}
-        </LinkBase>
       </div>
     </section>
   </main>

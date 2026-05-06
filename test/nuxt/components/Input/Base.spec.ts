@@ -42,6 +42,35 @@ describe('InputBase', () => {
       expect(component.emitted('update:modelValue')?.at(-1)).toEqual(['test'])
     })
 
+    it('keeps a double-space from becoming a sentence period when corrections are disabled', async () => {
+      const component = await mountSuspended(InputBase, {
+        props: { modelValue: '' },
+      })
+      const input = component.find('input')
+
+      input.element.value = 'better '
+      await input.trigger('input')
+      input.element.value = 'better. '
+      await input.trigger('input')
+
+      expect(component.emitted('update:modelValue')?.at(-1)).toEqual(['better  '])
+      expect((input.element as HTMLInputElement).value).toBe('better  ')
+    })
+
+    it('allows literal package-name periods when corrections are disabled', async () => {
+      const component = await mountSuspended(InputBase, {
+        props: { modelValue: '' },
+      })
+      const input = component.find('input')
+
+      input.element.value = 'zope.'
+      await input.trigger('input')
+      input.element.value = 'zope.interface'
+      await input.trigger('input')
+
+      expect(component.emitted('update:modelValue')?.at(-1)).toEqual(['zope.interface'])
+    })
+
     it('reflects modelValue prop changes', async () => {
       const component = await mountSuspended(InputBase, {
         props: { modelValue: 'initial' },

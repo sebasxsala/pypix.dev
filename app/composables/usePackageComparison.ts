@@ -1,4 +1,4 @@
-import { getDependencyCount } from '~/utils/npm/dependency-count'
+import type { SlimPackument } from '#shared/types/npm-registry'
 
 /** Special identifier for the "What Would James Do?" comparison column */
 export const NO_DEPENDENCY_ID = '__no_dependency__'
@@ -46,7 +46,7 @@ export interface PackageComparisonData {
     lastUpdated?: string
     /** Creation date of the package (ISO 8601 date-time string) */
     createdAt?: string
-    engines?: { node?: string; npm?: string }
+    engines?: { node?: string; npm?: string; python?: string }
     deprecated?: string
     github?: {
       stars?: number
@@ -65,7 +65,6 @@ export interface PackageComparisonData {
  */
 export function usePackageComparison(packageNames: MaybeRefOrGetter<string[]>) {
   const { t } = useI18n()
-  const { $npmRegistry } = useNuxtApp()
   const numberFormatter = useNumberFormatter()
   const compactNumberFormatter = useCompactNumberFormatter()
   const bytesFormatter = useBytesFormatter()
@@ -115,28 +114,21 @@ export function usePackageComparison(packageNames: MaybeRefOrGetter<string[]>) {
     loadingPackages.value = new Set(namesToFetch)
 
     try {
-      // First pass: fetch fast data (package info, downloads, analysis, vulns)
+      // First pass: fetch PyPI package metadata and optional pypix/repository signals.
       const results = await Promise.all(
         namesToFetch.map(async (name): Promise<PackageComparisonData | null> => {
           try {
-            // Fetch basic package info first (required)
-            const { data: pkgData } = await $npmRegistry<Packument>(`/${encodePackageName(name)}`)
+            // Fetch basic package info first (required). This endpoint adapts PyPI JSON metadata.
+            const pkgData = await $fetch<SlimPackument>(
+              `/api/pypi/package/${encodeURIComponent(name)}`,
+            )
             const latestVersion = pkgData['dist-tags']?.latest
             if (!latestVersion) return null
 
-            // Fetch fast additional data in parallel (optional - failures are ok)
+            // Fetch optional local/social and repository data in parallel. Failures are not fatal.
             const repoInfo = parseRepositoryInfo(pkgData.repository)
             const isGitHub = repoInfo?.provider === 'github'
-            const [downloads, analysis, vulns, likes, ghStars, ghIssues] = await Promise.all([
-              $fetch<{ downloads: number }>(
-                `https://api.npmjs.org/downloads/point/last-week/${encodePackageName(name)}`,
-              ).catch(() => null),
-              $fetch<PackageAnalysisResponse>(
-                `/api/registry/analysis/${encodePackageName(name)}`,
-              ).catch(() => null),
-              $fetch<VulnerabilityTreeResult>(
-                `/api/registry/vulnerabilities/${encodePackageName(name)}`,
-              ).catch(() => null),
+            const [likes, ghStars, ghIssues] = await Promise.all([
               $fetch<PackageLikes>(`/api/social/likes/${encodePackageName(name)}`).catch(
                 () => null,
               ),
@@ -155,60 +147,41 @@ export function usePackageComparison(packageNames: MaybeRefOrGetter<string[]>) {
                     .catch(() => null)
                 : Promise.resolve(null),
             ])
-            const versionData = pkgData.versions[latestVersion]
-            const packageSize = versionData?.dist?.unpackedSize
-
-            // Detect if package is binary-only
-            const isBinary = isBinaryOnlyPackage({
-              name: pkgData.name,
-              bin: versionData?.bin,
-              main: versionData?.main,
-              module: versionData?.module,
-              exports: versionData?.exports,
-            })
-
-            // Vulnerabilities
-            let vulnsTotal: number = 0
-            let vulnsSeverity = { critical: 0, high: 0, moderate: 0, low: 0 }
-
-            if (vulns) {
-              const { total, ...severity } = vulns.totalCounts
-              vulnsTotal = total
-              vulnsSeverity = severity
-            }
+            const versionData =
+              pkgData.requestedVersion?.version === latestVersion
+                ? pkgData.requestedVersion
+                : pkgData.versions[latestVersion]
+            const packageSize =
+              versionData && 'dist' in versionData ? versionData.dist?.unpackedSize : undefined
+            const engines =
+              versionData && 'engines' in versionData ? versionData.engines : undefined
 
             return {
               package: {
                 name: pkgData.name,
                 version: latestVersion,
-                description: undefined,
+                description: pkgData.description,
               },
-              downloads: downloads?.downloads,
+              downloads: undefined,
               packageSize,
-              directDeps: versionData ? getDependencyCount(versionData) : null,
-              installSize: undefined, // Will be filled in second pass
-              analysis: analysis ?? undefined,
-              vulnerabilities: {
-                count: vulnsTotal,
-                severity: vulnsSeverity,
-              },
+              directDeps: null,
+              installSize: undefined,
+              analysis: undefined,
+              vulnerabilities: undefined,
               metadata: {
-                license:
-                  typeof pkgData.license === 'object' && 'type' in pkgData.license
-                    ? pkgData.license.type
-                    : pkgData.license,
+                license: pkgData.license,
                 // Use version-specific publish time, NOT time.modified (which can be
                 // updated by metadata changes like maintainer additions)
                 lastUpdated: pkgData.time?.[latestVersion],
                 createdAt: pkgData.time?.created,
-                engines: analysis?.engines,
-                deprecated: versionData?.deprecated,
+                engines,
+                deprecated: undefined,
                 github: {
                   stars: ghStars ?? undefined,
                   issues: ghIssues ?? undefined,
                 },
               },
-              isBinaryOnly: isBinary,
+              isBinaryOnly: false,
               totalLikes: likes?.totalLikes,
             }
           } catch {
@@ -228,32 +201,6 @@ export function usePackageComparison(packageNames: MaybeRefOrGetter<string[]>) {
       cache.value = newCache
       loadingPackages.value = new Set()
       status.value = 'success'
-
-      // Second pass: fetch slow install size data in background for new packages
-      installSizeLoading.value = true
-      Promise.all(
-        namesToFetch.map(async name => {
-          try {
-            const installSize = await $fetch<{
-              selfSize: number
-              totalSize: number
-              dependencyCount: number
-            }>(`/api/registry/install-size/${encodePackageName(name)}`)
-
-            // Update cache with install size
-            const existing = cache.value.get(name)
-            if (existing) {
-              const updated = new Map(cache.value)
-              updated.set(name, { ...existing, installSize })
-              cache.value = updated
-            }
-          } catch {
-            // Install size fetch failed, leave as undefined
-          }
-        }),
-      ).finally(() => {
-        installSizeLoading.value = false
-      })
     } catch (e) {
       loadingPackages.value = new Set()
       error.value = e as Error
@@ -462,6 +409,13 @@ function computeFacetValue(
     }
     case 'engines': {
       const engines = data.metadata?.engines
+      if (engines?.python) {
+        return {
+          raw: engines.python,
+          display: `Python ${engines.python}`,
+          status: 'neutral',
+        }
+      }
       if (!engines?.node) {
         if (isNoDependency)
           return {

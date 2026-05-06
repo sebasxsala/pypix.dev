@@ -171,7 +171,10 @@ const { data: skillsData } = useLazyFetch<SkillsListResponse>(
     const version = resolvedVersion.value
     return version ? `${base}/v/${version}` : base
   },
-  { default: () => ({ package: '', version: '', skills: [] }) },
+  {
+    default: () => ({ package: '', version: '', skills: [] }),
+    immediate: supportsNpmOnlyPackageAnalysis,
+  },
 )
 
 const moduleReplacement = shallowRef<any>(null)
@@ -380,6 +383,7 @@ const sizeTooltip = computed(() => {
         size: bytesFormatter.format(displayVersion.value.dist.unpackedSize),
       }),
     installSize.value &&
+      supportsNpmOnlyPackageAnalysis &&
       installSize.value.dependencyCount &&
       $t('package.stats.size_tooltip.total', {
         size: bytesFormatter.format(installSize.value.totalSize),
@@ -632,7 +636,10 @@ const showSkeleton = shallowRef(false)
                     </ClientOnly>
                   </template>
                 </span>
-                <ButtonGroup v-if="dependencyCount > 0" class="ms-auto">
+                <ButtonGroup
+                  v-if="supportsNpmOnlyPackageAnalysis && dependencyCount > 0"
+                  class="ms-auto"
+                >
                   <LinkBase
                     variant="button-secondary"
                     size="sm"
@@ -677,8 +684,13 @@ const showSkeleton = shallowRef(false)
                   <span v-else>-</span>
                 </span>
 
-                <!-- Total install size in parens -->
-                <template v-if="displayVersion?.dist?.unpackedSize !== installSize?.totalSize">
+                <!-- Total npm install size in parens; PyPI only exposes distribution file size here. -->
+                <template
+                  v-if="
+                    supportsNpmOnlyPackageAnalysis &&
+                    displayVersion?.dist?.unpackedSize !== installSize?.totalSize
+                  "
+                >
                   <span class="ms-1">
                     <span
                       v-if="installSizeStatus === 'pending'"
@@ -698,7 +710,7 @@ const showSkeleton = shallowRef(false)
             </div>
 
             <!-- Vulnerabilities count -->
-            <div class="space-y-1 sm:col-span-2">
+            <div v-if="supportsNpmOnlyPackageAnalysis" class="space-y-1 sm:col-span-2">
               <dt class="text-xs text-fg-subtle uppercase tracking-wider">
                 {{ $t('package.stats.vulns') }}
               </dt>
@@ -941,17 +953,6 @@ const showSkeleton = shallowRef(false)
 
         <PackageSidebar :class="$style.areaSidebar">
           <div class="flex flex-col gap-4 sm:gap-6 lg:pt-4">
-            <!-- Team access controls (for scoped packages when connected) -->
-            <ClientOnly>
-              <PackageAccessControls
-                v-if="supportsNpmOnlyPackageAnalysis"
-                :package-name="pkg.name"
-              />
-              <template #fallback>
-                <!-- Show skeleton loaders when SSR or access controls are loading -->
-              </template>
-            </ClientOnly>
-
             <!-- Agent Skills -->
             <ClientOnly>
               <PackageSkillsCard

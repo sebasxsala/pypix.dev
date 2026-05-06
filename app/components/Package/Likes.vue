@@ -8,6 +8,7 @@ const props = defineProps<{
   packageName: string
 }>()
 
+const hasPackageName = computed(() => props.packageName.trim().length > 0)
 const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 
 const likeAnimKey = shallowRef(0)
@@ -38,16 +39,26 @@ const { user } = useAtproto()
 const authModal = useModal('auth-modal')
 const compactNumberFormatter = useCompactNumberFormatter()
 
-const { data: likesData, status: likeStatus } = useFetch<PackageLikes>(
-  () => `/api/social/likes/${props.packageName}`,
-  {
-    default: () => ({
-      totalLikes: 0,
-      userHasLiked: false,
-      topLikedRank: null,
-    }),
-    server: false,
+const {
+  data: likesData,
+  status: likeStatus,
+  execute: fetchLikes,
+} = useFetch<PackageLikes>(() => `/api/social/likes/${props.packageName}`, {
+  default: () => ({
+    totalLikes: 0,
+    userHasLiked: false,
+    topLikedRank: null,
+  }),
+  server: false,
+  immediate: false,
+})
+
+watch(
+  hasPackageName,
+  shouldFetch => {
+    if (shouldFetch) fetchLikes()
   },
+  { immediate: true },
 )
 const isLoadingLikeData = computed(
   () => likeStatus.value === 'pending' || likeStatus.value === 'idle',
@@ -126,7 +137,7 @@ const likeAction = async () => {
 </script>
 
 <template>
-  <div class="relative inline-flex items-center">
+  <div v-if="hasPackageName" class="relative inline-flex items-center">
     <TooltipApp :text="likeTooltipLabel" position="bottom" class="items-center" strategy="fixed">
       <div class="relative inline-flex">
         <span v-if="showLikeFloat" :key="likeFloatKey" aria-hidden="true" class="like-float"

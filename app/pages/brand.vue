@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ACCENT_COLORS, DISCORD_COMMUNITY_URL } from '#shared/utils/constants'
+import { ACCENT_COLORS } from '#shared/utils/constants'
 
 useSeoMeta({
   title: () => `${$t('brand.title')} - npmx`,
@@ -317,11 +317,11 @@ async function handlePngDownload(logo: (typeof logos)[number], variant: 'dark' |
             <i18n-t keypath="brand.guidelines.message" tag="p" class="m-0">
               <template #link>
                 <a
-                  :href="DISCORD_COMMUNITY_URL"
+                  href="https://github.com/sebasxsala/pypix.dev"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="text-accent hover:underline"
-                  >{{ $t('brand.guidelines.discord_link_text') }}</a
+                  >github.com/sebasxsala/pypix.dev</a
                 >
               </template>
             </i18n-t>

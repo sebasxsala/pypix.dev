@@ -4,17 +4,17 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => `${$t('a11y.title')} - npmx`,
-  description: () => $t('a11y.welcome', { app: 'npmx' }),
+  title: () => `${$t('a11y.title')} - pypix`,
+  description: () => $t('a11y.welcome', { app: 'pypix' }),
 })
 
 defineOgImage(
   'Page.takumi',
   {
     title: () => $t('a11y.title'),
-    description: () => $t('a11y.welcome', { app: 'npmx' }),
+    description: () => $t('a11y.welcome', { app: 'pypix' }),
   },
-  { alt: () => `${$t('a11y.title')} — npmx` },
+  { alt: () => `${$t('a11y.title')} - pypix` },
 )
 </script>
 
@@ -34,7 +34,7 @@ defineOgImage(
         <p class="text-fg-muted leading-relaxed">
           <i18n-t keypath="a11y.welcome" tag="span" scope="global">
             <template #app>
-              <strong class="text-fg">npmx</strong>
+              <strong class="text-fg">pypix</strong>
             </template>
           </i18n-t>
         </p>
@@ -115,11 +115,11 @@ defineOgImage(
           <p class="text-fg-muted leading-relaxed">
             <i18n-t keypath="a11y.contact.p1" tag="span" scope="global">
               <template #app>
-                <strong class="text-fg">npmx</strong>
+                <strong class="text-fg">pypix</strong>
               </template>
               <template #link>
                 <a
-                  href="https://github.com/npmx-dev/npmx.dev/issues"
+                  href="https://github.com/sebasxsala/pypix.dev/issues"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-1 text-fg-muted hover:text-fg underline decoration-fg-subtle/50 hover:decoration-fg"

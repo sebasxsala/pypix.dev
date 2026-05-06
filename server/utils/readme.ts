@@ -186,22 +186,22 @@ const ALLOWED_TAGS = [
 const ALLOWED_ATTR: Record<string, string[]> = {
   '*': ['id'], // Allow id on all tags
   'a': ['href', 'title', 'target', 'rel'],
-  'img': ['src', 'alt', 'title', 'width', 'height', 'align'],
+  'img': ['src', 'alt', 'title', 'width', 'height'],
   'source': ['src', 'srcset', 'type', 'media'],
   'button': ['class', 'title', 'type', 'aria-label', 'data-copy'],
-  'th': ['colspan', 'rowspan', 'align', 'valign', 'width'],
-  'td': ['colspan', 'rowspan', 'align', 'valign', 'width'],
-  'h3': ['data-level', 'align'],
-  'h4': ['data-level', 'align'],
-  'h5': ['data-level', 'align'],
-  'h6': ['data-level', 'align'],
+  'th': ['colspan', 'rowspan', 'valign', 'width', 'scope'],
+  'td': ['colspan', 'rowspan', 'valign', 'width'],
+  'h3': ['data-level'],
+  'h4': ['data-level'],
+  'h5': ['data-level'],
+  'h6': ['data-level'],
   'blockquote': ['data-callout'],
   'details': ['open'],
   'code': ['class'],
   'pre': ['class'],
   'span': ['class', 'style'],
-  'div': ['class', 'align'],
-  'p': ['align'],
+  'div': ['class'],
+  'p': [],
 }
 
 /**
@@ -470,21 +470,10 @@ function renderFrontmatterTable(data: Record<string, unknown>): string {
     .map(([key, value]) => {
       const displayValue =
         typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value ?? '')
-      return `<tr><th>${escapeHtml(key)}</th><td>${escapeHtml(displayValue)}</td></tr>`
+      return `<tr><th scope="row">${escapeHtml(key)}</th><td>${escapeHtml(displayValue)}</td></tr>`
     })
     .join('\n')
-  return `<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>\n${rows}\n</tbody></table>\n`
-}
-
-// Extract and preserve allowed attributes from HTML heading tags
-function extractHeadingAttrs(attrsString: string): string {
-  if (!attrsString) return ''
-  const preserved: string[] = []
-  const alignMatch = /\balign=(["']?)([^"'\s>]+)\1/i.exec(attrsString)
-  if (alignMatch?.[2]) {
-    preserved.push(`align="${alignMatch[2]}"`)
-  }
-  return preserved.length > 0 ? ` ${preserved.join(' ')}` : ''
+  return `<table><thead><tr><th scope="col">Key</th><th scope="col">Value</th></tr></thead><tbody>\n${rows}\n</tbody></table>\n`
 }
 
 export async function renderReadmeHtml(
@@ -576,12 +565,11 @@ export async function renderReadmeHtml(
   const htmlHeadingRe = /<h([1-6])(\s[^>]*)?>([\s\S]*?)<\/h\1>/gi
   const htmlAnchorRe = /<a(\s[^>]*?)href=(["'])([^"']*)\2([^>]*)>([\s\S]*?)<\/a>/gi
   renderer.html = function ({ text }: Tokens.HTML) {
-    let result = text.replace(htmlHeadingRe, (_, level, attrs = '', inner) => {
+    let result = text.replace(htmlHeadingRe, (_, level, _attrs, inner) => {
       const depth = parseInt(level)
       const plainText = getHeadingPlainText(inner)
       const slugSource = getHeadingSlugSource(inner)
-      const preservedAttrs = extractHeadingAttrs(attrs)
-      return processHeading(depth, inner, plainText, slugSource, preservedAttrs).trimEnd()
+      return processHeading(depth, inner, plainText, slugSource).trimEnd()
     })
     // Process raw HTML <a> tags for playground link collection and URL resolution
     result = result.replace(htmlAnchorRe, (_full, beforeHref, _quote, href, afterHref, inner) => {
@@ -673,6 +661,13 @@ ${html}
     }
 
     return `<blockquote>${body}</blockquote>\n`
+  }
+
+  renderer.tablecell = function ({ tokens, header }: Tokens.TableCell) {
+    const text = this.parser.parseInline(tokens)
+    const tag = header ? 'th' : 'td'
+    const scopeAttr = header ? ' scope="col"' : ''
+    return `<${tag}${scopeAttr}>${text}</${tag}>\n`
   }
 
   marked.setOptions({ renderer })
@@ -783,6 +778,13 @@ ${html}
         }
         attribs.href = resolvedHref
         return { tagName, attribs }
+      },
+      th: (tagName, attribs) => {
+        const scope = attribs.scope
+        if (scope === 'row' || scope === 'col' || scope === 'rowgroup' || scope === 'colgroup') {
+          return { tagName, attribs }
+        }
+        return { tagName, attribs: { ...attribs, scope: 'col' } }
       },
       div: prefixId,
       p: prefixId,

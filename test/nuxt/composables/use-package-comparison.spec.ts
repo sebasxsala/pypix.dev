@@ -66,7 +66,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve(registryData)
           }
           return Promise.resolve(null)
@@ -97,7 +97,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': 'test-package',
               'dist-tags': { latest: '1.0.0' },
@@ -133,7 +133,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': 'old-package',
               'dist-tags': { latest: '1.0.0' },
@@ -165,7 +165,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': 'fresh-package',
               'dist-tags': { latest: '1.0.0' },
@@ -200,7 +200,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': pkgName,
               'dist-tags': { latest: '1.0.0' },
@@ -238,7 +238,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': pkgName,
               'dist-tags': { latest: '1.0.0' },
@@ -275,7 +275,7 @@ describe('usePackageComparison', () => {
         .fn()
         .mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': pkgName,
               'dist-tags': { latest: '1.0.0' },
@@ -309,7 +309,7 @@ describe('usePackageComparison', () => {
         '$fetch',
         vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
           const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
-          if (fullUrl.startsWith('https://registry.npmjs.org/')) {
+          if (fullUrl.startsWith('/api/pypi/package/')) {
             return Promise.resolve({
               'name': 'test-package',
               'dist-tags': { latest: '1.0.0' },
@@ -338,6 +338,42 @@ describe('usePackageComparison', () => {
         type: 'date',
       })
       expect(value?.status).toBeUndefined()
+    })
+  })
+
+  describe('PyPI metadata facets', () => {
+    it('uses Python requirements from PyPI package metadata for the engines facet', async () => {
+      vi.stubGlobal(
+        '$fetch',
+        vi.fn().mockImplementation((url: string, options?: { baseURL?: string }) => {
+          const fullUrl = options?.baseURL ? `${options.baseURL}${url}` : url
+          if (fullUrl.startsWith('/api/pypi/package/')) {
+            return Promise.resolve({
+              'name': 'python-package',
+              'dist-tags': { latest: '1.0.0' },
+              'time': { '1.0.0': '2025-01-01T00:00:00.000Z' },
+              'versions': {
+                '1.0.0': {
+                  dist: { unpackedSize: 1000 },
+                  engines: { python: '>=3.9' },
+                },
+              },
+            })
+          }
+          return Promise.resolve(null)
+        }),
+      )
+
+      const { status, getFacetValues } = await usePackageComparisonInComponent(['python-package'])
+      await vi.waitFor(() => {
+        expect(status.value).toBe('success')
+      })
+
+      expect(getFacetValues('engines')[0]).toMatchObject({
+        raw: '>=3.9',
+        display: 'Python >=3.9',
+        status: 'neutral',
+      })
     })
   })
 })

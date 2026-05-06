@@ -88,9 +88,11 @@ useCommandPalettePackageContext(commandPalettePackageContext, {
 })
 useCommandPalettePackageCommands(commandPalettePackageContext)
 
+const DOCS_API_FORMAT_VERSION = 'v3'
+
 const docsUrl = computed(() => {
   if (!packageName.value || !resolvedVersion.value) return null
-  return `/api/registry/docs/${packageName.value}/v/${resolvedVersion.value}`
+  return `/api/registry/docs/${packageName.value}/v/${resolvedVersion.value}?format=${DOCS_API_FORMAT_VERSION}`
 })
 
 const shouldFetch = computed(() => !!docsUrl.value)
@@ -171,12 +173,49 @@ const stickyStyle = computed(() => {
     '--combined-header-height': `${56 + (packageHeaderHeight.value || 44)}px`,
   }
 })
+
+const docsLoadingTocWidths = [
+  'w-20',
+  'w-24',
+  'w-12',
+  'w-16',
+  'w-28',
+  'w-14',
+  'w-22',
+  'w-18',
+  'w-30',
+  'w-24',
+  'w-16',
+  'w-26',
+  'w-20',
+  'w-28',
+  'w-18',
+  'w-24',
+  'w-16',
+  'w-30',
+  'w-22',
+  'w-26',
+  'w-18',
+  'w-24',
+]
+
+const docsLoadingSections = [
+  { name: 'w-30', badge: 'w-18', code: ['w-4/5', 'w-3/5'], extra: false },
+  {
+    name: 'w-34',
+    badge: 'w-18',
+    code: ['w-11/12', 'w-4/5', 'w-3/4', 'w-5/6', 'w-2/3'],
+    extra: true,
+  },
+  { name: 'w-18', badge: 'w-18', code: ['w-2/3', 'w-1/2'], extra: false },
+] as const
 </script>
 
 <template>
   <div class="docs-page flex-1 flex flex-col" :style="stickyStyle">
     <PackageHeader
       :pkg="pkg"
+      :package-name="packageName"
       :resolved-version="resolvedVersion"
       :display-version="pkg?.requestedVersion"
       :latest-version="latestVersionDetailed"
@@ -187,10 +226,24 @@ const stickyStyle = computed(() => {
     <div class="flex" dir="ltr">
       <!-- Sidebar TOC -->
       <aside
-        v-if="docsData?.toc && !showEmptyState"
+        v-if="showLoading || (docsData?.toc && !showEmptyState)"
         class="hidden lg:block w-64 xl:w-72 shrink-0 border-ie border-border"
       >
-        <div class="docs-sidebar sticky overflow-y-auto p-4">
+        <div v-if="showLoading" class="docs-sidebar sticky overflow-hidden p-4" aria-hidden="true">
+          <SkeletonBlock class="h-3 w-20 rounded-sm mb-7" />
+          <SkeletonBlock class="h-5 w-36 rounded-sm mb-4" />
+          <div class="space-y-3 ps-3 border-is border-border/50">
+            <SkeletonBlock
+              v-for="(width, index) in docsLoadingTocWidths"
+              :key="index"
+              class="h-3 rounded-sm"
+              :class="width"
+            />
+          </div>
+          <SkeletonBlock class="absolute inset-ie-2 top-3 h-30 w-2 rounded-full opacity-60" />
+        </div>
+
+        <div v-else class="docs-sidebar sticky overflow-y-auto p-4">
           <h2 class="text-xs font-semibold text-fg-subtle uppercase tracking-wider mb-4">
             {{ $t('package.docs.contents') }}
           </h2>
@@ -201,11 +254,44 @@ const stickyStyle = computed(() => {
 
       <!-- Main content -->
       <main class="flex-1 min-w-0">
-        <div v-if="showLoading" class="p-6 sm:p-8 lg:p-12 space-y-4">
-          <SkeletonBlock class="h-8 w-64 rounded" />
-          <SkeletonBlock class="h-4 w-full max-w-2xl rounded" />
-          <SkeletonBlock class="h-4 w-5/6 max-w-2xl rounded" />
-          <SkeletonBlock class="h-4 w-3/4 max-w-2xl rounded" />
+        <div
+          v-if="showLoading"
+          class="docs-loading-content p-6 sm:p-8 lg:p-12"
+          role="status"
+          aria-busy="true"
+          :aria-label="$t('common.loading')"
+        >
+          <div class="mb-12">
+            <SkeletonBlock class="h-7 w-38 rounded-sm mb-7" />
+            <SkeletonBlock class="h-px w-full rounded-none opacity-80" />
+          </div>
+
+          <div class="space-y-16">
+            <section
+              v-for="section in docsLoadingSections"
+              :key="section.name"
+              class="border-b border-border/30 pb-10 last:border-b-0"
+              aria-hidden="true"
+            >
+              <div class="flex items-center gap-3 mb-6">
+                <SkeletonBlock class="h-5 w-3 rounded-sm opacity-50" />
+                <SkeletonBlock class="h-6 rounded-sm" :class="section.name" />
+                <SkeletonBlock class="h-6 rounded-full bg-badge-blue/35" :class="section.badge" />
+                <SkeletonBlock v-if="section.extra" class="h-4 w-20 rounded-sm opacity-60" />
+              </div>
+
+              <div class="rounded-lg border border-border/50 bg-bg-muted/50 p-4 space-y-3">
+                <SkeletonBlock
+                  v-for="(width, index) in section.code"
+                  :key="index"
+                  class="h-4 rounded-sm"
+                  :class="width"
+                />
+              </div>
+
+              <SkeletonBlock v-if="section.extra" class="mt-5 h-4 w-28 rounded-sm opacity-60" />
+            </section>
+          </div>
         </div>
 
         <div v-else-if="showEmptyState" class="p-6 sm:p-8 lg:p-12">
@@ -282,6 +368,10 @@ const stickyStyle = computed(() => {
 /* Individual symbol articles */
 .docs-content .docs-symbol {
   @apply mb-10 pb-10 border-b border-border/30 last:border-0;
+}
+
+.docs-content .docs-truncated {
+  @apply text-sm text-fg-subtle bg-bg-muted border border-border/50 rounded-lg px-4 py-3 mb-8;
 }
 
 .docs-content .docs-symbol:target {

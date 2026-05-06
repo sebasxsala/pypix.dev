@@ -114,4 +114,28 @@ describe('transformPypiProject', () => {
 
     expect(transformed.requestedVersion).toBeNull()
   })
+
+  it('maps yanked PyPI releases to deprecated version metadata', () => {
+    const transformed = transformPypiProject(
+      {
+        info: { name: 'demo', version: '1.0.0' },
+        releases: {
+          '1.0.0': [
+            {
+              filename: 'demo-1.0.0.tar.gz',
+              upload_time_iso_8601: '2024-01-01T00:00:00.000Z',
+              yanked: true,
+              yanked_reason: 'Bad wheel metadata',
+            },
+          ],
+        },
+        urls: [],
+      },
+      '1.0.0',
+    )
+
+    expect(transformed.versions['1.0.0']?.deprecated).toBe('Bad wheel metadata')
+    expect(transformed.requestedVersion?.deprecated).toBe('Bad wheel metadata')
+    expect(transformed.securityVersions?.[0]?.deprecated).toBe('Bad wheel metadata')
+  })
 })

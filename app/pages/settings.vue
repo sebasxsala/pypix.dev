@@ -282,7 +282,7 @@ useSeoMeta({
             <!-- Simple help link for source locale -->
             <template v-else>
               <a
-                href="https://github.com/npmx-dev/npmx.dev/tree/main/i18n/locales"
+                href="https://github.com/sebasxsala/pypix.dev/tree/main/i18n/locales"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 text-sm text-fg-muted hover:text-fg transition-colors duration-200 focus-visible:outline-accent/70 rounded"

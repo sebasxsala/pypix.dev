@@ -3,7 +3,6 @@ import { LinkBase } from '#components'
 import type { NavigationConfig, NavigationConfigWithGroups } from '~/types'
 import { NPMX_DOCS_SITE } from '#shared/utils/constants'
 
-const discord = useDiscordLink()
 const { open: openCommandPalette } = useCommandPalette()
 const { commandPaletteShortcutLabel } = usePlatformModifierKey()
 
@@ -15,8 +14,6 @@ withDefaults(
     showLogo: true,
   },
 )
-
-const { isConnected, npmUser } = useConnector()
 
 const desktopLinks = computed<NavigationConfig>(() => [
   {
@@ -122,29 +119,11 @@ const mobileLinks = computed<NavigationConfigWithGroups>(() => [
       {
         name: 'Source',
         label: $t('footer.source'),
-        href: 'https://repo.npmx.dev',
+        href: 'https://github.com/sebasxsala/pypix.dev',
         target: '_blank',
         type: 'link',
         external: true,
         iconClass: 'i-simple-icons:github',
-      },
-      {
-        name: 'Social',
-        label: $t('footer.social'),
-        href: 'https://social.npmx.dev',
-        target: '_blank',
-        type: 'link',
-        external: true,
-        iconClass: 'i-simple-icons:bluesky',
-      },
-      {
-        name: 'Chat',
-        label: discord.value.label,
-        href: discord.value.url,
-        target: '_blank',
-        type: 'link',
-        external: true,
-        iconClass: 'i-lucide:message-circle',
       },
     ],
   },
@@ -238,7 +217,7 @@ useShortcuts({
 
       <NuxtLink
         v-if="showLogo && !isSearchExpanded && prNumber"
-        :to="`https://github.com/npmx-dev/npmx.dev/pull/${prNumber}`"
+        :to="`https://github.com/sebasxsala/pypix.dev/pull/${prNumber}`"
         :aria-label="$t('header.pr', { prNumber })"
       >
         <span class="text-xs px-1.5 py-0.5 rounded badge-green font-sans font-medium">
@@ -284,21 +263,6 @@ useShortcuts({
           @focus="handleSearchFocus"
           @blur="handleSearchBlur"
         />
-        <ul
-          v-if="!isSearchExpanded && isConnected && npmUser"
-          :class="{ hidden: showFullSearch }"
-          class="hidden sm:flex items-center gap-4 sm:gap-6 list-none m-0 p-0"
-        >
-          <!-- Packages dropdown (when connected) -->
-          <li v-if="isConnected && npmUser" class="flex items-center">
-            <HeaderPackagesDropdown :username="npmUser" />
-          </li>
-
-          <!-- Orgs dropdown (when connected) -->
-          <li v-if="isConnected && npmUser" class="flex items-center">
-            <HeaderOrgsDropdown :username="npmUser" />
-          </li>
-        </ul>
       </div>
 
       <!-- End: Desktop nav items + Mobile menu button -->

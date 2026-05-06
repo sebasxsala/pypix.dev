@@ -48,6 +48,9 @@ const comingSoonFacetId = comingSoonFacets[0]
 const comingSoonFacetLabel = hasComingSoonFacets
   ? (facetLabels[comingSoonFacetId!]?.label ?? comingSoonFacetId)
   : ''
+const unsupportedFacets = (Object.keys(FACET_INFO) as ComparisonFacet[]).filter(
+  f => (FACET_INFO[f] as { unsupported?: boolean }).unsupported,
+)
 
 // Helper to build facet info with labels
 function buildFacetInfo(facet: ComparisonFacet) {
@@ -60,7 +63,7 @@ function buildFacetInfo(facet: ComparisonFacet) {
 }
 
 // Mock useFacetSelection
-const mockSelectedFacets = ref<string[]>(['downloads', 'types'])
+const mockSelectedFacets = ref<string[]>(['packageSize', 'license'])
 const mockIsFacetSelected = vi.fn((facet: string) => mockSelectedFacets.value.includes(facet))
 const mockToggleFacet = vi.fn()
 const mockSelectCategory = vi.fn()
@@ -115,7 +118,7 @@ function findCategoryActionButton(
 
 describe('FacetSelector', () => {
   beforeEach(() => {
-    mockSelectedFacets.value = ['downloads', 'types']
+    mockSelectedFacets.value = ['packageSize', 'license']
     mockIsFacetSelected.mockImplementation((facet: string) =>
       mockSelectedFacets.value.includes(facet),
     )
@@ -162,8 +165,8 @@ describe('FacetSelector', () => {
     })
 
     it('shows checkmark icon for selected facets', async () => {
-      mockSelectedFacets.value = ['downloads']
-      mockIsFacetSelected.mockImplementation((f: string) => f === 'downloads')
+      mockSelectedFacets.value = ['packageSize']
+      mockIsFacetSelected.mockImplementation((f: string) => f === 'packageSize')
 
       const component = await mountSuspended(FacetSelector)
 
@@ -171,8 +174,8 @@ describe('FacetSelector', () => {
     })
 
     it('shows add icon for unselected facets', async () => {
-      mockSelectedFacets.value = ['downloads']
-      mockIsFacetSelected.mockImplementation((f: string) => f === 'downloads')
+      mockSelectedFacets.value = ['packageSize']
+      mockIsFacetSelected.mockImplementation((f: string) => f === 'packageSize')
 
       const component = await mountSuspended(FacetSelector)
 
@@ -180,8 +183,8 @@ describe('FacetSelector', () => {
     })
 
     it('applies aria-checked for selected checkbox state', async () => {
-      mockSelectedFacets.value = ['downloads']
-      mockIsFacetSelected.mockImplementation((f: string) => f === 'downloads')
+      mockSelectedFacets.value = ['packageSize']
+      mockIsFacetSelected.mockImplementation((f: string) => f === 'packageSize')
 
       const component = await mountSuspended(FacetSelector)
 
@@ -196,10 +199,29 @@ describe('FacetSelector', () => {
       // Find a facet button (not all/none)
       const facetButton = component
         .findAll('button[role="checkbox"]')
-        .find(b => b.text().includes('Downloads'))
+        .find(b => b.text().includes('Package Size'))
       await facetButton?.trigger('click')
 
       expect(mockToggleFacet).toHaveBeenCalled()
+    })
+
+    it('disables unsupported facets and labels them as not supported', async () => {
+      const component = await mountSuspended(FacetSelector)
+
+      expect(unsupportedFacets.length).toBeGreaterThan(0)
+
+      for (const facet of unsupportedFacets) {
+        const label = facetLabels[facet]?.label ?? facet
+        const button = component
+          .findAll('button[role="checkbox"]')
+          .find(b => b.text().includes(label))
+
+        expect(button?.attributes('disabled')).toBeDefined()
+        expect(button?.text().toLowerCase()).toContain('not supported')
+
+        await button?.trigger('click')
+        expect(mockToggleFacet).not.toHaveBeenCalledWith(facet)
+      }
     })
   })
 
@@ -246,6 +268,9 @@ describe('FacetSelector', () => {
 
   describe('category all/none buttons', () => {
     it('calls selectCategory when all button is clicked', async () => {
+      mockSelectedFacets.value = ['license']
+      mockIsFacetSelected.mockImplementation((f: string) => f === 'license')
+
       const component = await mountSuspended(FacetSelector)
 
       const allButton = findCategoryActionButton(component, 'performance', 'all')
@@ -270,7 +295,7 @@ describe('FacetSelector', () => {
     it('marks all button as aria-disabled when all facets in category are selected', async () => {
       // Select all performance facets
       const performanceFacets: (string | ComparisonFacet)[] = FACETS_BY_CATEGORY.performance.filter(
-        (f: ComparisonFacet) => !FACET_INFO[f].comingSoon,
+        (f: ComparisonFacet) => !FACET_INFO[f].comingSoon && !FACET_INFO[f].unsupported,
       )
       mockSelectedFacets.value = performanceFacets
       mockIsFacetSelected.mockImplementation((f: string) => performanceFacets.includes(f))
@@ -284,8 +309,8 @@ describe('FacetSelector', () => {
 
     it('marks none button as aria-disabled when no facets in category are selected', async () => {
       // Deselect all performance facets
-      mockSelectedFacets.value = ['downloads'] // only health facet selected
-      mockIsFacetSelected.mockImplementation((f: string) => f === 'downloads')
+      mockSelectedFacets.value = ['license'] // only security facet selected
+      mockIsFacetSelected.mockImplementation((f: string) => f === 'license')
 
       const component = await mountSuspended(FacetSelector)
 
@@ -296,7 +321,7 @@ describe('FacetSelector', () => {
 
     it('does not call selectCategory when all button action is already fulfilled', async () => {
       const performanceFacets: (string | ComparisonFacet)[] = FACETS_BY_CATEGORY.performance.filter(
-        (f: ComparisonFacet) => !FACET_INFO[f].comingSoon,
+        (f: ComparisonFacet) => !FACET_INFO[f].comingSoon && !FACET_INFO[f].unsupported,
       )
       mockSelectedFacets.value = performanceFacets
       mockIsFacetSelected.mockImplementation((f: string) => performanceFacets.includes(f))
@@ -310,8 +335,8 @@ describe('FacetSelector', () => {
     })
 
     it('does not call deselectCategory when none button action is already fulfilled', async () => {
-      mockSelectedFacets.value = ['downloads']
-      mockIsFacetSelected.mockImplementation((f: string) => f === 'downloads')
+      mockSelectedFacets.value = ['license']
+      mockIsFacetSelected.mockImplementation((f: string) => f === 'license')
 
       const component = await mountSuspended(FacetSelector)
 
