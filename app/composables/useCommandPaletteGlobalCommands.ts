@@ -1,10 +1,7 @@
 // @unocss-include
 import type { CommandPaletteCommand, CommandPaletteView } from '~/types/command-palette'
-import {
-  DISCORD_BUILDERS_URL,
-  DISCORD_COMMUNITY_URL,
-  NPMX_DOCS_SITE,
-} from '#shared/utils/constants'
+import { NPMX_DOCS_SITE } from '#shared/utils/constants'
+import { getPublishingGuidePath, getPyPIProjectsUrl } from '~/utils/pypi-admin'
 
 type CommandPaletteSubview = Exclude<CommandPaletteView, 'root'>
 
@@ -75,12 +72,8 @@ export function useCommandPaletteGlobalCommands() {
   const colorMode = useColorMode()
   const { accentColors, selectedAccentColor, setAccentColor } = useAccentColor()
   const { backgroundThemes, selectedBackgroundTheme, setBackgroundTheme } = useBackgroundTheme()
-  const connectorModal = useModal('connector-modal')
-  const authModal = useModal('auth-modal')
   const keyboardShortcutsModal = useModal('keyboard-shortcuts-modal')
   const { settings } = useSettings()
-  const { isConnected: isNpmConnected, npmUser, disconnect: disconnectNpm } = useConnector()
-  const { user: atprotoUser, logout } = useAtproto()
   const { announce, close, setView } = useCommandPalette()
 
   function closeThen(run: () => void | Promise<void>) {
@@ -331,33 +324,20 @@ export function useCommandPaletteGlobalCommands() {
         to: { name: 'accessibility' },
       },
       {
-        id: 'npm-connection',
+        id: 'pypi-manage-projects',
         group: 'connections',
-        label:
-          isNpmConnected.value && npmUser.value
-            ? t('command_palette.connections.npm_connected', { username: npmUser.value })
-            : t('command_palette.connections.npm_connect'),
-        keywords: [t('account_menu.npm_cli')],
-        iconClass: 'i-lucide:terminal',
-        badge: isNpmConnected.value ? t('command_palette.connected') : null,
-        action: closeThen(() => {
-          connectorModal.open()
-        }),
+        label: t('pypi_admin.actions.manage_projects'),
+        keywords: [t('pypi_admin.descriptions.manage_projects'), 'PyPI', 'admin'],
+        iconClass: 'i-simple-icons:pypi',
+        href: getPyPIProjectsUrl(),
       },
       {
-        id: 'atproto-connection',
+        id: 'pypi-publishing-guide',
         group: 'connections',
-        label: atprotoUser.value?.handle
-          ? t('command_palette.connections.atmosphere_connected', {
-              handle: atprotoUser.value.handle,
-            })
-          : t('command_palette.connections.atmosphere_connect'),
-        keywords: [t('account_menu.atmosphere')],
-        iconClass: 'i-lucide:at-sign',
-        badge: atprotoUser.value ? t('command_palette.connected') : null,
-        action: closeThen(() => {
-          authModal.open()
-        }),
+        label: t('pypi_admin.actions.publishing_guide'),
+        keywords: [t('pypi_admin.descriptions.publishing_guide'), 'OIDC', 'publish'],
+        iconClass: 'i-lucide:book-open',
+        to: getPublishingGuidePath(),
       },
       {
         id: 'help-docs-link',
@@ -368,14 +348,6 @@ export function useCommandPaletteGlobalCommands() {
         href: NPMX_DOCS_SITE,
       },
       {
-        id: 'chat-link',
-        group: 'help',
-        label: t('footer.chat'),
-        keywords: [t('footer.chat')],
-        iconClass: 'i-lucide:message-circle',
-        href: DISCORD_COMMUNITY_URL,
-      },
-      {
         id: 'docs-link',
         group: 'npmx',
         label: t('footer.docs'),
@@ -384,36 +356,12 @@ export function useCommandPaletteGlobalCommands() {
         href: NPMX_DOCS_SITE,
       },
       {
-        id: 'npmx-chat-link',
-        group: 'npmx',
-        label: t('footer.chat'),
-        keywords: [t('footer.chat')],
-        iconClass: 'i-lucide:message-circle',
-        href: DISCORD_COMMUNITY_URL,
-      },
-      {
-        id: 'builders-chat-link',
-        group: 'npmx',
-        label: t('footer.builders_chat'),
-        keywords: [t('footer.builders_chat')],
-        iconClass: 'i-lucide:message-circle',
-        href: DISCORD_BUILDERS_URL,
-      },
-      {
         id: 'source-link',
         group: 'npmx',
         label: t('footer.source'),
         keywords: [t('footer.source')],
         iconClass: 'i-simple-icons:github',
-        href: 'https://repo.npmx.dev',
-      },
-      {
-        id: 'social-link',
-        group: 'npmx',
-        label: t('footer.social'),
-        keywords: [t('footer.social')],
-        iconClass: 'i-simple-icons:bluesky',
-        href: 'https://social.npmx.dev',
+        href: 'https://github.com/sebasxsala/pypix.dev',
       },
       {
         id: 'theme-system',
@@ -499,110 +447,6 @@ export function useCommandPaletteGlobalCommands() {
         },
       },
     ]
-
-    const npmUsername = npmUser.value
-    if (isNpmConnected.value && npmUsername) {
-      items.push(
-        {
-          id: 'npm-disconnect',
-          group: 'connections',
-          label: t('command_palette.connections.npm_disconnect'),
-          keywords: [
-            npmUsername,
-            t('command_palette.connections.npm_connected', { username: npmUsername }),
-          ],
-          iconClass: 'i-lucide:plug-zap',
-          action: runThenAnnounce(
-            () => {
-              disconnectNpm()
-            },
-            () => t('command_palette.announcements.npm_disconnected'),
-          ),
-        },
-        {
-          id: 'my-packages',
-          group: 'navigation',
-          label: t('command_palette.navigation.packages', { username: npmUsername }),
-          keywords: [npmUsername, t('header.packages')],
-          iconClass: 'i-lucide:boxes',
-          active: route.name === '~username' && route.params.username?.toString() === npmUsername,
-          activeLabel: activeLabel(
-            route.name === '~username' && route.params.username?.toString() === npmUsername,
-            t('command_palette.here'),
-          ),
-          to: {
-            name: '~username',
-            params: {
-              username: npmUsername,
-            },
-          },
-        },
-        {
-          id: 'my-orgs',
-          group: 'navigation',
-          label: t('command_palette.navigation.orgs', { username: npmUsername }),
-          keywords: [npmUsername, t('header.orgs')],
-          iconClass: 'i-lucide:users',
-          active:
-            route.name === '~username-orgs' && route.params.username?.toString() === npmUsername,
-          activeLabel: activeLabel(
-            route.name === '~username-orgs' && route.params.username?.toString() === npmUsername,
-            t('command_palette.here'),
-          ),
-          to: {
-            name: '~username-orgs',
-            params: {
-              username: npmUsername,
-            },
-          },
-        },
-      )
-    }
-
-    const atprotoProfile = atprotoUser.value
-    if (atprotoProfile != null) {
-      items.push(
-        {
-          id: 'atproto-disconnect',
-          group: 'connections',
-          label: t('command_palette.connections.atmosphere_disconnect'),
-          keywords: [
-            atprotoProfile.handle,
-            t('command_palette.connections.atmosphere_connected', {
-              handle: atprotoProfile.handle,
-            }),
-          ],
-          iconClass: 'i-lucide:log-out',
-          action: runThenAnnounce(
-            async () => {
-              await logout()
-            },
-            () => t('command_palette.announcements.atmosphere_disconnected'),
-          ),
-        },
-        {
-          id: 'my-profile',
-          group: 'navigation',
-          label: t('command_palette.navigation.profile', { handle: atprotoProfile.handle }),
-          keywords: [atprotoProfile.handle, t('account_menu.atmosphere')],
-          iconClass: 'i-lucide:user',
-          active:
-            route.name === 'profile-identity' &&
-            route.params.identity?.toString() === atprotoProfile.handle,
-          activeLabel: activeLabel(
-            route.name === 'profile-identity' &&
-              route.params.identity?.toString() === atprotoProfile.handle,
-            t('command_palette.here'),
-          ),
-          to: {
-            name: 'profile-identity',
-            params: {
-              identity: atprotoProfile.handle,
-            },
-          },
-        },
-      )
-    }
 
     return items
   })

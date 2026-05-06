@@ -5,6 +5,7 @@ import { SCROLL_TO_TOP_THRESHOLD } from '~/composables/useScrollToTop'
 
 const props = defineProps<{
   pkg?: Pick<SlimPackument, 'name' | 'versions' | 'dist-tags'> | null
+  packageName?: string | null
   resolvedVersion?: string | null
   displayVersion?: PackumentVersion | null
   latestVersion?: SlimVersion | null
@@ -60,7 +61,7 @@ const navExtraOffsetStyle = { '--package-nav-extra': '0px' }
 const { y: scrollY } = useScroll(window)
 const showScrollToTop = computed(() => scrollY.value > SCROLL_TO_TOP_THRESHOLD)
 
-const packageName = computed(() => props.pkg?.name ?? '')
+const packageName = computed(() => props.pkg?.name ?? props.packageName ?? '')
 const fundingUrl = computed(() => {
   let funding = props.displayVersion?.funding
   if (Array.isArray(funding)) funding = funding[0]
@@ -117,21 +118,23 @@ useCommandPaletteContextCommands(
 
 // Docs URL: use our generated API docs
 const docsLink = computed(() => {
-  if (!props.resolvedVersion) return null
+  if (!packageName.value || !props.resolvedVersion) return null
+  const path = packageName.value.split('/').filter(Boolean)
+  path.push('v', props.resolvedVersion)
 
   return {
     name: 'docs' as const,
     params: {
-      path: [props.pkg?.name ?? '', 'v', props.resolvedVersion] satisfies [string, string, string],
+      path: path as [string, ...string[]],
     },
   }
 })
 
 const codeLink = computed((): RouteLocationRaw | null => {
-  if (props.pkg == null || props.resolvedVersion == null) {
+  if (!packageName.value || props.resolvedVersion == null) {
     return null
   }
-  const split = props.pkg.name.split('/')
+  const split = packageName.value.split('/')
   return {
     name: 'code',
     params: {
@@ -144,27 +147,27 @@ const codeLink = computed((): RouteLocationRaw | null => {
 })
 
 const mainLink = computed((): RouteLocationRaw | null => {
-  if (props.pkg == null || props.resolvedVersion == null) {
+  if (!packageName.value || props.resolvedVersion == null) {
     return null
   }
-  return packageRoute(props.pkg.name, props.resolvedVersion)
+  return packageRoute(packageName.value, props.resolvedVersion)
 })
 
 const diffLink = computed((): RouteLocationRaw | null => {
   if (
-    props.pkg == null ||
+    !packageName.value ||
     props.resolvedVersion == null ||
     props.latestVersion == null ||
     props.latestVersion.version === props.resolvedVersion
   ) {
     return null
   }
-  return diffRoute(props.pkg.name, props.resolvedVersion, props.latestVersion.version)
+  return diffRoute(packageName.value, props.resolvedVersion, props.latestVersion.version)
 })
 
 const timelineLink = computed((): RouteLocationRaw | null => {
-  if (props.pkg == null || props.resolvedVersion == null) return null
-  const split = props.pkg.name.split('/')
+  if (!packageName.value || props.resolvedVersion == null) return null
+  const split = packageName.value.split('/')
   return {
     name: 'timeline',
     params: {
@@ -179,7 +182,8 @@ useShortcuts({
   '.': () => codeLink.value,
   'm': () => mainLink.value,
   'd': () => docsLink.value,
-  'c': () => props.pkg && { name: 'compare' as const, query: { packages: props.pkg.name } },
+  'c': () =>
+    packageName.value && { name: 'compare' as const, query: { packages: packageName.value } },
   'f': () => diffLink.value,
   't': () => timelineLink.value,
 })
@@ -187,7 +191,7 @@ useShortcuts({
 
 <template>
   <!-- Package header -->
-  <header class="bg-bg pt-5 pb-1 w-full container">
+  <div class="bg-bg pt-5 pb-1 w-full container">
     <!-- Package name and version -->
     <div class="flex items-baseline justify-between gap-x-2 gap-y-1 flex-wrap min-w-0">
       <CopyToClipboardButton
@@ -198,7 +202,7 @@ useShortcuts({
       >
         <h1
           class="font-mono text-lg sm:text-3xl font-medium min-w-0 break-words"
-          :title="pkg?.name"
+          :title="packageName"
           dir="ltr"
         >
           <LinkBase v-if="orgName" :to="{ name: 'org', params: { org: orgName } }">
@@ -206,13 +210,14 @@ useShortcuts({
           </LinkBase>
           <span v-if="orgName">/</span>
           <span :class="{ 'text-fg-muted': orgName }">
-            {{ orgName ? pkg?.name.replace(`@${orgName}/`, '') : pkg?.name }}
+            {{ orgName ? packageName.replace(`@${orgName}/`, '') : packageName }}
           </span>
         </h1>
       </CopyToClipboardButton>
       <!-- Package metrics -->
       <div class="flex gap-2 flex-wrap items-stretch">
         <LinkBase
+          v-if="packageName"
           variant="button-secondary"
           :to="{ name: 'compare', query: { packages: packageName } }"
           aria-keyshortcuts="c"
@@ -220,8 +225,6 @@ useShortcuts({
         >
           <span class="max-sm:sr-only">{{ $t('package.links.compare_this_package') }}</span>
         </LinkBase>
-        <PackageLikes :packageName />
-
         <LinkBase
           variant="button-secondary"
           v-if="fundingUrl"
@@ -232,7 +235,10 @@ useShortcuts({
         </LinkBase>
       </div>
     </div>
-  </header>
+    <div v-if="packageName" class="mt-4 max-w-xl">
+      <PyPIAdminActions :package-name="packageName" variant="contextual" />
+    </div>
+  </div>
   <div
     ref="header"
     class="w-full bg-bg sticky top-14 z-10 border-b border-border pt-2"

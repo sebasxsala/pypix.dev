@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
-import { useAtproto } from '~/composables/atproto/useAtproto'
 import type { NavigationConfigWithGroups } from '~/types'
 
 const isOpen = defineModel<boolean>('open', { default: false })
@@ -9,8 +8,6 @@ const { links } = defineProps<{
 }>()
 
 const { open: openCommandPalette } = useCommandPalette()
-const { isConnected, npmUser, avatar: npmAvatar } = useConnector()
-const { user: atprotoUser } = useAtproto()
 
 const navRef = useTemplateRef('navRef')
 const { activate, deactivate } = useFocusTrap(navRef, { allowOutsideClick: true })
@@ -24,22 +21,6 @@ function handleOpenCommandPalette() {
   nextTick(() => {
     openCommandPalette()
   })
-}
-
-function handleShowConnector() {
-  const connectorModal = document.querySelector<HTMLDialogElement>('#connector-modal')
-  if (connectorModal) {
-    closeMenu()
-    connectorModal.showModal()
-  }
-}
-
-function handleShowAuth() {
-  const authModal = document.querySelector<HTMLDialogElement>('#auth-modal')
-  if (authModal) {
-    closeMenu()
-    authModal.showModal()
-  }
 }
 
 // Close menu on route change
@@ -119,67 +100,9 @@ onUnmounted(deactivate)
                 {{ $t('account_menu.account') }}
               </span>
 
-              <!-- npm CLI connection status (only show if connected) -->
-              <button
-                v-if="isConnected && npmUser"
-                type="button"
-                class="w-full flex items-center gap-3 px-3 py-3 rounded-md font-mono text-sm text-fg hover:bg-bg-subtle transition-colors duration-200 text-start"
-                @click="handleShowConnector"
-              >
-                <img
-                  v-if="npmAvatar"
-                  :src="npmAvatar"
-                  :alt="npmUser"
-                  width="20"
-                  height="20"
-                  class="w-5 h-5 rounded-full object-cover"
-                />
-                <span
-                  v-else
-                  class="w-5 h-5 rounded-full bg-bg-muted flex items-center justify-center"
-                >
-                  <span class="i-lucide:terminal w-3 h-3 text-fg-muted" aria-hidden="true" />
-                </span>
-                <span class="flex-1">~{{ npmUser }}</span>
-                <span class="w-2 h-2 rounded-full bg-green-500" aria-hidden="true" />
-              </button>
-
-              <!-- Atmosphere connection status -->
-              <button
-                v-if="atprotoUser"
-                type="button"
-                class="w-full flex items-center gap-3 px-3 py-3 rounded-md font-mono text-sm text-fg hover:bg-bg-subtle transition-colors duration-200 text-start"
-                @click="handleShowAuth"
-              >
-                <img
-                  v-if="atprotoUser.avatar"
-                  :src="atprotoUser.avatar"
-                  :alt="atprotoUser.handle"
-                  width="20"
-                  height="20"
-                  class="w-5 h-5 rounded-full object-cover"
-                />
-                <span
-                  v-else
-                  class="w-5 h-5 rounded-full bg-bg-muted flex items-center justify-center"
-                >
-                  <span class="i-lucide:at-sign w-3 h-3 text-fg-muted" aria-hidden="true" />
-                </span>
-                <span class="flex-1 truncate">@{{ atprotoUser.handle }}</span>
-              </button>
-
-              <!-- Connect Atmosphere button (show if not connected) -->
-              <button
-                v-else
-                type="button"
-                class="w-full flex items-center gap-3 px-3 py-3 rounded-md font-mono text-sm text-fg hover:bg-bg-subtle transition-colors duration-200 text-start"
-                @click="handleShowAuth"
-              >
-                <span class="w-5 h-5 rounded-full bg-bg-muted flex items-center justify-center">
-                  <span class="i-lucide:at-sign w-3 h-3 text-fg-muted" aria-hidden="true" />
-                </span>
-                <span class="flex-1">{{ $t('account_menu.connect_atmosphere') }}</span>
-              </button>
+              <div @click="closeMenu">
+                <PyPIAdminActions />
+              </div>
             </div>
 
             <div class="px-2 py-2">

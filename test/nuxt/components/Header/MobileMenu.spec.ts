@@ -115,4 +115,22 @@ describe('MobileMenu', () => {
       wrapper.unmount()
     }
   })
+
+  it('shows official PyPI admin actions in the mobile account section', async () => {
+    const wrapper = await mountMenu(true)
+    try {
+      await nextTick()
+      const dialogText = document.querySelector('[role="dialog"]')?.textContent ?? ''
+
+      expect(dialogText).toContain('Manage projects')
+      expect(dialogText).toContain('Publishing guide')
+      expect(dialogText).not.toContain('Configure Trusted Publisher')
+      expect(dialogText).not.toContain('Create pending publisher')
+      expect(dialogText).not.toContain('Organizations')
+      expect(dialogText).not.toContain('npm CLI')
+      expect(dialogText).not.toContain('Atmosphere')
+    } finally {
+      wrapper.unmount()
+    }
+  })
 })

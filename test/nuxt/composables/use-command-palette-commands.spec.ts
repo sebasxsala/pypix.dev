@@ -145,11 +145,21 @@ describe('useCommandPaletteCommands', () => {
       'help',
     )
     expect(flatCommands.value.find(command => command.id === 'help-docs-link')).toBeTruthy()
-    expect(flatCommands.value.find(command => command.id === 'chat-link')?.group).toBe('help')
-    expect(flatCommands.value.find(command => command.id === 'npmx-chat-link')?.group).toBe('npmx')
-    expect(flatCommands.value.find(command => command.id === 'builders-chat-link')?.group).toBe(
-      'npmx',
+    expect(flatCommands.value.find(command => command.id === 'pypi-manage-projects')?.href).toBe(
+      'https://pypi.org/manage/projects/',
     )
+    expect(flatCommands.value.find(command => command.id === 'pypi-publishing-guide')?.to).toBe(
+      '/publishing',
+    )
+    expect(
+      flatCommands.value.find(command => command.id === 'pypi-pending-publisher'),
+    ).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'pypi-organizations')).toBeUndefined()
+    expect(flatCommands.value.some(command => command.label.includes('Atmosphere'))).toBe(false)
+    expect(flatCommands.value.some(command => command.label.includes('npm CLI'))).toBe(false)
+    expect(flatCommands.value.find(command => command.id === 'chat-link')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'npmx-chat-link')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'builders-chat-link')).toBeUndefined()
     expect(flatCommands.value.find(command => command.id === 'about')?.group).toBe('npmx')
     expect(flatCommands.value.find(command => command.id === 'blog')?.group).toBe('npmx')
     expect(flatCommands.value.find(command => command.id === 'privacy')?.group).toBe('npmx')
@@ -157,9 +167,6 @@ describe('useCommandPaletteCommands', () => {
     expect(flatCommands.value.find(command => command.id === 'settings')?.to).toEqual({
       name: 'settings',
     })
-    expect(flatCommands.value.find(command => command.id === 'chat-link')?.href).toBe(
-      'https://chat.npmx.dev',
-    )
     expect(flatCommands.value.find(command => command.id === 'relative-dates')?.badge).toBe('off')
     expect(flatCommands.value.find(command => command.id === 'settings')?.label).toBe('settings')
     expect(flatCommands.value.find(command => command.id === 'theme-system')?.active).toBe(true)
@@ -280,46 +287,29 @@ describe('useCommandPaletteCommands', () => {
     wrapper.unmount()
   })
 
-  it('adds npm account commands and disconnect support when npm is connected', async () => {
+  it('does not add inherited npm account commands when npm is connected', async () => {
     const { wrapper, flatCommands } = await captureCommandPalette({
       route: '/~alice/orgs',
       npmUser: 'alice',
     })
-    const commandPalette = useCommandPalette()
-    commandPalette.open()
 
-    expect(flatCommands.value.find(command => command.id === 'npm-disconnect')).toBeTruthy()
-    expect(flatCommands.value.find(command => command.id === 'my-packages')?.to).toEqual({
-      name: '~username',
-      params: {
-        username: 'alice',
-      },
-    })
-    expect(flatCommands.value.find(command => command.id === 'my-orgs')?.active).toBe(true)
-
-    await flatCommands.value.find(command => command.id === 'npm-disconnect')?.action?.()
-
-    expect(mockDisconnectNpm).toHaveBeenCalledTimes(1)
-    expect(commandPalette.isOpen.value).toBe(false)
+    expect(flatCommands.value.find(command => command.id === 'npm-disconnect')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'my-packages')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'my-orgs')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'pypi-manage-projects')).toBeTruthy()
 
     wrapper.unmount()
   })
 
-  it('adds atproto account commands and disconnect support when a profile is connected', async () => {
+  it('does not add atproto account commands when a profile is connected', async () => {
     const { wrapper, flatCommands } = await captureCommandPalette({
       route: '/profile/alice.bsky.social',
       atprotoHandle: 'alice.bsky.social',
     })
-    const commandPalette = useCommandPalette()
-    commandPalette.open()
 
-    expect(flatCommands.value.find(command => command.id === 'atproto-disconnect')).toBeTruthy()
-    expect(flatCommands.value.find(command => command.id === 'my-profile')?.active).toBe(true)
-
-    await flatCommands.value.find(command => command.id === 'atproto-disconnect')?.action?.()
-
-    expect(mockLogout).toHaveBeenCalledTimes(1)
-    expect(commandPalette.isOpen.value).toBe(false)
+    expect(flatCommands.value.find(command => command.id === 'atproto-disconnect')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'my-profile')).toBeUndefined()
+    expect(flatCommands.value.find(command => command.id === 'pypi-manage-projects')).toBeTruthy()
 
     wrapper.unmount()
   })
@@ -341,6 +331,43 @@ describe('useCommandPaletteCommands', () => {
       groupedCommands.value.find(group => group.id === 'versions')?.items.map(item => item.id),
     ).toEqual(['version:3.4.2', 'version:3.5.0'])
     expect(flatCommands.value.find(command => command.id === 'version:3.4.2')?.label).toBe('3.4.2')
+
+    wrapper.unmount()
+  })
+
+  it('keeps version commands working for PyPI versions that are not valid semver', async () => {
+    const { wrapper, groupedCommands } = await captureCommandPalette({
+      route: '/package/better-auth',
+      packageContext: {
+        packageName: 'better-auth',
+        resolvedVersion: '0.0.1b11',
+        latestVersion: '0.0.1b11',
+        versions: ['0.0.1b11', '0.0.1b10', '0.0.1'],
+      },
+    })
+
+    expect(
+      groupedCommands.value.find(group => group.id === 'versions')?.items.map(item => item.id),
+    ).toEqual(['version:0.0.1b11', 'version:0.0.1b10', 'version:0.0.1'])
+
+    wrapper.unmount()
+  })
+
+  it('ignores PyPI-only version strings when applying semver range overrides', async () => {
+    const { wrapper, groupedCommands } = await captureCommandPalette({
+      route: '/package/better-auth',
+      query: '^0.0.1',
+      packageContext: {
+        packageName: 'better-auth',
+        resolvedVersion: '0.0.1b11',
+        latestVersion: '0.0.1b11',
+        versions: ['0.0.1b11', '0.0.1b10', '0.0.1'],
+      },
+    })
+
+    expect(
+      groupedCommands.value.find(group => group.id === 'versions')?.items.map(item => item.id),
+    ).toEqual(['version:0.0.1'])
 
     wrapper.unmount()
   })
