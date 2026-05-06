@@ -101,6 +101,7 @@ export default defineNuxtConfig({
   routeRules: {
     // API routes
     '/api/**': { isr: 300 },
+    '/api/pypi/search': { isr: false, cache: false },
     '/api/registry/badge/**': {
       isr: {
         expiration: 60 * 60 /* one hour */,
