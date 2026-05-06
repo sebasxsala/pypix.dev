@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { compare, validRange } from 'semver'
+import { compare, valid, validRange } from 'semver'
 import type { RouteLocationRaw } from 'vue-router'
 import { fetchAllPackageVersions } from '~/utils/npm/api'
 
@@ -95,6 +95,11 @@ function versionRoute(version: string): RouteLocationRaw {
   return packageRoute(props.packageName, version)
 }
 
+function compareVersionsForDisplay(a: VersionDisplay, b: VersionDisplay): number {
+  if (valid(a.version) && valid(b.version)) return compare(b.version, a.version)
+  return (b.time ?? '').localeCompare(a.time ?? '') || b.version.localeCompare(a.version)
+}
+
 // Route to the full versions history page
 const versionsPageRoute = computed(() => packageVersionsRoute(props.packageName))
 
@@ -186,7 +191,7 @@ const allTagRows = computed(() => {
         deprecated: versionData?.deprecated,
       } as VersionDisplay,
     }))
-    .sort((a, b) => compare(b.primaryVersion.version, a.primaryVersion.version))
+    .sort((a, b) => compareVersionsForDisplay(a.primaryVersion, b.primaryVersion))
 })
 
 // Check if the whole package is deprecated (latest version is deprecated)
@@ -323,7 +328,7 @@ function processLoadedVersions(allVersions: PackageVersionInfo[]) {
         const vChannel = getPrereleaseChannel(v.version)
         return isSameVersionGroup(v.version, tagVersion) && vChannel === tagChannel
       })
-      .sort((a, b) => compare(b.version, a.version))
+      .sort(compareVersionsForDisplay)
       .map(v => ({
         version: v.version,
         time: v.time,
@@ -362,7 +367,7 @@ function processLoadedVersions(allVersions: PackageVersionInfo[]) {
 
   // Sort within each group
   for (const versions of byGroupKey.values()) {
-    versions.sort((a, b) => compare(b.version, a.version))
+    versions.sort(compareVersionsForDisplay)
   }
 
   // Build groups sorted by group key descending

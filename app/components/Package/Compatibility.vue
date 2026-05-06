@@ -7,6 +7,7 @@ const engineNames: Record<string, string> = {
   bun: 'Bun',
   node: 'Node.js',
   npm: 'npm',
+  python: 'Python',
 }
 
 // Map engine name to icon class
@@ -15,6 +16,7 @@ const engineIcons: Record<string, string> = {
   node: 'i-simple-icons:nodedotjs',
   npm: 'i-simple-icons:npm',
   pnpm: 'i-simple-icons:pnpm',
+  python: 'i-simple-icons:python',
   yarn: 'i-simple-icons:yarn',
 }
 

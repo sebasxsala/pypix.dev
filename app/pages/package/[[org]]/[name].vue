@@ -6,6 +6,7 @@ const readmeHeader = useTemplateRef('readmeHeader')
 const isReadmeHeaderPinned = shallowRef(false)
 const packageHeaderHeight = usePackageHeaderHeight()
 const readmeStickyTop = computed(() => `${56 + (packageHeaderHeight.value || 44)}px`)
+const supportsNpmOnlyPackageAnalysis = false
 
 function isStickyPinned(el: HTMLElement | null): boolean {
   if (!el) return false
@@ -43,12 +44,12 @@ defineOgImage(
     variant: 'download-chart',
   },
   [
-    { key: 'og', alt: () => `npm package ${packageName.value} download chart and stats` },
+    { key: 'og', alt: () => `PyPI package ${packageName.value} details` },
     {
       key: 'whatsapp',
       width: 800,
       height: 800,
-      alt: () => `npm package ${packageName.value} download chart and stats`,
+      alt: () => `PyPI package ${packageName.value} details`,
     },
   ],
 )
@@ -60,9 +61,7 @@ if (import.meta.server) {
 // Fetch README for specific version if requested; otherwise, latest
 const { data: readmeData, status: readmeStatus } = useLazyFetch<ReadmeResponse>(
   () => {
-    const base = `/api/registry/readme/${packageName.value}`
-    const version = resolvedVersion.value
-    return version ? `${base}/v/${version}` : base
+    return `/api/pypi/readme/${packageName.value}`
   },
   {
     default: () => ({
@@ -96,9 +95,7 @@ const {
   execute: fetchReadmeMarkdown,
 } = useLazyFetch<ReadmeMarkdownResponse>(
   () => {
-    const base = `/api/registry/readme/markdown/${packageName.value}`
-    const version = resolvedVersion.value
-    return version ? `${base}/v/${version}` : base
+    return `/api/pypi/readme/markdown/${packageName.value}`
   },
   {
     server: false,
@@ -161,7 +158,7 @@ const {
 watch(
   [resolvedVersion, resolvedStatus],
   ([version, status]) => {
-    if (version && status === 'success') {
+    if (supportsNpmOnlyPackageAnalysis && version && status === 'success') {
       fetchInstallSize()
     }
   },
@@ -177,8 +174,7 @@ const { data: skillsData } = useLazyFetch<SkillsListResponse>(
   { default: () => ({ package: '', version: '', skills: [] }) },
 )
 
-const { data: packageAnalysis } = usePackageAnalysis(packageName, requestedVersion)
-const { data: moduleReplacement } = useModuleReplacement(packageName)
+const moduleReplacement = shallowRef<any>(null)
 
 if (
   import.meta.server &&
@@ -294,10 +290,8 @@ const pkgDescription = useMarkdown(() => ({
 
 // Fetch dependency analysis (lazy, client-side)
 // This is the same composable used by PackageVulnerabilityTree and PackageDeprecatedTree
-const { data: vulnTree, status: vulnTreeStatus } = useDependencyAnalysis(
-  packageName,
-  () => resolvedVersion.value ?? '',
-)
+const vulnTree = shallowRef<any>(null)
+const vulnTreeStatus = computed(() => 'success')
 
 const {
   data: provenanceData,
@@ -363,10 +357,6 @@ const publishSecurityDowngrade = computed(() => {
   if (!currentVersion) return null
   return detectPublishSecurityDowngradeForVersion(versionSecurityMetadata.value, currentVersion)
 })
-
-const installVersionOverride = computed(
-  () => publishSecurityDowngrade.value?.trustedVersion ?? null,
-)
 
 const downgradeFallbackInstallText = computed(() => {
   const d = publishSecurityDowngrade.value
@@ -441,20 +431,6 @@ function hasProvenance(version: PackumentVersion | null): boolean {
   return !!dist.attestations
 }
 
-// Get @types package name if available (non-deprecated)
-const typesPackageName = computed(() => {
-  if (!packageAnalysis.value) return null
-  if (packageAnalysis.value.types.kind !== '@types') return null
-  if (packageAnalysis.value.types.deprecated) return null
-  return packageAnalysis.value.types.packageName
-})
-
-// Executable detection for run command
-const executableInfo = computed(() => {
-  if (!displayVersion.value || !pkg.value) return null
-  return getExecutableInfo(pkg.value.name, displayVersion.value.bin)
-})
-
 // Detect if package is binary-only (show only execute commands, no install)
 const isBinaryOnly = computed(() => {
   if (!displayVersion.value || !pkg.value) return false
@@ -473,17 +449,9 @@ const isCreatePkg = computed(() => {
   return isCreatePackage(pkg.value.name)
 })
 
-// Get associated create-* package info (e.g., vite -> create-vite)
-const createPackageInfo = computed(() => {
-  if (!packageAnalysis.value?.createPackage) return null
-  // Don't show if deprecated
-  if (packageAnalysis.value.createPackage.deprecated) return null
-  return packageAnalysis.value.createPackage
-})
-
 // Canonical URL for this package page
 const canonicalUrl = computed(() => {
-  const base = `https://npmx.dev/package/${packageName.value}`
+  const base = `https://pypix.dev/package/${packageName.value}`
   return requestedVersion.value ? `${base}/v/${requestedVersion.value}` : base
 })
 
@@ -495,6 +463,16 @@ const versionUrlPattern = computed(
 useCommandPaletteVersionCommands(commandPalettePackageContext, versionUrlPattern)
 
 const dependencyCount = computed(() => getDependencyCount(displayVersion.value))
+const pythonInstallCommand = computed(() => {
+  const version =
+    requestedVersion.value && requestedVersion.value !== 'latest' ? resolvedVersion.value : null
+  return version
+    ? `pip install ${packageName.value}==${version}`
+    : `pip install ${packageName.value}`
+})
+const { copied: copiedInstallCommand, copy: copyInstallCommand } = useClipboard({
+  copiedDuring: 2000,
+})
 
 const numberFormatter = useNumberFormatter()
 const bytesFormatter = useBytesFormatter()
@@ -504,9 +482,9 @@ useHead({
 })
 
 useSeoMeta({
-  title: () => (pkg.value?.name ? `${pkg.value.name} - npmx` : 'Package - npmx'),
-  ogTitle: () => (pkg.value?.name ? `${pkg.value.name} - npmx` : 'Package - npmx'),
-  twitterTitle: () => (pkg.value?.name ? `${pkg.value.name} - npmx` : 'Package - npmx'),
+  title: () => (pkg.value?.name ? `${pkg.value.name} - pypix` : 'Package - pypix'),
+  ogTitle: () => (pkg.value?.name ? `${pkg.value.name} - pypix` : 'Package - pypix'),
+  twitterTitle: () => (pkg.value?.name ? `${pkg.value.name} - pypix` : 'Package - pypix'),
   description: () => pkg.value?.description ?? '',
   ogDescription: () => pkg.value?.description ?? '',
   twitterDescription: () => pkg.value?.description ?? '',
@@ -580,7 +558,7 @@ const showSkeleton = shallowRef(false)
 
             <PackageExternalLinks :pkg :jsrInfo />
             <PackageMetricsBadges
-              v-if="resolvedVersion"
+              v-if="supportsNpmOnlyPackageAnalysis && resolvedVersion"
               :package-name="packageName"
               :version="resolvedVersion"
               :is-binary="isBinaryOnly"
@@ -811,7 +789,6 @@ const showSkeleton = shallowRef(false)
                 :package-name="pkg.name"
                 :version="displayVersion"
               />
-              <PackageManagerSelect />
             </div>
           </div>
           <div>
@@ -901,18 +878,37 @@ const showSkeleton = shallowRef(false)
                 </template>
               </p>
             </div>
-            <TerminalInstall
-              :package-name="pkg.name"
-              :requested-version="
-                requestedVersion && requestedVersion !== 'latest' ? resolvedVersion : null
-              "
-              :install-version-override="installVersionOverride"
-              :jsr-info="jsrInfo"
-              :dev-dependency-suggestion="packageAnalysis?.devDependencySuggestion"
-              :types-package-name="typesPackageName"
-              :executable-info="executableInfo"
-              :create-package-info="createPackageInfo"
-            />
+            <div class="bg-bg-subtle border border-border rounded-lg overflow-hidden">
+              <div class="flex gap-1.5 px-3 pt-2 sm:px-4 sm:pt-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-fg-subtle" />
+                <span class="w-2.5 h-2.5 rounded-full bg-fg-subtle" />
+                <span class="w-2.5 h-2.5 rounded-full bg-fg-subtle" />
+              </div>
+              <div class="px-3 pt-2 pb-3 sm:px-4 sm:pt-3 sm:pb-4 overflow-x-auto" dir="ltr">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="self-start text-fg-subtle font-mono text-sm select-none">$</span>
+                  <code class="font-mono text-sm min-w-0">
+                    <span class="text-fg">pip</span>
+                    <span class="text-fg-muted"> install {{ pkg.name }}</span>
+                    <span
+                      v-if="requestedVersion && requestedVersion !== 'latest' && resolvedVersion"
+                      class="text-fg-muted"
+                      >=={{ resolvedVersion }}</span
+                    >
+                  </code>
+                  <button
+                    type="button"
+                    class="px-2 py-0.5 font-mono text-xs text-fg-muted bg-bg-subtle/80 border border-border rounded transition-colors duration-200 hover:(text-fg border-border-hover) active:scale-95 focus-visible:outline-accent/70 select-none"
+                    :aria-label="$t('package.get_started.copy_command')"
+                    @click.stop="copyInstallCommand(pythonInstallCommand)"
+                  >
+                    <span aria-live="polite">{{
+                      copiedInstallCommand ? $t('common.copied') : $t('common.copy')
+                    }}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -930,12 +926,12 @@ const showSkeleton = shallowRef(false)
           <!-- Vulnerability scan -->
           <ClientOnly>
             <PackageVulnerabilityTree
-              v-if="resolvedVersion"
+              v-if="supportsNpmOnlyPackageAnalysis && resolvedVersion"
               :package-name="pkg.name"
               :version="resolvedVersion"
             />
             <PackageDeprecatedTree
-              v-if="resolvedVersion"
+              v-if="supportsNpmOnlyPackageAnalysis && resolvedVersion"
               :package-name="pkg.name"
               :version="resolvedVersion"
               class="mt-3"
@@ -947,7 +943,10 @@ const showSkeleton = shallowRef(false)
           <div class="flex flex-col gap-4 sm:gap-6 lg:pt-4">
             <!-- Team access controls (for scoped packages when connected) -->
             <ClientOnly>
-              <PackageAccessControls :package-name="pkg.name" />
+              <PackageAccessControls
+                v-if="supportsNpmOnlyPackageAnalysis"
+                :package-name="pkg.name"
+              />
               <template #fallback>
                 <!-- Show skeleton loaders when SSR or access controls are loading -->
               </template>
@@ -968,6 +967,7 @@ const showSkeleton = shallowRef(false)
 
             <!-- Download stats -->
             <PackageWeeklyDownloadStats
+              v-if="supportsNpmOnlyPackageAnalysis"
               :packageName
               :createdIso="pkg?.time?.created ?? null"
               :repoRef="repoRef"

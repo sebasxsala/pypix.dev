@@ -153,14 +153,16 @@ export function usePackage(
 ) {
   const asyncData = useLazyAsyncData(
     () => `package:${toValue(name)}:${toValue(requestedVersion) ?? ''}`,
-    async ({ $npmRegistry }, { signal }) => {
-      const encodedName = encodePackageName(toValue(name))
-      const { data: r, isStale } = await $npmRegistry<Packument>(`/${encodedName}`, {
-        signal,
-      })
+    async (_, { signal }) => {
       const reqVer = toValue(requestedVersion)
-      const pkg = transformPackument(r, reqVer)
-      return { ...pkg, isStale }
+      const query = reqVer ? `?version=${encodeURIComponent(reqVer)}` : ''
+      const pkg = await $fetch<SlimPackument>(
+        `/api/pypi/package/${encodeURIComponent(toValue(name))}${query}`,
+        {
+          signal,
+        },
+      )
+      return { ...pkg, isStale: false }
     },
   )
 

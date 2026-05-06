@@ -1,4 +1,4 @@
-import { compare, major } from 'semver'
+import { compare, major, valid } from 'semver'
 
 export interface PublishSecurityDowngrade {
   downgradedVersion: string
@@ -35,13 +35,33 @@ function toTimestamp(time?: string): number {
   return Date.parse(time)
 }
 
+function compareBySemverDesc(a: string, b: string): number {
+  const aValid = valid(a)
+  const bValid = valid(b)
+
+  if (aValid && bValid) {
+    return compare(b, a)
+  }
+
+  if (aValid !== bValid) {
+    return aValid ? -1 : 1
+  }
+
+  return 0
+}
+
+function getSemverMajor(version: string): number | null {
+  if (!valid(version)) return null
+  return major(version)
+}
+
 function sortByRecency(a: VersionWithIndex, b: VersionWithIndex): number {
   const aValid = !Number.isNaN(a.timestamp)
   const bValid = !Number.isNaN(b.timestamp)
 
   if (!aValid && !bValid) {
     // Fall back to semver comparison if no valid timestamps
-    const semverOrder = compare(b.version, a.version)
+    const semverOrder = compareBySemverDesc(a.version, b.version)
     if (semverOrder !== 0) return semverOrder
 
     // If semver is also equal, maintain original order
@@ -85,7 +105,7 @@ export function detectPublishSecurityDowngradeForVersion(
   const current = sorted[currentIndex]
   if (!current) return null
 
-  const currentMajor = major(current.version)
+  const currentMajor = getSemverMajor(current.version)
 
   // Find the strongest older version across all majors (for detection)
   // and the strongest within the same major (for recommendation)
@@ -97,7 +117,7 @@ export function detectPublishSecurityDowngradeForVersion(
     if (!strongestOlderAny || version.trustRank > strongestOlderAny.trustRank) {
       strongestOlderAny = version
     }
-    if (major(version.version) === currentMajor) {
+    if (currentMajor !== null && getSemverMajor(version.version) === currentMajor) {
       if (!strongestOlderSameMajor || version.trustRank > strongestOlderSameMajor.trustRank) {
         strongestOlderSameMajor = version
       }

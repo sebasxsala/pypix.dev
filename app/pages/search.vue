@@ -351,8 +351,12 @@ const canPublishToScope = computed(() => {
   return orgMembership.value[scope] === true
 })
 
+// Temporarily hidden until PyPI project claim logic is implemented.
+const isClaimPromptEnabled = shallowRef(false)
+
 // Show claim prompt when valid name, available, either not connected or connected and has permission
 const showClaimPrompt = computed(() => {
+  if (!isClaimPromptEnabled.value) return false
   if (!isValidPackageName.value) return false
   if (isConnected.value && !canPublishToScope.value) return false
 
@@ -557,11 +561,11 @@ onKeyDown(['ArrowDown', 'ArrowUp', 'Enter'], handleResultsKeydown)
 
 useSeoMeta({
   title: () =>
-    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - npmx`,
+    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - pypix`,
   ogTitle: () =>
-    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - npmx`,
+    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - pypix`,
   twitterTitle: () =>
-    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - npmx`,
+    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - pypix`,
   description: () =>
     query.value
       ? $t('search.meta_description', { search: query.value })
@@ -580,7 +584,7 @@ defineOgImage(
   'Page.takumi',
   {
     title: () =>
-      `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - npmx`,
+      `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - pypix`,
     description: () =>
       query.value
         ? $t('search.meta_description', { search: query.value })
@@ -588,7 +592,9 @@ defineOgImage(
   },
   {
     alt: () =>
-      query.value ? `Search results for "${query.value}" on npmx` : 'Search npm packages on npmx',
+      query.value
+        ? `Search results for "${query.value}" on pypix`
+        : 'Search PyPI packages on pypix',
   },
 )
 

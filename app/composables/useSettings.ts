@@ -60,7 +60,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   enableGraphPulseLooping: false,
   selectedLocale: null,
   preferredBackgroundTheme: null,
-  searchProvider: import.meta.test ? 'npm' : 'algolia',
+  searchProvider: 'npm',
   instantSearch: true,
   keyboardShortcuts: true,
   connector: {

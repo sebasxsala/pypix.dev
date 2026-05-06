@@ -32,6 +32,14 @@ const allMaintainersText = computed(() => {
   return pkg.value.maintainers.map(m => m.name || m.email).join(', ')
 })
 
+function maintainerLabel(maintainer: { username?: string; name?: string; email?: string }) {
+  return maintainer.username || maintainer.name || maintainer.email || ''
+}
+
+function maintainerUsername(maintainer: { username?: string; name?: string }) {
+  return maintainer.username || maintainer.name || ''
+}
+
 const compactNumberFormatter = useCompactNumberFormatter()
 </script>
 
@@ -109,16 +117,18 @@ const compactNumberFormatter = useCompactNumberFormatter()
       >
         <template
           v-for="(maintainer, idx) in pkg.maintainers.slice(0, 3)"
-          :key="maintainer.username || maintainer.email"
+          :key="maintainerLabel(maintainer) || idx"
         >
           <NuxtLink
+            v-if="maintainerUsername(maintainer)"
             :to="{
               name: '~username',
-              params: { username: maintainer.username || maintainer.name || '' },
+              params: { username: maintainerUsername(maintainer) },
             }"
             class="relative z-10 hover:text-accent-fallback transition-colors duration-200"
             @click.stop
-            >{{ maintainer.username || maintainer.name || maintainer.email }}</NuxtLink
+            >{{ maintainerLabel(maintainer) }}</NuxtLink
+          ><span v-else>{{ maintainerLabel(maintainer) }}</span
           ><span v-if="idx < Math.min(pkg.maintainers.length, 3) - 1">, </span>
         </template>
         <span v-if="pkg.maintainers.length > 3" class="text-fg-subtle">

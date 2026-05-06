@@ -39,7 +39,7 @@ describe('checkPackageExists', () => {
     const result = await checkPackageExists('vue')
 
     expect(result).toBe(true)
-    expect(fetchMock).toHaveBeenCalledWith('https://registry.npmjs.org/vue', { method: 'HEAD' })
+    expect(fetchMock).toHaveBeenCalledWith('/api/pypi/package/vue', { method: 'GET' })
   })
 
   it('returns false when package does not exist', async () => {
@@ -55,18 +55,18 @@ describe('checkPackageExists', () => {
 
     await checkPackageExists('some-package')
 
-    expect(fetchMock).toHaveBeenCalledWith('https://registry.npmjs.org/some-package', {
-      method: 'HEAD',
+    expect(fetchMock).toHaveBeenCalledWith('/api/pypi/package/some-package', {
+      method: 'GET',
     })
   })
 
-  it('encodes scoped package names correctly', async () => {
+  it('encodes package names correctly', async () => {
     fetchMock.mockResolvedValue(undefined)
 
-    await checkPackageExists('@vue/core')
+    await checkPackageExists('zope.interface')
 
-    expect(fetchMock).toHaveBeenCalledWith('https://registry.npmjs.org/@vue%2Fcore', {
-      method: 'HEAD',
+    expect(fetchMock).toHaveBeenCalledWith('/api/pypi/package/zope.interface', {
+      method: 'GET',
     })
   })
 })
@@ -98,6 +98,7 @@ describe('findSimilarPackages', () => {
 
     const result = await findSimilarPackages('svelte')
 
+    expect(fetchMock).toHaveBeenCalledWith('/api/pypi/search?q=svelte&size=20', {})
     expect(result).toHaveLength(1)
     expect(result[0]).toMatchObject({
       name: 'svelte',

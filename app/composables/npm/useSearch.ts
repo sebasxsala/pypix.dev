@@ -3,6 +3,20 @@ function emptySearchPayload() {
     searchResponse: emptySearchResponse(),
     suggestions: [] as SearchSuggestion[],
     packageAvailability: null as { name: string; available: boolean } | null,
+    query: '',
+    provider: 'npm' as SearchProvider,
+  }
+}
+
+function searchPayload(
+  q: string,
+  provider: SearchProvider,
+  payload: Omit<ReturnType<typeof emptySearchPayload>, 'query' | 'provider'>,
+) {
+  return {
+    ...payload,
+    query: q,
+    provider,
   }
 }
 
@@ -47,6 +61,12 @@ export function useSearch(
   const packageAvailability = shallowRef<{ name: string; available: boolean } | null>(null)
   const existenceCache = shallowRef<Record<string, boolean>>({})
   const suggestionRequestId = shallowRef(0)
+
+  function effectiveSearchProvider() {
+    // MVP PyPI migration: keep the inherited setting shape but always route search through PyPI.
+    void toValue(searchProvider)
+    return 'npm' as SearchProvider
+  }
 
   /**
    * Determine which extra checks to include in the Algolia multi-search.
@@ -140,7 +160,7 @@ export function useSearch(
     () => `search:${toValue(searchProvider)}:${toValue(query)}`,
     async (_nuxtApp, { signal }) => {
       const q = toValue(query)
-      const provider = toValue(searchProvider)
+      const provider = effectiveSearchProvider()
 
       if (!q.trim()) {
         isRateLimited.value = false
@@ -163,11 +183,11 @@ export function useSearch(
 
           isRateLimited.value = false
           processAlgoliaChecks(q, checks, result)
-          return {
+          return searchPayload(q, provider, {
             searchResponse: result.search,
             suggestions: suggestions.value,
             packageAvailability: packageAvailability.value,
-          }
+          })
         }
 
         const response = await searchAlgolia(q, { size: opts.size ?? 25 })
@@ -177,11 +197,11 @@ export function useSearch(
         }
 
         isRateLimited.value = false
-        return {
+        return searchPayload(q, provider, {
           searchResponse: response,
           suggestions: [],
           packageAvailability: null,
-        }
+        })
       }
 
       try {
@@ -199,11 +219,11 @@ export function useSearch(
         }
 
         isRateLimited.value = false
-        return {
+        return searchPayload(q, provider, {
           searchResponse: response,
           suggestions: [],
           packageAvailability: null,
-        }
+        })
       } catch (error: unknown) {
         const errorMessage = (error as { message?: string })?.message || String(error)
         const isRateLimitError =
@@ -221,7 +241,7 @@ export function useSearch(
 
   async function fetchMore(targetSize: number): Promise<void> {
     const q = toValue(query).trim()
-    const provider = toValue(searchProvider)
+    const provider = effectiveSearchProvider()
 
     if (!q) {
       cache.value = null
@@ -322,8 +342,19 @@ export function useSearch(
     },
   )
 
+  watch([() => toValue(query), () => effectiveSearchProvider()], () => {
+    cache.value = null
+  })
+
   const data = computed<NpmSearchResponse | null>(() => {
+    const q = toValue(query).trim()
+    const provider = effectiveSearchProvider()
+
+    if (!q) return emptySearchResponse()
+
     if (cache.value) {
+      if (cache.value.query !== q || cache.value.provider !== provider) return emptySearchResponse()
+
       return {
         isStale: false,
         objects: cache.value.objects,
@@ -331,7 +362,13 @@ export function useSearch(
         time: new Date().toISOString(),
       }
     }
-    return asyncData.data.value?.searchResponse ?? null
+
+    const payload = asyncData.data.value
+    if (!payload || payload.query !== q || payload.provider !== provider) {
+      return emptySearchResponse()
+    }
+
+    return payload.searchResponse
   })
 
   const hasMore = computed(() => {
@@ -436,8 +473,7 @@ export function useSearch(
     () => `npm-suggestions:${toValue(searchProvider)}:${toValue(query)}`,
     async () => {
       const q = toValue(query).trim()
-      if (toValue(searchProvider) === 'algolia' || !q)
-        return { suggestions: [], packageAvailability: null }
+      if (!q) return { suggestions: [], packageAvailability: null }
       const { intent, name } = parseSuggestionIntent(q)
       if (!intent || !name) return { suggestions: [], packageAvailability: null }
       return validateSuggestionsNpm(q)

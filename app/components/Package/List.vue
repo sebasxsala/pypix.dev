@@ -67,6 +67,10 @@ const currentPage = computed(() => props.currentPage ?? 1)
 const pageSize = computed(() => props.pageSize ?? 25)
 // Numeric page size for virtual scroll and arithmetic (use 25 as default)
 const numericPageSize = computed(() => pageSize.value)
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil(props.results.length / numericPageSize.value)),
+)
+const effectiveCurrentPage = computed(() => Math.min(currentPage.value, totalPages.value))
 
 // Compute paginated results for paginated mode
 const displayedResults = computed(() => {
@@ -74,10 +78,20 @@ const displayedResults = computed(() => {
     return props.results
   }
 
-  const start = (currentPage.value - 1) * numericPageSize.value
+  const start = (effectiveCurrentPage.value - 1) * numericPageSize.value
   const end = start + numericPageSize.value
   return props.results.slice(start, end)
 })
+
+watch(
+  [paginationMode, currentPage, totalPages],
+  ([mode, page, pages]) => {
+    if (mode === 'paginated' && page > pages) {
+      emit('pageChange', pages)
+    }
+  },
+  { immediate: true },
+)
 
 // Set up infinite scroll if hasMore is provided
 const hasMore = computed(() => props.hasMore ?? false)

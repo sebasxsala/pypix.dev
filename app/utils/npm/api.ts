@@ -1,6 +1,3 @@
-import { getVersions } from 'fast-npm-meta'
-import { compare } from 'semver'
-
 type NpmDownloadsRangeResponse = {
   start: string
   end: string
@@ -32,30 +29,30 @@ export async function fetchNpmDownloadsRange(
 const allVersionsCache = new Map<string, Promise<PackageVersionInfo[]>>()
 
 /**
- * Fetch all versions of a package using fast-npm-meta API.
+ * Fetch all versions of a package using the PyPI package endpoint.
  * Returns version info sorted by version (newest first).
  * Results are cached to avoid duplicate requests.
  *
  * Note: This is a standalone async function for use in event handlers.
  * For composable usage, use useAllPackageVersions instead.
  *
- * @see https://github.com/antfu/fast-npm-meta
  */
 export async function fetchAllPackageVersions(packageName: string): Promise<PackageVersionInfo[]> {
   const cached = allVersionsCache.get(packageName)
   if (cached) return cached
 
   const promise = (async () => {
-    const data = await getVersions(packageName, { metadata: true })
+    const data = await $fetch<SlimPackument>(`/api/pypi/package/${encodeURIComponent(packageName)}`)
 
-    return Object.entries(data.versionsMeta)
+    return Object.entries(data.versions)
       .map(([version, meta]) => ({
         version,
-        time: meta.time,
-        hasProvenance: meta.provenance === 'trustedPublisher' || meta.provenance === true,
+        time: data.time[version],
+        hasProvenance: !!meta.hasProvenance,
+        trustLevel: meta.trustLevel,
         deprecated: meta.deprecated,
       }))
-      .sort((a, b) => compare(b.version, a.version))
+      .sort((a, b) => (b.time ?? '').localeCompare(a.time ?? ''))
   })()
 
   allVersionsCache.set(packageName, promise)

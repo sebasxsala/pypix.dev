@@ -1,11 +1,11 @@
 <template>
   <UButton
-    to="https://npmx.dev"
+    to="https://pypix.dev"
     external
     color="neutral"
     variant="subtle"
     size="xs"
     trailingIcon="i-lucide-arrow-up-right"
-    label="npmx.dev"
+    label="pypix.dev"
   />
 </template>

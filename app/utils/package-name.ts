@@ -1,6 +1,4 @@
 import validatePackageName from 'validate-npm-package-name'
-import { NPM_REGISTRY } from '#shared/utils/constants'
-import { encodePackageName } from '#shared/utils/npm'
 
 export function splitPackageName(packageName: string): { org: string; name: string } {
   const [org = '', name = ''] = packageName.startsWith('@')
@@ -84,9 +82,9 @@ export async function checkPackageExists(
   options: Parameters<typeof $fetch>[1] = {},
 ): Promise<boolean> {
   try {
-    await $fetch(`${NPM_REGISTRY}/${encodePackageName(name)}`, {
+    await $fetch(`/api/pypi/package/${encodeURIComponent(name)}`, {
       ...options,
-      method: 'HEAD',
+      method: 'GET',
     })
     return true
   } catch {
@@ -109,7 +107,7 @@ export async function findSimilarPackages(
           description?: string
         }
       }>
-    }>(`${NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(name)}&size=20`, options)
+    }>(`/api/pypi/search?q=${encodeURIComponent(name)}&size=20`, options)
 
     for (const obj of searchResponse.objects) {
       const pkgName = obj.package.name

@@ -299,4 +299,26 @@ describe('detectPublishSecurityDowngradeForVersion', () => {
     // Both are provenance rank, so no downgrade
     expect(result).toBeNull()
   })
+
+  it('does not throw for PyPI versions that are not valid SemVer', () => {
+    expect(() =>
+      detectPublishSecurityDowngradeForVersion(
+        [
+          {
+            version: '0.1.0',
+            time: '2026-01-01T00:00:00.000Z',
+            hasProvenance: true,
+            trustLevel: 'provenance',
+          },
+          {
+            version: '0.1.0.1',
+            time: '2026-01-02T00:00:00.000Z',
+            hasProvenance: false,
+            trustLevel: 'none',
+          },
+        ],
+        '0.1.0.1',
+      ),
+    ).not.toThrow()
+  })
 })

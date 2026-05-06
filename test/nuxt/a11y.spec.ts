@@ -944,6 +944,13 @@ describe('component accessibility audits', () => {
       expect(results.violations).toEqual([])
     })
 
+    it('should not add redundant list roles to keyword lists', async () => {
+      const component = await mountSuspended(PackageCard, {
+        props: { result: mockResult },
+      })
+      expect(component.find('ul[aria-label="Keywords"]').attributes('role')).toBeUndefined()
+    })
+
     it('should have no accessibility violations with h2 heading', async () => {
       const component = await mountSuspended(PackageCard, {
         props: { result: mockResult, headingLevel: 'h2' },

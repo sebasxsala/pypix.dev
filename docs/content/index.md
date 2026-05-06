@@ -1,15 +1,15 @@
 ---
 seo:
-  title: npmx.dev Documentation
-  description: A fast, modern browser for the npm registry
+  title: pypix.dev Documentation
+  description: A fast, modern browser for the PyPI registry
 ---
 
 <!-- prettier-ignore-start -->
 
 ::u-page-hero
 ---
-title: npmx.dev
-description: A fast, modern browser for the npm registry. Speed first, URL compatible, and simple.
+title: pypix.dev
+description: A fast, modern browser for the PyPI registry. Speed first, Python-native, and simple.
 links:
 - label: Get Started
   to: /getting-started/introduction
@@ -36,7 +36,7 @@ links:
 :::u-page-feature{icon="i-lucide:code" to="/guide/features" title="Browse source code" description="View package source code with syntax highlighting and permalink to specific lines."}
 :::
 
-:::u-page-feature{icon="i-lucide:link" to="/guide/url-structure" title="Use familiar URLs" description="Replace npmjs.com with npmx.dev in any URL and it just works."}
+:::u-page-feature{icon="i-lucide:link" to="/guide/url-structure" title="Use familiar URLs" description="Use PyPI-style project URLs with a faster modern package browser."}
 :::
 
 :::u-page-feature{icon="i-lucide:keyboard" to="/guide/keyboard-shortcuts" title="Navigate with keyboard" description="Open the command palette with ⌘K on macOS or Ctrl+K on Windows and Linux. Press / to search. Use arrow keys to browse results."}

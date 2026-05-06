@@ -152,7 +152,7 @@ const mobileLinks = computed<NavigationConfigWithGroups>(() => [
 
 const showFullSearch = shallowRef(false)
 const showMobileMenu = shallowRef(false)
-const { env, prNumber } = useAppConfig().buildInfo
+const { prNumber } = useAppConfig().buildInfo
 
 // On mobile, clicking logo+search button expands search
 const route = useRoute()
@@ -232,13 +232,7 @@ useShortcuts({
           dir="ltr"
           class="relative inline-flex items-center gap-1 py-2 header-logo font-mono text-lg font-medium text-fg hover:text-fg/90 transition-colors duration-200 me-4"
         >
-          <AppLogo class="h-4.5 w-auto" />
-          <span
-            aria-hidden="true"
-            class="scale-35 transform-origin-br font-mono tracking-wide text-accent absolute bottom-0.75 -inset-ie-1"
-          >
-            {{ env === 'release' ? 'alpha' : env }}
-          </span>
+          <AppLogo class="h-6 w-auto" />
         </NuxtLink>
       </LogoContextMenu>
 

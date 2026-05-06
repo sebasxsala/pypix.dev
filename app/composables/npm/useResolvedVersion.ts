@@ -1,5 +1,3 @@
-import type { ResolvedPackageVersion } from 'fast-npm-meta'
-
 export function useResolvedVersion(
   packageName: MaybeRefOrGetter<string>,
   requestedVersion: MaybeRefOrGetter<string | null>,
@@ -9,11 +7,11 @@ export function useResolvedVersion(
     async () => {
       const version = toValue(requestedVersion)
       const name = toValue(packageName)
-      const url = version
-        ? `https://npm.antfu.dev/${name}@${version}`
-        : `https://npm.antfu.dev/${name}`
-      const data = await $fetch<ResolvedPackageVersion>(url)
-      return data.version
+      const query = version ? `?version=${encodeURIComponent(version)}` : ''
+      const data = await $fetch<{ version: string | null }>(
+        `/api/pypi/version/${encodeURIComponent(name)}${query}`,
+      )
+      return data.version ?? undefined
     },
     { default: () => undefined },
   )

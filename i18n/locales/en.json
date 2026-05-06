@@ -2,15 +2,15 @@
   "$schema": "../schema.json",
   "seo": {
     "home": {
-      "title": "npmx - Package Browser for the npm Registry",
-      "description": "a fast, modern browser for the npm registry. Search, browse, and explore packages with a modern interface."
+      "title": "pypix - Package Browser for PyPI",
+      "description": "a fast, modern browser for the PyPI registry. Search, browse, and explore Python packages with a modern interface."
     }
   },
   "built_at": "built {0}",
-  "alt_logo": "npmx logo",
-  "tagline": "a fast, modern browser for the npm registry",
-  "non_affiliation_disclaimer": "not affiliated with npm, Inc.",
-  "trademark_disclaimer": "npm is a registered trademark of npm, Inc. This site is not affiliated with npm, Inc.",
+  "alt_logo": "pypix logo",
+  "tagline": "a fast, modern browser for the PyPI registry",
+  "non_affiliation_disclaimer": "not affiliated with the Python Software Foundation",
+  "trademark_disclaimer": "PyPI is operated by the Python Software Foundation. This site is not affiliated with the Python Software Foundation.",
   "footer": {
     "about": "about",
     "blog": "blog",
@@ -49,7 +49,7 @@
     "open_timeline": "Open timeline"
   },
   "search": {
-    "label": "Search npm packages",
+    "label": "Search PyPI packages",
     "placeholder": "search packages...",
     "button": "search",
     "searching": "Searching...",
@@ -62,9 +62,9 @@
     "title_search": "search: {search}",
     "title_packages": "search packages",
     "meta_description": "Search results for '{search}'",
-    "meta_description_packages": "Search npm packages",
+    "meta_description_packages": "Search PyPI packages",
     "not_taken": "{name} is not taken",
-    "claim_prompt": "Claim this package name on npm",
+    "claim_prompt": "Claim this project name on PyPI",
     "claim_button": "Claim \"{name}\"",
     "want_to_claim": "Want to claim this package name?",
     "start_typing": "Start typing to search packages",
@@ -86,7 +86,7 @@
   "command_palette": {
     "title": "command palette",
     "quick_actions": "jump to...",
-    "subtitle": "navigate across npmx and switch settings quickly",
+    "subtitle": "navigate across pypix and switch settings quickly",
     "subtitle_languages": "choose a language or help improve translations",
     "instructions": "Type to filter commands. Use the arrow keys to move through results and Enter to run a command.",
     "input_label": "Command palette search",
@@ -109,7 +109,7 @@
       "connections": "Connections",
       "navigation": "Navigation",
       "links": "Links",
-      "npmx": "npmx",
+      "npmx": "pypix",
       "package": "Package",
       "package_with_name": "Package ({name})",
       "versions": "Versions",
@@ -205,7 +205,7 @@
   "blog": {
     "title": "Blog",
     "heading": "blog",
-    "meta_description": "Insights and updates from the npmx community",
+    "meta_description": "Insights and updates from the pypix community",
     "author": {
       "view_profile": "View {name}'s profile on Bluesky"
     },
@@ -230,8 +230,8 @@
   },
   "settings": {
     "title": "settings",
-    "tagline": "customize your npmx experience",
-    "meta_description": "Customize your npmx.dev experience with theme, language, and display preferences.",
+    "tagline": "customize your pypix experience",
+    "meta_description": "Customize your pypix.dev experience with theme, language, and display preferences.",
     "sections": {
       "appearance": "Appearance",
       "display": "Display",
@@ -241,9 +241,9 @@
     },
     "data_source": {
       "label": "Data source",
-      "description": "Choose where npmx gets search data. Individual package pages always use the npm registry directly.",
-      "npm": "npm Registry",
-      "npm_description": "Fetches search, org and user listings directly from the official npm registry. Authoritative, but can be slower.",
+      "description": "Choose where pypix gets search data. Individual package pages should use PyPI directly as the migration progresses.",
+      "npm": "PyPI",
+      "npm_description": "Fetches package metadata from official PyPI endpoints. Search still needs a PyPI-specific index.",
       "algolia": "Algolia",
       "algolia_description": "Uses Algolia for faster search, org and user pages."
     },
@@ -261,7 +261,7 @@
     "theme_dark": "Dark",
     "theme_system": "System",
     "language": "Language",
-    "help_translate": "Help translate npmx",
+    "help_translate": "Help translate pypix",
     "translation_status": "Check global translation status",
     "accent_colors": {
       "label": "Accent colors",
@@ -356,14 +356,14 @@
     "website": "Website",
     "website_placeholder": "https://example.com",
     "likes": "Likes",
-    "seo_title": "{handle} - npmx",
-    "seo_description": "npmx profile by {handle}",
+    "seo_title": "{handle} - pypix",
+    "seo_description": "pypix profile by {handle}",
     "not_found": "Profile Not Found",
     "not_found_message": "The profile for {handle} could not be found.",
     "invite": {
-      "message": "It doesn't look like they're using npmx yet. Want to tell them about it?",
+      "message": "It doesn't look like they're using pypix yet. Want to tell them about it?",
       "share_button": "Share on Bluesky",
-      "compose_text": "Hey {'@'}{handle}! Have you checked out npmx.dev yet? It's a browser for the npm registry that's fast, modern, and open-source.\nhttps://npmx.dev"
+      "compose_text": "Hey {'@'}{handle}! Have you checked out pypix.dev yet? It's a browser for PyPI that's fast, modern, and open-source.\nhttps://pypix.dev"
     }
   },
   "package": {
@@ -453,7 +453,7 @@
     "likes": {
       "like": "Like this package",
       "unlike": "Unlike this package",
-      "top_rank_tooltip": "This is among the top 10 most liked packages on npmx! (#{rank})",
+      "top_rank_tooltip": "This is among the top 10 most liked packages on pypix! (#{rank})",
       "top_rank_label": "#{rank}",
       "top_rank_link_label": "View likes leaderboard. This package is ranked #{rank}."
     },
@@ -462,9 +462,9 @@
       "default_not_available": "Docs are not available for this version.",
       "not_available": "Docs not available",
       "not_available_detail": "We could not generate docs for this version.",
-      "page_title": "API Docs - npmx",
-      "page_title_name": "{name} docs - npmx",
-      "page_title_version": "{name} docs - npmx",
+      "page_title": "API Docs - pypix",
+      "page_title_name": "{name} docs - pypix",
+      "page_title_version": "{name} docs - pypix",
       "og_title": "{name} - Docs",
       "view_package": "View package"
     },
@@ -684,7 +684,7 @@
         "trend_weak": "weak",
         "trend_undefined": "undefined (insufficient data)",
         "button_label": "Copy alt text",
-        "watermark": "At the bottom, a watermark reads \"./npmx a fast, modern browser for the npm registry\"",
+        "watermark": "At the bottom, a watermark reads \"./pypix a fast, modern browser for the PyPI registry\"",
         "analysis": "{package_name} starts at {start_value} and ends at {end_value}, showing a {trend} trend with a slope of {downloads_slope} downloads per time interval",
         "estimation": "The final value is an estimate based on partial data for the current period.",
         "estimations": "The final values are estimates based on partial data for the current period.",
@@ -798,7 +798,7 @@
   "leaderboard": {
     "likes": {
       "title": "Likes Leaderboard",
-      "description": "The 10 most liked packages on npmx right now.",
+      "description": "The 10 most liked packages on pypix right now.",
       "rank": "Rank",
       "likes": "Likes",
       "unavailable_title": "No likes leaderboard yet",
@@ -821,7 +821,7 @@
       "advanced": "Advanced options",
       "port_label": "Port",
       "warning": "WARNING",
-      "warning_text": "This allows npmx to access your npm CLI. Only connect to sites you trust.",
+      "warning_text": "This inherited connector still targets npm CLI flows. Only connect to sites you trust.",
       "connect": "Connect",
       "connecting": "Connecting...",
       "auto_open_url": "Automatically open auth page"
@@ -1133,13 +1133,13 @@
   "about": {
     "title": "About",
     "heading": "about",
-    "meta_description": "npmx is a fast, modern browser for the npm registry. A great UX/DX for exploring npm packages.",
+    "meta_description": "pypix is a fast, modern browser for the PyPI registry. A great UX/DX for exploring Python packages.",
     "what_we_are": {
       "title": "What we are",
       "better_ux_dx": "great UX/DX",
       "admin_ui": "admin UI",
-      "description": "npmx is a {betterUxDx} for the npm package registry and tooling. We strive to provide a fast, modern interface for exploring packages, with features like dark mode, keyboard navigation, code browsing, and connections to alternative registries like {jsr}.",
-      "admin_description": "We also aim to provide a great {adminUi} for managing your packages, teams, and organizations — all from the browser, powered by your local npm CLI."
+      "description": "pypix is a {betterUxDx} for the Python package registry and tooling. We strive to provide a fast, modern interface for exploring packages, with features like dark mode, keyboard navigation, code browsing, requirements, classifiers, project links, and release metadata.",
+      "admin_description": "We also aim to provide a great {adminUi} for workflows that map cleanly to Python packaging and PyPI account management."
     },
     "what_we_are_not": {
       "title": "What we're not",
@@ -1173,7 +1173,7 @@
     },
     "contributors": {
       "title": "... and {count} more contributor | ... and {count} more contributors",
-      "description": "npmx is fully open source, built by an amazing community of contributors. Join us and let's build the npm browsing experience we always wanted, together.",
+      "description": "pypix is fully open source, forked from npmx.dev and now focused on the Python packaging experience we want.",
       "loading": "Loading contributors...",
       "error": "Failed to load contributors",
       "view_profile": "View {name}'s GitHub profile"
@@ -1182,7 +1182,7 @@
       "title": "Get involved",
       "contribute": {
         "title": "Contribute",
-        "description": "Help us build the npm experience we all want.",
+        "description": "Help us build the PyPI browsing experience we all want.",
         "cta": "View on GitHub"
       },
       "community": {
@@ -1191,13 +1191,13 @@
         "cta": "Join Discord"
       },
       "builders": {
-        "title": "Help build npmx",
-        "description": "Join the builders shaping the future of npmx.",
+        "title": "Help build pypix",
+        "description": "Join the builders shaping the future of pypix.",
         "cta": "Join Builders Discord"
       },
       "follow": {
         "title": "Stay updated",
-        "description": "Find out the latest on npmx.",
+        "description": "Find out the latest on pypix.",
         "cta": "Follow on Bluesky"
       }
     }
@@ -1221,7 +1221,7 @@
       "disconnect": "Disconnect",
       "connect_prompt": "Connect with your Atmosphere account",
       "handle_label": "Handle",
-      "handle_placeholder": "alice.npmx.social",
+      "handle_placeholder": "alice.pypix.social",
       "connect": "Connect",
       "create_account": "Create a new account",
       "connect_bluesky": "Connect with Bluesky",
@@ -1232,7 +1232,7 @@
     }
   },
   "header": {
-    "home": "npmx home",
+    "home": "pypix home",
     "packages": "packages",
     "packages_dropdown": {
       "title": "Your Packages",
@@ -1254,11 +1254,11 @@
   "compare": {
     "packages": {
       "title": "compare packages",
-      "tagline": "compare npm packages side-by-side to help you choose the right one.",
-      "meta_title": "Compare {packages} - npmx",
-      "meta_title_empty": "Compare Packages - npmx",
+      "tagline": "compare Python packages side-by-side to help you choose the right one.",
+      "meta_title": "Compare {packages} - pypix",
+      "meta_title_empty": "Compare Packages - pypix",
       "meta_description": "Side-by-side comparison of {packages}",
-      "meta_description_empty": "Compare npm packages side-by-side",
+      "meta_description_empty": "Compare Python packages side-by-side",
       "section_packages": "Packages",
       "section_facets": "Facets",
       "section_comparison": "Comparison",
@@ -1455,8 +1455,8 @@
     "word_wrap": "Word wrap"
   },
   "pds": {
-    "title": "npmx.social",
-    "meta_description": "The official AT Protocol Personal Data Server (PDS) for the npmx community.",
+    "title": "pypix.social",
+    "meta_description": "The official AT Protocol Personal Data Server (PDS) for the pypix community.",
     "join": {
       "title": "Join the Community",
       "description": "Whether you are creating your first account on the atmosphere or migrating an existing one, you belong here. You can migrate your current account without losing your handle, your posts, or your followers.",
@@ -1470,11 +1470,11 @@
       "infrastructure_value": "Hosted on Hetzner",
       "privacy_label": "Privacy:",
       "privacy_value": "Subject to strict EU Data Protection laws",
-      "learn_more": "Learn how npmx uses the Atmosphere"
+      "learn_more": "Learn how pypix uses the Atmosphere"
     },
     "community": {
       "title": "Who is here",
-      "description": "Some of the {count} accounts that are already calling npmx.social home:",
+      "description": "Some of the {count} accounts that are already calling pypix.social home:",
       "loading": "Loading PDS community...",
       "error": "Failed to load PDS community.",
       "empty": "No community members to display.",
@@ -1617,9 +1617,9 @@
   },
   "vacations": {
     "title": "on vacation",
-    "meta_description": "The npmx team was recharging. Discord reopened after a week.",
+    "meta_description": "The pypix team was recharging. Discord reopened after a week.",
     "heading": "recharging",
-    "subtitle": "we were building npmx at a pace that was costing {some} of us sleep. we didn't want that to be the norm! so we took a week off. together.",
+    "subtitle": "we were building pypix at a pace that was costing {some} of us sleep. we didn't want that to be the norm! so we took a week off. together.",
     "illustration_alt": "a single row of cosy icons",
     "poke_log": "Poke the campfire",
     "what": {
@@ -1663,17 +1663,17 @@
   "brand": {
     "title": "Brand",
     "heading": "brand",
-    "meta_description": "npmx brand guidelines, logos, colors, and typography for use in press and media.",
-    "intro": "Resources and guidelines for using the npmx brand in your projects, articles, and media.",
+    "meta_description": "pypix brand guidelines, logos, colors, and typography for use in press and media.",
+    "intro": "Resources and guidelines for using the pypix brand in your projects, articles, and media.",
     "logos": {
       "title": "logos",
-      "description": "Download npmx logos in SVG and PNG formats. Use the appropriate variant for your background.",
+      "description": "Download pypix logos in SVG and PNG formats. Use the appropriate variant for your background.",
       "wordmark": "FULL WORDMARK",
-      "wordmark_alt": "npmx full wordmark logo with blue slash on dark background",
-      "wordmark_light_alt": "npmx full wordmark logo with accent slash on light background",
+      "wordmark_alt": "pypix full wordmark logo with blue slash on dark background",
+      "wordmark_light_alt": "pypix full wordmark logo with accent slash on light background",
       "mark": "LOGO MARK",
-      "mark_alt": "npmx logo mark with dot and slash on dark background",
-      "mark_light_alt": "npmx logo mark with dot and slash on light background",
+      "mark_alt": "pypix logo mark with dot and slash on dark background",
+      "mark_light_alt": "pypix logo mark with dot and slash on light background",
       "on_dark": "on dark",
       "on_light": "on light",
       "download_svg": "SVG",
@@ -1683,7 +1683,7 @@
     },
     "customize": {
       "title": "customize your logo",
-      "description": "Preview the npmx logo with your accent color and background. The preview reflects your current settings — pick a color, toggle the background, and download.",
+      "description": "Preview the pypix logo with your accent color and background. The preview reflects your current settings — pick a color, toggle the background, and download.",
       "accent_label": "accent",
       "bg_label": "background",
       "download_svg_aria": "Download customized logo as SVG",
@@ -1691,7 +1691,7 @@
     },
     "typography": {
       "title": "typography",
-      "description": "npmx uses the Geist font family by Vercel for both interface text and code.",
+      "description": "pypix uses the Geist font family by Vercel for both interface text and code.",
       "sans": "Geist Sans",
       "sans_desc": "Used for body text and UI elements.",
       "mono": "Geist Mono",
@@ -1705,5 +1705,5 @@
       "discord_link_text": "chat.npmx.dev"
     }
   },
-  "alt_logo_kawaii": "A cute, rounded, and colorful version of the npmx logo."
+  "alt_logo_kawaii": "A cute, rounded, and colorful version of the pypix logo."
 }

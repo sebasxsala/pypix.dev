@@ -6,7 +6,7 @@
       viewBox="0 0 512 512"
       class="w-8 h-8"
     >
-      <title>npmx docs</title>
+      <title>pypix docs</title>
       <rect fill="currentColor" x="110" y="310" width="60" height="60" />
       <text
         fill="var(--ui-primary)"
@@ -21,6 +21,6 @@
         <tspan>/</tspan>
       </text>
     </svg>
-    <span class="text-base font-medium">npmx <span class="text-primary">docs</span></span>
+    <span class="text-base font-medium">pypix <span class="text-primary">docs</span></span>
   </div>
 </template>

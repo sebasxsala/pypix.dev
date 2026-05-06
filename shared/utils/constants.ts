@@ -8,11 +8,15 @@ export const CACHE_MAX_AGE_ONE_DAY = 60 * 60 * 24
 export const CACHE_MAX_AGE_ONE_YEAR = 60 * 60 * 24 * 365
 
 // API Strings
-export const NPMX_SITE = 'https://npmx.dev'
-export const NPMX_DOCS_SITE = 'https://docs.npmx.dev'
+export const NPMX_SITE = 'https://pypix.dev'
+export const NPMX_DOCS_SITE = 'https://docs.pypix.dev'
 export const NPMX_DID = 'did:plc:u5zp7npt5kpueado77kuihyz'
 export const BLUESKY_API = 'https://public.api.bsky.app'
 export const BLUESKY_COMMENTS_REQUEST = '/api/atproto/bluesky-comments'
+export const PYPI_BASE = 'https://pypi.org'
+export const PYPI_JSON_API = 'https://pypi.org/pypi'
+export const PYPI_SIMPLE_API = 'https://pypi.org/simple'
+export const PYPISTATS_API = 'https://pypistats.org/api'
 export const NPM_REGISTRY = 'https://registry.npmjs.org'
 export const NPM_API = 'https://api.npmjs.org'
 export const MICROLINK_API = 'https://api.microlink.io'
@@ -32,7 +36,7 @@ export const NPM_MISSING_README_SENTINEL = 'ERROR: No README data found!'
 /** The npm registry truncates the packument readme field at 65,536 characters (2^16) */
 export const NPM_README_TRUNCATION_THRESHOLD = 64_000
 export const ERROR_JSR_FETCH_FAILED = 'Failed to fetch package from JSR registry.'
-export const ERROR_NPM_FETCH_FAILED = 'Failed to fetch package from npm registry.'
+export const ERROR_NPM_FETCH_FAILED = 'Failed to fetch package from PyPI registry.'
 export const ERROR_PDS_FETCH_FAILED = 'Failed to fetch PDS repos.'
 export const ERROR_PROVENANCE_FETCH_FAILED = 'Failed to fetch provenance.'
 export const UNSET_NUXT_SESSION_PASSWORD = 'NUXT_SESSION_PASSWORD not set'
@@ -51,7 +55,7 @@ export const SLINGSHOT_HOST = 'slingshot.microcosm.blue'
 // ATProtocol
 // References used to link packages to things that are not inherently atproto
 export const PACKAGE_SUBJECT_REF = (packageName: string) =>
-  `https://npmx.dev/package/${packageName}`
+  `https://pypix.dev/package/${packageName}`
 // OAuth scopes as we add new ones we need to check these on certain actions. If not redirect the user to login again to upgrade the scopes
 export const LIKES_SCOPE = `repo:${dev.npmx.feed.like.$nsid}`
 export const PROFILE_SCOPE = `repo:${dev.npmx.actor.profile.$nsid}`

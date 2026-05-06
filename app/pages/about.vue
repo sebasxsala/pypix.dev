@@ -4,9 +4,9 @@ import { SPONSORS } from '~/assets/logos/sponsors'
 import { OSS_PARTNERS } from '~/assets/logos/oss-partners'
 
 useSeoMeta({
-  title: () => `${$t('about.title')} - npmx`,
-  ogTitle: () => `${$t('about.title')} - npmx`,
-  twitterTitle: () => `${$t('about.title')} - npmx`,
+  title: () => `${$t('about.title')} - pypix`,
+  ogTitle: () => `${$t('about.title')} - pypix`,
+  twitterTitle: () => `${$t('about.title')} - pypix`,
   description: () => $t('about.meta_description'),
   ogDescription: () => $t('about.meta_description'),
   twitterDescription: () => $t('about.meta_description'),
@@ -16,13 +16,13 @@ defineOgImage(
   'Page.takumi',
   {
     title: () => `${$t('about.title')}`,
-    description: 'a fast, modern browser for the npm registry',
+    description: 'a fast, modern browser for the PyPI registry',
   },
-  { alt: () => `${$t('about.title')} — npmx` },
+  { alt: () => `${$t('about.title')} - pypix` },
 )
 
 const pmLinks = {
-  npm: 'https://www.npmjs.com/',
+  npm: 'https://pypi.org/',
   pnpm: 'https://pnpm.io/',
   yarn: 'https://yarnpkg.com/',
   bun: 'https://bun.sh/',

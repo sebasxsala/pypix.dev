@@ -30,7 +30,7 @@ export default defineNuxtConfig({
     preference: 'system',
     fallback: 'dark',
     dataValue: 'theme',
-    storageKey: 'npmx-color-mode',
+    storageKey: 'pypix-color-mode',
   },
 
   css: ['~/assets/main.css'],
@@ -48,7 +48,7 @@ export default defineNuxtConfig({
       redisRestToken: process.env.UPSTASH_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN || '',
     },
     public: {
-      // Algolia npm-search index (maintained by Algolia & jsDelivr, used by yarnpkg.com et al.)
+      // TODO(pypi): Replace the inherited Algolia npm-search index with a PyPI search/index source.
       algolia: {
         appId: 'OFCNCOG2CU',
         apiKey: 'f54e21fa3a2a0160595bb058179bfb1e',
@@ -68,12 +68,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'en-US' },
-      title: 'npmx',
+      title: 'pypix',
       link: [
         {
           rel: 'search',
           type: 'application/opensearchdescription+xml',
-          title: 'npm',
+          title: 'PyPI',
           href: '/opensearch.xml',
         },
       ],
@@ -87,9 +87,9 @@ export default defineNuxtConfig({
   },
 
   site: {
-    url: 'https://npmx.dev',
-    name: 'npmx',
-    description: 'A fast, modern browser for the npm registry',
+    url: 'https://pypix.dev',
+    name: 'pypix',
+    description: 'A fast, modern browser for the PyPI registry',
   },
 
   router: {
@@ -197,11 +197,11 @@ export default defineNuxtConfig({
     '/blog/**': { prerender: true },
     // proxy for insights
     '/_v/script.js': {
-      proxy: 'https://npmx.dev/_vercel/insights/script.js',
+      proxy: 'https://pypix.dev/_vercel/insights/script.js',
     },
-    '/_v/view': { proxy: 'https://npmx.dev/_vercel/insights/view' },
-    '/_v/event': { proxy: 'https://npmx.dev/_vercel/insights/event' },
-    '/_v/session': { proxy: 'https://npmx.dev/_vercel/insights/session' },
+    '/_v/view': { proxy: 'https://pypix.dev/_vercel/insights/view' },
+    '/_v/event': { proxy: 'https://pypix.dev/_vercel/insights/event' },
+    '/_v/session': { proxy: 'https://pypix.dev/_vercel/insights/session' },
     // lunaria status.json
     '/lunaria/status.json': {
       headers: {
@@ -325,9 +325,9 @@ export default defineNuxtConfig({
       config: false,
     },
     manifest: {
-      name: 'npmx',
-      short_name: 'npmx',
-      description: 'A fast, modern browser for the npm registry',
+      name: 'pypix',
+      short_name: 'pypix',
+      description: 'A fast, modern browser for the PyPI registry',
       theme_color: '#0a0a0a',
       background_color: '#0a0a0a',
       icons: [

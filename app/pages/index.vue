@@ -86,8 +86,6 @@ defineOgImage('Splash.takumi', {}, { alt: () => $t('seo.home.description') })
             <InstantSearch />
           </form>
         </search>
-
-        <BuildEnvironment class="mt-4" />
       </header>
 
       <nav

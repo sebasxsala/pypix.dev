@@ -1,3 +1,4 @@
+import type { LocationQueryRaw } from 'vue-router'
 import { normalizeSearchParam } from '#shared/utils/url'
 import { debounce } from 'perfect-debounce'
 
@@ -6,11 +7,28 @@ const pagesWithLocalFilter = new Set(['~username', 'org'])
 
 const SEARCH_DEBOUNCE_MS = 100
 
+function normalizeSubmittedSearchQuery(value: string): string {
+  return value.trim().replace(/\s+/g, '-')
+}
+
+export function buildGlobalSearchQuery(
+  routeQuery: LocationQueryRaw,
+  value: string,
+): LocationQueryRaw {
+  return {
+    ...routeQuery,
+    q: normalizeSubmittedSearchQuery(value) || undefined,
+    p: undefined,
+  }
+}
+
 export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   const { settings } = useSettings()
   const { searchProvider } = useSearchProvider()
   const searchProviderValue = computed(() => {
     const p = normalizeSearchParam(route.query.p)
+    // Backward-compatible read for old /search?p=npm links. New PyPI-first URLs
+    // should not persist the inherited npm provider marker.
     if (p === 'npm' || searchProvider.value === 'npm') return 'npm'
     return 'algolia'
   })
@@ -36,7 +54,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   // This is basically doing instant search as user types
   watch(searchQuery, val => {
     if (settings.value.instantSearch) {
-      commitSearchQuery(val)
+      commitSearchQuery(normalizeSubmittedSearchQuery(val))
     }
   })
 
@@ -52,7 +70,9 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
 
   // Updates URL when search query changes (immediately for instantSearch or after Enter hit otherwise)
   const updateUrlQueryImpl = (value: string, provider: 'npm' | 'algolia') => {
-    const isSameQuery = route.query.q === value && route.query.p === provider
+    void provider
+    const submittedValue = normalizeSubmittedSearchQuery(value)
+    const isSameQuery = normalizeSearchParam(route.query.q) === submittedValue && !route.query.p
     // Don't navigate away from pages that use ?q for local filtering
     if ((pagesWithLocalFilter.has(route.name as string) && place === 'content') || isSameQuery) {
       return
@@ -60,19 +80,14 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
 
     if (route.name === 'search') {
       router.replace({
-        query: {
-          ...route.query,
-          q: value || undefined,
-          p: provider === 'npm' ? 'npm' : undefined,
-        },
+        query: buildGlobalSearchQuery(route.query, submittedValue),
       })
       return
     }
     router.push({
       name: 'search',
       query: {
-        q: value,
-        p: provider === 'npm' ? 'npm' : undefined,
+        q: submittedValue || undefined,
       },
     })
   }
@@ -82,7 +97,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   function flushUpdateUrlQuery() {
     // Commit the current query when explicitly submitted (Enter pressed)
     commitSearchQuery.cancel()
-    committedSearchQuery.value = searchQuery.value
+    committedSearchQuery.value = normalizeSubmittedSearchQuery(searchQuery.value)
     // When instant search is off the debounce queue is empty, so call directly
     if (!settings.value.instantSearch) {
       updateUrlQueryImpl(searchQuery.value, searchProvider.value)
