@@ -6,6 +6,27 @@ import {
   type ShowcasedFramework,
 } from '~/utils/frameworks'
 
+describe('SHOWCASED_FRAMEWORKS', () => {
+  it('showcases curated Python packages for the home page', () => {
+    expect(SHOWCASED_FRAMEWORKS.map(framework => framework.package)).toEqual([
+      'django',
+      'fastapi',
+      'flask',
+      'requests',
+      'pydantic',
+      'numpy',
+      'pandas',
+      'pytest',
+      'sqlalchemy',
+      'ruff',
+      'uvicorn',
+      'typer',
+      'httpx',
+      'better-auth-py',
+    ])
+  })
+})
+
 describe('getFrameworkColor', () => {
   it('returns the color a listed framework', () => {
     SHOWCASED_FRAMEWORKS.forEach((framework: ShowcasedFramework) => {
