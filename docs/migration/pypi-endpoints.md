@@ -26,6 +26,19 @@ Important PyPI API notes:
 - PyPI XML-RPC search is permanently disabled. Search needs another source, such as a maintained external index, a local index built from `/simple/`, or a hosted search pipeline.
 - Prefer the Simple/Index JSON API for complete project/version/file listings where possible.
 
+Current search MVP:
+
+- `/api/pypi/search` intentionally does not call PyPI Stats. Download counts are useful package metadata, but they add one extra external request per result and should not block search latency.
+- Exact package-name queries such as `requests`, `fastapi`, and `django` use `GET https://pypi.org/pypi/<project>/json` directly to prioritize the canonical package first, then fill the rest of the result set from the cached `/simple/` project index.
+- Non-exact searches still use the Simple/Index project list, cached through Nitro storage for one day with SWR. This is acceptable for the migration MVP, but it is still a name-only search and cannot rank by description, classifiers, popularity, recency, or download counts.
+- Keep `/api/pypi/search` uncached at the route level unless query-aware ISR is restored with `passQuery` and `allowQuery`. The internal `/simple/` cache is the controlled cache layer for now.
+
+Future search direction:
+
+- Build or adopt a real PyPI search index. Good candidates are Meilisearch, Typesense, Algolia, Postgres full-text search, or a custom scheduled import pipeline backed by PyPI Simple/JSON plus a downloads provider.
+- Index at least normalized name, canonical name, summary, keywords, classifiers, latest version, upload time, project URLs, yanked status, vulnerability signals, and optional popularity/download fields from a documented provider.
+- Keep download stats out of the synchronous search request. Load them from the index if precomputed, or hydrate them lazily in package cards/details.
+
 References:
 
 - https://docs.pypi.org/api/json/

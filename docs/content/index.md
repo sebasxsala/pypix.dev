@@ -17,7 +17,7 @@ links:
   size: xl
   trailingIcon: i-lucide:arrow-right
 - label: View on GitHub
-  to: https://github.com/npmx-dev/npmx.dev
+  to: https://github.com/sebasxsala/pypix.dev
   target: \_blank
   color: neutral
   size: xl
