@@ -122,12 +122,12 @@
       "help_translate": "Help translate"
     },
     "connections": {
-      "npm_connect": "Connect to npm CLI",
-      "npm_connected": "npm CLI (~{username})",
-      "npm_disconnect": "Disconnect npm CLI",
-      "atmosphere_connect": "Connect to Atmosphere",
-      "atmosphere_connected": "atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "Disconnect Atmosphere"
+      "npm_connect": "Manage on PyPI",
+      "npm_connected": "PyPI official admin",
+      "npm_disconnect": "Close PyPI admin",
+      "atmosphere_connect": "Manage on PyPI",
+      "atmosphere_connected": "PyPI official admin",
+      "atmosphere_disconnect": "Close PyPI admin"
     },
     "navigation": {
       "home": "home",
@@ -182,8 +182,8 @@
       "background_theme_changed": "Background shade set to {theme}.",
       "download_started": "Downloading {package} tarball.",
       "copied_to_clipboard": "Copied to clipboard.",
-      "npm_disconnected": "npm CLI disconnected.",
-      "atmosphere_disconnected": "Atmosphere disconnected.",
+      "npm_disconnected": "PyPI admin closed.",
+      "atmosphere_disconnected": "PyPI admin closed.",
       "facets_all_selected": "All facets selected.",
       "facets_all_deselected": "All facets deselected.",
       "view_switched": "Switched to {view} view.",
@@ -205,13 +205,14 @@
   "blog": {
     "title": "Blog",
     "heading": "blog",
-    "meta_description": "Insights and updates from the pypix community",
+    "meta_description": "Updates from pypix.",
     "author": {
       "view_profile": "View {name}'s profile on Bluesky"
     },
     "draft_badge": "Draft",
     "draft_banner": "This is an unpublished draft. It may be incomplete or contain inaccuracies.",
-    "no_posts": "No posts found.",
+    "empty_title": "Coming soon",
+    "no_posts": "There are no pypix blog posts yet. Updates will live here when they are ready.",
     "atproto": {
       "view_on_bluesky": "View on Bluesky",
       "reply_on_bluesky": "Reply on Bluesky",
@@ -461,7 +462,7 @@
       "contents": "Contents",
       "default_not_available": "Docs are not available for this version.",
       "not_available": "Docs not available",
-      "not_available_detail": "We could not generate docs for this version.",
+      "not_available_detail": "Docs are not available for this package version.",
       "page_title": "API Docs - pypix",
       "page_title_name": "{name} docs - pypix",
       "page_title_version": "{name} docs - pypix",
@@ -810,9 +811,9 @@
       "title": "Local Connector",
       "connected": "Connected",
       "connected_as_user": "Connected as ~{user}",
-      "connected_hint": "You can now manage packages and organizations from the web UI.",
+      "connected_hint": "Authenticated package administration should happen in PyPI official admin.",
       "disconnect": "Disconnect",
-      "run_hint": "Run the connector on your machine to enable admin features.",
+      "run_hint": "pypix does not provide a local admin connector for PyPI.",
       "copy_command": "Copy command",
       "copied": "Copied",
       "paste_token": "Then paste the token below to connect:",
@@ -821,7 +822,7 @@
       "advanced": "Advanced options",
       "port_label": "Port",
       "warning": "WARNING",
-      "warning_text": "This inherited connector still targets npm CLI flows. Only connect to sites you trust.",
+      "warning_text": "This inherited connector is not part of the PyPI-first flow.",
       "connect": "Connect",
       "connecting": "Connecting...",
       "auto_open_url": "Automatically open auth page"
@@ -958,21 +959,21 @@
     "modal": {
       "title": "Claim Package Name",
       "success": "Package claimed!",
-      "success_detail": "{name}{'@'}0.0.0 has been published to npm.",
-      "success_hint": "You can now publish new versions to this package using npm publish.",
+      "success_detail": "{name} has been prepared for PyPI publishing.",
+      "success_hint": "Publish and manage projects through PyPI official tools.",
       "view_package": "View Package",
       "invalid_name": "Invalid package name:",
       "available": "This name is available!",
       "taken": "This name is already taken.",
       "missing_permission": "You do not have permission to add a package to scope {'@'}{scope}.",
-      "similar_warning": "Similar packages exist - npm may reject this name:",
+      "similar_warning": "Similar projects exist - PyPI may reject this name:",
       "related": "Related packages:",
       "scope_warning_title": "Consider using a scoped package instead",
-      "scope_warning_text": "Unscoped package names are a shared resource. Only claim a name if you intend to publish and maintain a package. For personal or organizational projects, use a scoped name like {'@'}{username}/{name}.",
-      "connect_required": "Connect to the local connector to claim this package name.",
-      "connect_button": "Connect to Connector",
-      "publish_hint": "This will publish a minimal placeholder package.",
-      "preview_json": "Preview package.json",
+      "scope_warning_text": "Package names are a shared resource. Only publish a name if you intend to maintain a real project.",
+      "connect_required": "Use PyPI official admin to manage project ownership and publishing.",
+      "connect_button": "Open PyPI admin",
+      "publish_hint": "Use PyPI official publishing tools for new projects.",
+      "preview_json": "Preview metadata",
       "claim_button": "Claim Package Name",
       "publishing": "Publishing...",
       "checking": "Checking availability...",
@@ -1138,8 +1139,8 @@
       "title": "What we are",
       "better_ux_dx": "great UX/DX",
       "admin_ui": "admin UI",
-      "description": "pypix is a {betterUxDx} for the Python package registry and tooling. We strive to provide a fast, modern interface for exploring packages, with features like dark mode, keyboard navigation, code browsing, requirements, classifiers, project links, and release metadata.",
-      "admin_description": "We also aim to provide a great {adminUi} for workflows that map cleanly to Python packaging and PyPI account management."
+      "description": "pypix is a {betterUxDx} for the Python Package Index and the packaging workflows around it. We provide a fast, modern interface for exploring projects, releases, files, requirements, classifiers, project links, security signals, and install guidance.",
+      "admin_description": "We also aim to provide a great {adminUi} for PyPI workflows that make sense in the browser, while keeping publishing and environment management in the tools Python developers already use."
     },
     "what_we_are_not": {
       "title": "What we're not",
@@ -1165,7 +1166,7 @@
     },
     "team": {
       "title": "Team",
-      "governance": "Governance",
+      "governance": "Maintainer",
       "role_steward": "steward",
       "role_maintainer": "maintainer",
       "sponsor": "sponsor",
@@ -1173,7 +1174,7 @@
     },
     "contributors": {
       "title": "... and {count} more contributor | ... and {count} more contributors",
-      "description": "pypix is fully open source, forked from npmx.dev and now focused on the Python packaging experience we want.",
+      "description": "pypix is maintained by sebasxsala and built in the open on GitHub.",
       "loading": "Loading contributors...",
       "error": "Failed to load contributors",
       "view_profile": "View {name}'s GitHub profile"
@@ -1184,33 +1185,49 @@
         "title": "Contribute",
         "description": "Help us build the PyPI browsing experience we all want.",
         "cta": "View on GitHub"
-      },
-      "community": {
-        "title": "Join the community",
-        "description": "Chat, ask questions, and share ideas.",
-        "cta": "Join Discord"
-      },
-      "builders": {
-        "title": "Help build pypix",
-        "description": "Join the builders shaping the future of pypix.",
-        "cta": "Join Builders Discord"
-      },
-      "follow": {
-        "title": "Stay updated",
-        "description": "Find out the latest on pypix.",
-        "cta": "Follow on Bluesky"
       }
+    }
+  },
+  "pypi_admin": {
+    "actions": {
+      "manage_projects": "Manage projects",
+      "manage_project": "Manage project",
+      "project_page": "View on PyPI",
+      "trusted_publisher": "Configure Trusted Publisher",
+      "pending_publisher": "Create pending publisher",
+      "publishing_guide": "Publishing guide",
+      "organizations": "Organizations"
+    },
+    "descriptions": {
+      "manage_projects": "Open official PyPI project admin",
+      "manage_project": "Open this project in official PyPI admin",
+      "project_page": "Open the public PyPI project page",
+      "trusted_publisher": "Configure OIDC publishing on PyPI",
+      "pending_publisher": "Prepare publishing for a project that does not exist yet",
+      "publishing_guide": "Generate the no-token GitHub Actions workflow",
+      "organizations": "Manage PyPI organizations and teams on pypi.org"
+    },
+    "guide": {
+      "title": "Publishing to PyPI",
+      "subtitle": "Use official PyPI admin for account actions. pypix.dev can guide the workflow, but it does not store PyPI tokens or mutate PyPI accounts.",
+      "trusted_publishing": "Trusted Publishing",
+      "trusted_publishing_body": "Use PyPI Trusted Publishing to publish from CI with short-lived OIDC credentials instead of long-lived API tokens.",
+      "official_actions": "Official PyPI actions",
+      "github_workflow": "GitHub Actions workflow",
+      "copy_workflow": "Copy workflow",
+      "copied": "Copied",
+      "no_tokens": "No PyPI token is needed for this workflow after the trusted publisher is configured on PyPI."
     }
   },
   "account_menu": {
     "connect": "connect",
     "account": "Account",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Manage packages & orgs",
-    "atmosphere_desc": "Social features & identity",
-    "connect_npm_cli": "Connect to npm CLI",
-    "connect_atmosphere": "Connect to Atmosphere",
+    "npm_cli": "PyPI",
+    "atmosphere": "PyPI",
+    "npm_cli_desc": "Use PyPI official admin",
+    "atmosphere_desc": "Use PyPI official admin",
+    "connect_npm_cli": "Manage on PyPI",
+    "connect_atmosphere": "Manage on PyPI",
     "connecting": "Connecting...",
     "ops": "{count} op | {count} ops"
   },
@@ -1224,9 +1241,8 @@
       "handle_placeholder": "alice.pypix.social",
       "connect": "Connect",
       "create_account": "Create a new account",
-      "connect_bluesky": "Connect with Bluesky",
       "what_is_atmosphere": "What is an Atmosphere account?",
-      "atmosphere_explanation": "{npmx} uses the {atproto} to power many of its social features, allowing users to own their data and use one account for all compatible applications. Once you create an account, you can use other apps like {bluesky} and {tangled} with the same account.",
+      "atmosphere_explanation": "pypix may use {atproto} for future social features, allowing users to own their data and use one account for compatible applications like {tangled}.",
       "default_input_error": "Please enter a valid handle, DID, or a full PDS URL",
       "profile": "Profile"
     }
@@ -1310,6 +1326,7 @@
       "selected_all_category_facets": "Selected all {category} facets",
       "deselected_all_category_facets": "Deselected all {category} facets",
       "coming_soon": "Coming soon",
+      "not_supported": "Not supported",
       "select_all": "Select all facets",
       "deselect_all": "Deselect all facets",
       "binary_only_tooltip": "This package exposes binaries and no exports",
@@ -1321,8 +1338,8 @@
       },
       "items": {
         "packageSize": {
-          "label": "Package Size",
-          "description": "Size of the package itself (unpacked)"
+          "label": "Distribution Size",
+          "description": "Size of the selected PyPI distribution file"
         },
         "installSize": {
           "label": "Install Size",
@@ -1353,8 +1370,8 @@
           "description": "Whether the package is deprecated"
         },
         "engines": {
-          "label": "Engines",
-          "description": "Node.js version requirements"
+          "label": "Requires Python",
+          "description": "Python version requirement from PyPI metadata"
         },
         "types": {
           "label": "Types",
@@ -1456,36 +1473,22 @@
   },
   "pds": {
     "title": "pypix.social",
-    "meta_description": "The official AT Protocol Personal Data Server (PDS) for the pypix community.",
-    "join": {
-      "title": "Join the Community",
-      "description": "Whether you are creating your first account on the atmosphere or migrating an existing one, you belong here. You can migrate your current account without losing your handle, your posts, or your followers.",
-      "migrate": "Migrate with PDS MOOver"
+    "meta_description": "pypix.social is reserved for a future AT Protocol identity experience.",
+    "status": {
+      "title": "Not available yet",
+      "description": "pypix does not currently operate a public AT Protocol Personal Data Server.",
+      "future": "A PDS or Atmosphere-based identity flow may come later, but for now there are no server details or community accounts to display."
     },
-    "server": {
-      "title": "Server Details",
-      "location_label": "Location:",
-      "location_value": "Nuremberg, Germany",
-      "infrastructure_label": "Infrastructure:",
-      "infrastructure_value": "Hosted on Hetzner",
-      "privacy_label": "Privacy:",
-      "privacy_value": "Subject to strict EU Data Protection laws",
-      "learn_more": "Learn how pypix uses the Atmosphere"
-    },
-    "community": {
-      "title": "Who is here",
-      "description": "Some of the {count} accounts that are already calling pypix.social home:",
-      "loading": "Loading PDS community...",
-      "error": "Failed to load PDS community.",
-      "empty": "No community members to display.",
-      "view_profile": "View {handle}'s profile",
-      "new_accounts": "...plus {count} more that are new to the atmosphere"
+    "moover": {
+      "title": "About PDS MOOver",
+      "description": "PDS MOOver is a migration tool for AT Protocol accounts. It helps move an existing account from one Personal Data Server to another while preserving the identity and social graph where the protocol allows it.",
+      "note": "Because pypix.social is not active yet, there is no pypix migration flow to use right now."
     }
   },
   "privacy_policy": {
     "title": "privacy policy",
     "last_updated": "Last updated: {date}",
-    "welcome": "Welcome to {app}. We are committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights regarding your information.",
+    "welcome": "Welcome to {app}. This policy explains what data this site collects, how it is used, and how to contact the maintainer.",
     "cookies": {
       "what_are": {
         "title": "What are cookies?",
@@ -1501,7 +1504,7 @@
         "cookie_vdpl": "__vdpl",
         "cookie_vdpl_desc": "This cookie is used by our hosting provider (Vercel) for skew protection. It ensures you fetch assets from the correct deployment version if a new update is released while you are browsing. It does not track you.",
         "cookie_h3": "h3",
-        "cookie_h3_desc": "This is our secure session cookie. It stores the OAuth access token when you connect your Atmosphere account. It is essential for maintaining your authenticated session."
+        "cookie_h3_desc": "This is a secure session cookie used by the application runtime when session features are enabled. Authentication features are not currently exposed on the public site."
       },
       "local_storage": {
         "title": "Local storage",
@@ -1530,31 +1533,31 @@
       "li2": "It does not collect personal identifiers",
       "li3": "It does not track users across websites",
       "li4": "All data is aggregated and anonymised",
-      "p3": "The only information collected includes: page URLs, referrer, country/region, device type, browser, and operating system. This data cannot be used to identify individual users."
+      "p3": "The only information collected includes page URLs, referrer, country or region, device type, browser, and operating system. This data cannot be used by pypix to identify individual users."
     },
     "authenticated": {
       "title": "Authenticated users",
-      "p1": "When you connect your {bold} account to npmx, we store your OAuth access token in a secure, HTTP-only session cookie. This token is used solely to authenticate requests on your behalf.",
+      "p1": "When authenticated account features are enabled in pypix, OAuth access tokens are stored in a secure, HTTP-only session cookie and used only to authenticate requests on your behalf.",
       "bold": "Atmosphere",
       "p2": "We do not store your credentials, and we do not access any data beyond what is necessary to provide the features you use. You can disconnect your account at any time from the {settings} page.",
       "settings": "settings"
     },
     "data_retention": {
       "title": "Data retention",
-      "p1": "Session cookies are automatically deleted when you close your browser or after a period of inactivity. Local storage preferences remain on your device until you clear your browser data. Analytics data is retained in aggregate form and cannot be linked to individual users."
+      "p1": "Session cookies are automatically deleted when you close your browser or after a period of inactivity. Local storage preferences remain on your device until you clear your browser data. Analytics data is retained in aggregate form and cannot be linked by pypix to individual users."
     },
     "your_rights": {
       "title": "Your rights",
       "p1": "You have the right to:",
       "li1": "Access information about what data we collect",
       "li2": "Clear your local storage and cookies at any time",
-      "li3": "Disconnect your authenticated session",
+      "li3": "Clear any session cookies stored by your browser",
       "li4": "Request information about our data practices",
       "p2": "Since we do not collect personal data, there is typically no personal information to delete or export."
     },
     "contact": {
       "title": "Contact us",
-      "p1": "For any questions or concerns about this privacy policy, you can contact us by opening an issue on our {link}.",
+      "p1": "For any questions or concerns about this privacy policy, contact sebasxsala by opening an issue on the {link}.",
       "link": "GitHub repository"
     },
     "changes": {
@@ -1617,16 +1620,16 @@
   },
   "vacations": {
     "title": "on vacation",
-    "meta_description": "The pypix team was recharging. Discord reopened after a week.",
+    "meta_description": "The pypix team was recharging.",
     "heading": "recharging",
     "subtitle": "we were building pypix at a pace that was costing {some} of us sleep. we didn't want that to be the norm! so we took a week off. together.",
     "illustration_alt": "a single row of cosy icons",
     "poke_log": "Poke the campfire",
     "what": {
       "title": "what happened",
-      "p1": "discord was closed {dates}.",
+      "p1": "community work paused {dates}.",
       "dates": "February 14 – 21",
-      "p2": "all invite links were gone and channels were locked – except {garden}, which stayed open for folks who wanted to keep hanging out.",
+      "p2": "public collaboration slowed down for a short break, while {garden} stayed open for folks who wanted to keep hanging out.",
       "garden": "#garden"
     },
     "meantime": {
@@ -1636,8 +1639,7 @@
     },
     "return": {
       "title": "we came back!",
-      "p1": "we came back recharged and ready for the final push to March 3rd. {social} for updates.",
-      "social_link": "follow us on Bluesky"
+      "p1": "we came back recharged and ready for the final push to March 3rd."
     },
     "stats": {
       "contributors": "Contributors",
@@ -1702,7 +1704,7 @@
     "guidelines": {
       "title": "just a note",
       "message": "Accessibility matters to us, and we would love you to follow us in this vision. When using mentioned media, ensure there is enough contrast against the background, and don't go smaller than 24px. If you need any other resources or additional information about the project, feel free to reach us at {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "discord_link_text": "github.com/sebasxsala/pypix.dev"
     }
   },
   "alt_logo_kawaii": "A cute, rounded, and colorful version of the pypix logo."

@@ -27,6 +27,7 @@ const pages = [
   '/package-docs',
   '/pds',
   '/privacy',
+  '/publishing',
   '/search',
   '/settings',
   '/translation-status',
