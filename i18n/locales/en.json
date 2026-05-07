@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "docs",
     "source": "source",
-    "social": "social",
-    "chat": "chat",
-    "builders_chat": "builders",
     "keyboard_shortcuts": "keyboard shortcuts",
     "brand": "brand",
     "resources": "Resources",
@@ -52,7 +49,6 @@
     "label": "Search PyPI packages",
     "placeholder": "search packages...",
     "button": "search",
-    "searching": "Searching...",
     "found_packages": "No packages found | Found 1 package | Found {count} packages",
     "found_packages_sorted": "No results found | Sorting top {count} result | Sorting top {count} results",
     "updating": "(updating...)",
@@ -63,10 +59,6 @@
     "title_packages": "search packages",
     "meta_description": "Search results for '{search}'",
     "meta_description_packages": "Search PyPI packages",
-    "not_taken": "{name} is not taken",
-    "claim_prompt": "Claim this project name on PyPI",
-    "claim_button": "Claim \"{name}\"",
-    "want_to_claim": "Want to claim this package name?",
     "start_typing": "Start typing to search packages",
     "algolia_disclaimer": "Powered by Algolia",
     "exact_match": "exact",
@@ -97,7 +89,6 @@
     "empty_search_hint": "Press Enter to search for \"{query}\".",
     "current": "current",
     "here": "you are here",
-    "connected": "connected",
     "state": {
       "on": "on",
       "off": "off"
@@ -121,19 +112,8 @@
       "keyboard_shortcuts": "Keyboard shortcuts",
       "help_translate": "Help translate"
     },
-    "connections": {
-      "npm_connect": "Manage on PyPI",
-      "npm_connected": "PyPI official admin",
-      "npm_disconnect": "Close PyPI admin",
-      "atmosphere_connect": "Manage on PyPI",
-      "atmosphere_connected": "PyPI official admin",
-      "atmosphere_disconnect": "Close PyPI admin"
-    },
     "navigation": {
-      "home": "home",
-      "packages": "packages (~{username})",
-      "orgs": "orgs (~{username})",
-      "profile": "profile ({'@'}{handle})"
+      "home": "home"
     },
     "links": {
       "external": "External link"
@@ -182,8 +162,6 @@
       "background_theme_changed": "Background shade set to {theme}.",
       "download_started": "Downloading {package} tarball.",
       "copied_to_clipboard": "Copied to clipboard.",
-      "npm_disconnected": "PyPI admin closed.",
-      "atmosphere_disconnected": "PyPI admin closed.",
       "facets_all_selected": "All facets selected.",
       "facets_all_deselected": "All facets deselected.",
       "view_switched": "Switched to {view} view.",
@@ -245,14 +223,12 @@
     "data_source": {
       "label": "Data source",
       "description": "Choose where pypix gets search data. Individual package pages should use PyPI directly as the migration progresses.",
-      "npm": "PyPI",
       "npm_description": "Fetches package metadata from official PyPI endpoints. Search still needs a PyPI-specific index.",
       "pypi_search": "PyPI search",
       "algolia": "Algolia",
       "algolia_search": "Algolia search",
       "algolia_description": "Uses Algolia for faster search, org and user pages."
     },
-    "pypi_search_provider": "PyPI search",
     "python_installer": "Python installer",
     "python_installer_description": "Choose the installer used in package install commands.",
     "python_version_style": "Version style",
@@ -267,10 +243,6 @@
     "instant_search": "Instant search",
     "instant_search_description": "Navigates to the search page and updates the results as you type.",
     "relative_dates": "Relative dates",
-    "include_types": "Include {'@'}types in install",
-    "include_types_description": "Add {'@'}types package to install commands for untyped packages",
-    "hide_platform_packages": "Hide platform-specific packages in search",
-    "hide_platform_packages_description": "Hide native binary packages like {'@'}esbuild/linux-x64 from results",
     "enable_graph_pulse_loop": "Enable looping of pulse effect on mini graph",
     "enable_graph_pulse_loop_description": "Activate a continuous pulse animation on the weekly download graph. This animation may be distracting for some users.",
     "theme": "Theme",
@@ -378,9 +350,7 @@
     "not_found": "Profile Not Found",
     "not_found_message": "The profile for {handle} could not be found.",
     "invite": {
-      "message": "It doesn't look like they're using pypix yet. Want to tell them about it?",
-      "share_button": "Share on Bluesky",
-      "compose_text": "Hey {'@'}{handle}! Have you checked out pypix.dev yet? It's a browser for PyPI that's fast, modern, and open-source.\nhttps://pypix.dev"
+      "message": "It doesn't look like they're using pypix yet. Want to tell them about it?"
     }
   },
   "package": {
@@ -595,20 +565,7 @@
     },
     "timeline": {
       "load_more": "Load more",
-      "load_error": "Failed to load timeline. Please try again later.",
-      "size_increase": "Install size increased by {percent}% ({size})",
-      "size_decrease": "Install size decreased by {percent}% ({size})",
-      "dep_increase": "{count} dependencies added",
-      "dep_decrease": "{count} dependencies removed",
-      "license_change": "License changed from {from} to {to}",
-      "esm_added": "Module type changed to ESM",
-      "esm_removed": "Module type changed from ESM to CJS",
-      "types_added": "TypeScript types added",
-      "types_removed": "TypeScript types removed",
-      "trusted_publisher_added": "Trusted publishing enabled",
-      "trusted_publisher_removed": "Trusted publishing removed",
-      "provenance_added": "Provenance enabled",
-      "provenance_removed": "Provenance removed"
+      "load_error": "Failed to load timeline. Please try again later."
     },
     "dependencies": {
       "title": "Dependency ({count}) | Dependencies ({count})",
@@ -1174,25 +1131,14 @@
         "managers": "package managers"
       }
     },
-    "sponsors": {
-      "title": "Sponsors"
-    },
-    "oss_partners": {
-      "title": "OSS Partners"
-    },
     "team": {
       "title": "Team",
       "governance": "Maintainer",
-      "role_steward": "steward",
-      "role_maintainer": "maintainer",
       "sponsor": "sponsor",
       "sponsor_aria": "Sponsor {name} on GitHub"
     },
     "contributors": {
-      "title": "... and {count} more contributor | ... and {count} more contributors",
       "description": "pypix is maintained by sebasxsala and built in the open on GitHub.",
-      "loading": "Loading contributors...",
-      "error": "Failed to load contributors",
       "view_profile": "View {name}'s GitHub profile"
     },
     "get_involved": {
@@ -1208,7 +1154,6 @@
     "actions": {
       "manage_projects": "Manage projects",
       "manage_project": "Manage project",
-      "project_page": "View on PyPI",
       "trusted_publisher": "Configure Trusted Publisher",
       "pending_publisher": "Create pending publisher",
       "publishing_guide": "Publishing guide",
@@ -1217,11 +1162,7 @@
     "descriptions": {
       "manage_projects": "Open official PyPI project admin",
       "manage_project": "Open this project in official PyPI admin",
-      "project_page": "Open the public PyPI project page",
-      "trusted_publisher": "Configure OIDC publishing on PyPI",
-      "pending_publisher": "Prepare publishing for a project that does not exist yet",
-      "publishing_guide": "Generate the no-token GitHub Actions workflow",
-      "organizations": "Manage PyPI organizations and teams on pypi.org"
+      "publishing_guide": "Generate the no-token GitHub Actions workflow"
     },
     "guide": {
       "title": "Publishing to PyPI",
@@ -1237,15 +1178,7 @@
   },
   "account_menu": {
     "connect": "connect",
-    "account": "Account",
-    "npm_cli": "PyPI",
-    "atmosphere": "PyPI",
-    "npm_cli_desc": "Use PyPI official admin",
-    "atmosphere_desc": "Use PyPI official admin",
-    "connect_npm_cli": "Manage on PyPI",
-    "connect_atmosphere": "Manage on PyPI",
-    "connecting": "Connecting...",
-    "ops": "{count} op | {count} ops"
+    "account": "Account"
   },
   "auth": {
     "modal": {
@@ -1551,13 +1484,6 @@
       "li4": "All data is aggregated and anonymised",
       "p3": "The only information collected includes page URLs, referrer, country or region, device type, browser, and operating system. This data cannot be used by pypix to identify individual users."
     },
-    "authenticated": {
-      "title": "Authenticated users",
-      "p1": "When authenticated account features are enabled in pypix, OAuth access tokens are stored in a secure, HTTP-only session cookie and used only to authenticate requests on your behalf.",
-      "bold": "Atmosphere",
-      "p2": "We do not store your credentials, and we do not access any data beyond what is necessary to provide the features you use. You can disconnect your account at any time from the {settings} page.",
-      "settings": "settings"
-    },
     "data_retention": {
       "title": "Data retention",
       "p1": "Session cookies are automatically deleted when you close your browser or after a period of inactivity. Local storage preferences remain on your device until you clear your browser data. Analytics data is retained in aggregate form and cannot be linked by pypix to individual users."
@@ -1719,8 +1645,7 @@
     },
     "guidelines": {
       "title": "just a note",
-      "message": "Accessibility matters to us, and we would love you to follow us in this vision. When using mentioned media, ensure there is enough contrast against the background, and don't go smaller than 24px. If you need any other resources or additional information about the project, feel free to reach us at {link}.",
-      "discord_link_text": "github.com/sebasxsala/pypix.dev"
+      "message": "Accessibility matters to us, and we would love you to follow us in this vision. When using mentioned media, ensure there is enough contrast against the background, and don't go smaller than 24px. If you need any other resources or additional information about the project, feel free to reach us at {link}."
     }
   },
   "alt_logo_kawaii": "A cute, rounded, and colorful version of the pypix logo."

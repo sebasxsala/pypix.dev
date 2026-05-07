@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "docs",
     "source": "source",
-    "social": "réseaux sociaux",
-    "chat": "espace de discussion",
-    "builders_chat": "builders",
     "keyboard_shortcuts": "raccourcis clavier",
     "brand": "Marque"
   },
@@ -49,7 +46,6 @@
     "label": "Rechercher des paquets npm",
     "placeholder": "rechercher des paquets...",
     "button": "rechercher",
-    "searching": "Recherche en cours...",
     "found_packages": "{count} paquets trouvés",
     "found_packages_sorted": "Tri du top {count} résultat | Tri des top {count} résultats",
     "updating": "(mise à jour...)",
@@ -60,10 +56,6 @@
     "title_packages": "rechercher des paquets",
     "meta_description": "Résultats de recherche pour « {search} »",
     "meta_description_packages": "Rechercher des paquets npm",
-    "not_taken": "{name} n'est pas pris",
-    "claim_prompt": "Réserver ce nom de paquet sur npm",
-    "claim_button": "Réserver « {name} »",
-    "want_to_claim": "Vous souhaitez réserver ce nom de paquet ?",
     "start_typing": "Commencez à taper pour rechercher des paquets",
     "algolia_disclaimer": "Propulsé par Algolia",
     "exact_match": "exact",
@@ -94,7 +86,6 @@
     "empty_search_hint": "Appuyez sur Entrée pour rechercher « {query} ».",
     "current": "actuel",
     "here": "vous êtes ici",
-    "connected": "connecté",
     "state": {
       "on": "activé",
       "off": "désactivé"
@@ -118,19 +109,8 @@
       "keyboard_shortcuts": "Raccourcis clavier",
       "help_translate": "Aider à traduire"
     },
-    "connections": {
-      "npm_connect": "Se connecter avec npm CLI",
-      "npm_connected": "CLI npm (~{username})",
-      "npm_disconnect": "Se déconnecter de npm CLI",
-      "atmosphere_connect": "Se connecter à Atmosphere",
-      "atmosphere_connected": "atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "Se déconnecter d’Atmosphere"
-    },
     "navigation": {
-      "home": "accueil",
-      "packages": "paquets (~{username})",
-      "orgs": "organisations (~{username})",
-      "profile": "profil ({'@'}{handle})"
+      "home": "accueil"
     },
     "links": {
       "external": "Lien externe"
@@ -179,8 +159,6 @@
       "background_theme_changed": "Couleur d’arrière-plan {theme}.",
       "download_started": "Téléchargement du tarball de {package}.",
       "copied_to_clipboard": "Copié dans le presse-papiers.",
-      "npm_disconnected": "npm CLI déconnecté.",
-      "atmosphere_disconnected": "Atmosphere déconnecté.",
       "facets_all_selected": "Toutes les facettes sélectionnées.",
       "facets_all_deselected": "Toutes les facettes désélectionnées.",
       "view_switched": "Vue {view} activée.",
@@ -239,7 +217,6 @@
     "data_source": {
       "label": "Source de données",
       "description": "Choisissez d'où npmx récupère ses données de recherche. Les pages des paquets utilisent toujours directement le registre npm.",
-      "npm": "Registre npm",
       "npm_description": "Effectuer la recherche sur les paquets, organisations et utilisateurs directement sur le registre npm officiel. Fiable, mais peut être plus lent.",
       "algolia": "Algolia",
       "algolia_description": "Utiliser Algolia pour accélérer la recherche et les pages d'organisations et d'utilisateurs."
@@ -247,13 +224,8 @@
     "instant_search": "Recherche instantanée",
     "instant_search_description": "Navigue vers la page de recherche et met à jour les résultats au fur et à mesure de la saisie.",
     "relative_dates": "Dates relatives",
-    "include_types": "Inclure {'@'}types à la commande d'installation",
-    "include_types_description": "Inclure les paquets {'@'}types à la commande d'installation pour les paquets non typés",
-    "hide_platform_packages": "Masquer les paquets spécifiques à la plateforme dans la recherche",
-    "hide_platform_packages_description": "Masquer les paquets binaires natifs comme {'@'}esbuild/linux-x64 des résultats",
     "enable_graph_pulse_loop": "Activer la boucle de l'effet de pulsation sur le mini-graphe",
     "enable_graph_pulse_loop_description": "Activer une animation de pulsation continue sur le graphique des téléchargements hebdomadaires. Cette animation peut être gênante pour certaines personnes.",
-    "enable_code_ligatures": "Activer les ligatures de code",
     "theme": "Thème",
     "theme_light": "Clair",
     "theme_dark": "Sombre",
@@ -282,7 +254,8 @@
       "black": "Noir"
     },
     "keyboard_shortcuts_enabled": "Activer les raccourcis clavier",
-    "keyboard_shortcuts_enabled_description": "Les raccourcis clavier peuvent être désactivés s'ils entrent en conflit avec d'autres raccourcis du navigateur ou du système"
+    "keyboard_shortcuts_enabled_description": "Les raccourcis clavier peuvent être désactivés s'ils entrent en conflit avec d'autres raccourcis du navigateur ou du système",
+    "enable_code_ligatures": "Activer les ligatures de code"
   },
   "i18n": {
     "missing_keys": "{count} traduction manquante | {count} traductions manquantes",
@@ -342,8 +315,8 @@
       "tangled": "Voir sur Tangled"
     },
     "collapse": "Réduire",
-    "expand": "Développer",
     "collapse_with_name": "Réduire {name}",
+    "expand": "Développer",
     "expand_with_name": "Développer {name}"
   },
   "profile": {
@@ -358,9 +331,7 @@
     "not_found": "Profil introuvable",
     "not_found_message": "Le profil de {handle} est introuvable.",
     "invite": {
-      "message": "Il semblerait qu'ils n'utilisent pas encore npmx. Vous voulez leur en parler ?",
-      "share_button": "Partager sur Bluesky",
-      "compose_text": "Salut {'@'}{handle} ! As-tu déjà testé npmx.dev ? C'est un navigateur pour le registre npm : rapide, moderne et open source.\nhttps://npmx.dev"
+      "message": "Il semblerait qu'ils n'utilisent pas encore npmx. Vous voulez leur en parler ?"
     }
   },
   "package": {
@@ -382,6 +353,7 @@
       "size": "La taille d'installation a augmenté de {percent} ({size} de plus)",
       "deps": "{count} dépendances supplémentaires"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Vous n'avez peut-être pas besoin de cette dépendance.",
       "native": "Ceci peut être remplacé par {replacement}, disponible depuis Node {nodeVersion}.",
@@ -566,20 +538,7 @@
     },
     "timeline": {
       "load_more": "Charger plus",
-      "load_error": "Échec de chargement de l'historique. Veuillez réessayer plus tard.",
-      "size_increase": "La taille d'installation a augmenté de {percent}% ({size})",
-      "size_decrease": "La taille d'installation a diminué de {percent}% ({size})",
-      "dep_increase": "{count} dépendance ajoutée | {count} dépendances ajoutées",
-      "dep_decrease": "{count} dépendance retirée | {count} dépendances retirées",
-      "license_change": "La licence est passée de {from} à {to}",
-      "esm_added": "Le type de module est passé à ESM",
-      "esm_removed": "Le type de module a changé de ESM à CJS",
-      "types_added": "Les types TypeScript ont été ajoutés",
-      "types_removed": "Les types TypeScript ont été supprimés",
-      "trusted_publisher_added": "Vérification ajoutée",
-      "trusted_publisher_removed": "Vérification enlevée",
-      "provenance_added": "Preuve de provenance ajoutée",
-      "provenance_removed": "Preuve de provenance enlevée"
+      "load_error": "Échec de chargement de l'historique. Veuillez réessayer plus tard."
     },
     "dependencies": {
       "title": "Dépendances ({count})",
@@ -979,6 +938,7 @@
     "view_raw": "Voir le fichier brut",
     "toggle_container": "Changer la largeur du conteneur",
     "open_raw_file": "Ouvrir le fichier brut",
+    "open_path_dropdown": "Ouvrir le menu du chemin",
     "file_too_large": "Fichier trop volumineux pour l'aperçu",
     "file_size_warning": "{size} dépasse la limite de 500 Ko pour la coloration syntaxique",
     "failed_to_load": "Échec du chargement du fichier",
@@ -996,7 +956,6 @@
       "preview": "aperçu",
       "code": "code"
     },
-    "open_path_dropdown": "Ouvrir le menu du chemin",
     "file_path": "Chemin du fichier",
     "binary_file": "Fichier binaire",
     "binary_rendering_warning": "Le type de fichier \"{contentType}\" n'est pas pris en charge pour l'aperçu."
@@ -1145,25 +1104,14 @@
         "managers": "des gestionnaires"
       }
     },
-    "sponsors": {
-      "title": "Commanditaires"
-    },
-    "oss_partners": {
-      "title": "Partenaires open source"
-    },
     "team": {
       "title": "Équipe",
       "governance": "Gouvernance",
-      "role_steward": "pilote",
-      "role_maintainer": "mainteneur",
       "sponsor": "sponsor",
       "sponsor_aria": "Sponsoriser {name} sur GitHub"
     },
     "contributors": {
-      "title": "Contributeurs",
       "description": "npmx est entièrement open source, construit par une incroyable communauté de contributeurs. Rejoignez-nous et construisons l'expérience de navigation pour npm dont nous avons toujours rêvés, ensemble.",
-      "loading": "Chargement des contributeurs...",
-      "error": "Échec du chargement des contributeurs",
       "view_profile": "Voir le profil GitHub de {name}"
     },
     "get_involved": {
@@ -1172,35 +1120,17 @@
         "title": "Contribuer",
         "description": "Aidez-nous à créer l'expérience npm que nous voulons tous.",
         "cta": "Voir sur GitHub"
-      },
-      "community": {
-        "title": "Rejoindre la communauté",
-        "description": "Discutez, posez des questions et partagez des idées.",
-        "cta": "Joindre le Discord"
-      },
-      "builders": {
-        "title": "Aidez-nous à construire npmx",
-        "description": "Rejoignez les builders qui façonnent l'avenir de npmx.",
-        "cta": "Rejoindre le Discord Builders"
-      },
-      "follow": {
-        "title": "Rester à jour",
-        "description": "Découvrez les dernières nouveautés de npmx.",
-        "cta": "Suivre sur Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "connexion",
-    "account": "Compte",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Gérer les paquets et orgs",
-    "atmosphere_desc": "Fonctionnalités sociales et identité",
-    "connect_npm_cli": "Connexion à npm CLI",
-    "connect_atmosphere": "Connexion à Atmosphere",
-    "connecting": "Connexion en cours...",
-    "ops": "{count} op | {count} ops"
+    "account": "Compte"
   },
   "auth": {
     "modal": {
@@ -1212,7 +1142,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Connexion",
       "create_account": "Créer un nouveau compte",
-      "connect_bluesky": "Connexion avec Bluesky",
       "what_is_atmosphere": "Qu'est-ce qu'un compte Atmosphere ?",
       "atmosphere_explanation": "{npmx} utilise {atproto} pour alimenter plusieurs de ses fonctionnalités sociales, permettant aux utilisateurs de posséder leurs données et d'utiliser un seul compte pour toutes les applications compatibles. Une fois votre compte créé, vous pouvez utiliser d'autres applications comme {bluesky} ou {tangled} avec le même compte.",
       "default_input_error": "Veuillez entrer un identifiant, DID ou URL PDS valide",
@@ -1445,30 +1374,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Le serveur de données personnelles (PDS) officiel du protocole AT pour la communauté npmx.",
-    "join": {
-      "title": "Rejoindre la communauté",
-      "description": "Que vous créiez votre premier compte sur l'Atmosphère ou que vous migriez un compte existant, vous êtes ici chez vous. Vous pouvez migrer votre compte actuel sans perdre votre identifiant, vos publications ni vos abonnés.",
-      "migrate": "Migrer avec PDS MOOver"
-    },
-    "server": {
-      "title": "Détails du serveur",
-      "location_label": "Emplacement :",
-      "location_value": "Nuremberg, Allemagne",
-      "infrastructure_label": "Infrastructure :",
-      "infrastructure_value": "Hébergé chez Hetzner",
-      "privacy_label": "Confidentialité :",
-      "privacy_value": "Soumis aux lois strictes de protection des données de l'UE",
-      "learn_more": "Découvrir comment npmx utilise l'Atmosphère"
-    },
-    "community": {
-      "title": "Qui est ici",
-      "description": "Quelques-uns des {count} comptes qui ont déjà fait de npmx.social leur chez-soi :",
-      "loading": "Chargement de la communauté PDS...",
-      "error": "Échec du chargement de la communauté PDS.",
-      "empty": "Aucun membre de la communauté à afficher.",
-      "view_profile": "Voir le profil de {handle}",
-      "new_accounts": "...plus {count} autres qui sont nouveaux sur l'Atmosphère"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "politique de confidentialité",
@@ -1519,13 +1426,6 @@
       "li3": "Ne piste pas les utilisateurs entre les sites",
       "li4": "Toutes les données sont agrégées et anonymisées",
       "p3": "Les seules informations collectées sont : les URLs des pages, le référent, le pays/région, le type d'appareil, le navigateur et le système d'exploitation. Ces données ne permettent pas d'identifier des utilisateurs individuels."
-    },
-    "authenticated": {
-      "title": "Utilisateurs authentifiés",
-      "p1": "Lorsque vous connectez votre compte {bold} à npmx, nous stockons votre jeton d'accès OAuth dans un cookie de session sécurisé (HTTP-only). Ce jeton sert uniquement à authentifier les requêtes en votre nom.",
-      "bold": "Atmosphere",
-      "p2": "Nous ne stockons pas vos identifiants et n'accédons à aucune donnée au-delà de ce qui est nécessaire aux fonctionnalités que vous utilisez. Vous pouvez déconnecter votre compte à tout moment depuis la page des {settings}.",
-      "settings": "paramètres"
     },
     "data_retention": {
       "title": "Conservation des données",
@@ -1624,8 +1524,7 @@
     },
     "return": {
       "title": "nous sommes de retour !",
-      "p1": "nous sommes revenus revigorés et prêts pour la dernière ligne droite jusqu'au 3 mars. {social} pour voir les mises à jour.",
-      "social_link": "suivez-nous sur Bluesky"
+      "p1": "nous sommes revenus revigorés et prêts pour la dernière ligne droite jusqu'au 3 mars. {social} pour voir les mises à jour."
     },
     "stats": {
       "contributors": "Contributeurs",
@@ -1689,8 +1588,7 @@
     },
     "guidelines": {
       "title": "juste une note",
-      "message": "L'accessibilité compte beaucoup pour nous, et nous serions ravis que vous partagiez cette vision. Lors de l'utilisation des médias mentionnés, assurez-vous qu'il y a suffisamment de contraste avec l'arrière-plan, et ne descendez pas en dessous de 24 px. Si vous avez besoin d'autres ressources ou d'informations supplémentaires sur le projet, n'hésitez pas à nous contacter à {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "L'accessibilité compte beaucoup pour nous, et nous serions ravis que vous partagiez cette vision. Lors de l'utilisation des médias mentionnés, assurez-vous qu'il y a suffisamment de contraste avec l'arrière-plan, et ne descendez pas en dessous de 24 px. Si vous avez besoin d'autres ressources ou d'informations supplémentaires sur le projet, n'hésitez pas à nous contacter à {link}."
     }
   },
   "alt_logo_kawaii": "Une version mignonne, arrondie et colorée du logo npmx."

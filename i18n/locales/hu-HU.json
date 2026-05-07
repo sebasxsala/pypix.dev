@@ -15,8 +15,6 @@
     "about": "rólunk",
     "docs": "dokumentáció",
     "source": "forráskód",
-    "social": "közösség",
-    "chat": "chat",
     "keyboard_shortcuts": "billentyűzet parancsikonok"
   },
   "shortcuts": {
@@ -40,7 +38,6 @@
     "label": "npm csomagok keresése",
     "placeholder": "csomagok keresése...",
     "button": "keresés",
-    "searching": "Keresés...",
     "found_packages": "Nincs csomag találva | 1 csomag található | {count} csomag található",
     "found_packages_sorted": "Nincs találat | Felső {count} eredmény rendezése | Felső {count} eredmény rendezése",
     "updating": "(frissítés...)",
@@ -51,10 +48,6 @@
     "title_packages": "csomagok keresése",
     "meta_description": "Keresési eredmények: '{search}'",
     "meta_description_packages": "npm csomagok keresése",
-    "not_taken": "{name} még szabad",
-    "claim_prompt": "Foglald le ezt a csomagnevet az npm-en",
-    "claim_button": "\"{name}\" lefoglalása",
-    "want_to_claim": "Szeretnéd lefoglalni ezt a csomagnevet?",
     "start_typing": "Kezdj el gépelni a kereséshez",
     "algolia_disclaimer": "Az Algolia által működtetve",
     "exact_match": "pontos",
@@ -64,6 +57,23 @@
       "view_user_packages": "E felhasználó csomagjainak megtekintése",
       "view_org_packages": "E szervezet csomagjainak megtekintése"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Főmenü",
@@ -95,16 +105,11 @@
     "data_source": {
       "label": "Adatforrás",
       "description": "Válaszd ki, hogy az npmx honnan szerez keresési adatokat. Az egyes csomag oldalai mindig közvetlenül az npm regiszterből használnak adatokat.",
-      "npm": "npm Regiszter",
       "npm_description": "Közvetlenül a hivatalos npm regiszterből szerez keresési, szervezeti és felhasználólista adatokat. Mérvadó, de lehet, hogy lassabb.",
       "algolia": "Algolia",
       "algolia_description": "Az Algolia-t használ a gyorsabb kereséshez, szervezeti és felhasználó oldalakhoz."
     },
     "relative_dates": "Relatív dátumok",
-    "include_types": "{'@'}types hozzáadása telepítéskor",
-    "include_types_description": "Adja hozzá a {'@'}types csomagot a telepítési parancshoz típus nélküli csomagoknál",
-    "hide_platform_packages": "Platform-specifikus csomagok elrejtése a keresőben",
-    "hide_platform_packages_description": "Natív bináris csomagok (pl. {'@'}esbuild/linux-x64) elrejtése az eredmények közül",
     "theme": "Téma",
     "theme_light": "Világos",
     "theme_dark": "Sötét",
@@ -174,9 +179,7 @@
     "not_found": "Profil nem található",
     "not_found_message": "A(z) {handle} felhasználó profilja nem található.",
     "invite": {
-      "message": "Úgy tűnik, hogy még nem használja az npmx-et. Szeretnéd megtudatni vele?",
-      "share_button": "Megosztás a Bluesky-on",
-      "compose_text": "Halló {'@'}{handle}! Már próbáltad az npmx.dev-et? Egy gyors, modern és nyílt forráskódú böngésző az npm regiszterhez.\nhttps://npmx.dev"
+      "message": "Úgy tűnik, hogy még nem használja az npmx-et. Szeretnéd megtudatni vele?"
     }
   },
   "package": {
@@ -198,6 +201,7 @@
       "size": "A telepítési méret {percent}-kal nőtt ({size} nagyobb)",
       "deps": "{count} további függőség"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Lehet, hogy nincs szükséged erre a függőségre.",
       "native": "Ez helyettesíthető a következővel: {replacement}, amely elérhető a Node {nodeVersion} verzió óta.",
@@ -356,6 +360,7 @@
         "general_description": "Sávdiagram, amely a(z) {package_name} csomag {semver_grouping_mode} verzióinak verzió szerinti letöltéseit mutatja, {date_range_label} a(z) {first_version} verziótól a(z) {last_version} verzióig. A legtöbbször letöltött verzió a(z) {max_downloaded_version}, {max_version_downloads} letöltéssel. {per_version_analysis}. {watermark}."
       }
     },
+    "timeline": {},
     "dependencies": {
       "title": "Függőség ({count}) | Függőségek ({count})",
       "list_label": "Csomag függőségei",
@@ -392,6 +397,7 @@
       "show_less": "(kevesebb megjelenítése)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "Bontás",
       "granularity_daily": "Napi",
       "granularity_weekly": "Heti",
@@ -536,6 +542,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -880,25 +889,14 @@
         "managers": "kezelőket"
       }
     },
-    "sponsors": {
-      "title": "Szponzorok"
-    },
-    "oss_partners": {
-      "title": "OSS partnerek"
-    },
     "team": {
       "title": "Csapat",
       "governance": "Irányítás",
-      "role_steward": "gondnok",
-      "role_maintainer": "karbantartó",
       "sponsor": "szponzor",
       "sponsor_aria": "{name} szponzorálása a GitHub-on"
     },
     "contributors": {
-      "title": "... és {count} további közreműködő | ... és {count} további közreműködő",
       "description": "Az npmx teljes mértékben nyílt forráskódú, egy csodálatos közreműködői közösség által. Csatlakozz hozzánk, és építsük fel együtt azt az npm böngészési élményt, amire mindig is vágytunk.",
-      "loading": "Közreműködők betöltése...",
-      "error": "Nem sikerült betölteni a közreműködőket",
       "view_profile": "{name} GitHub profiljának megtekintése"
     },
     "get_involved": {
@@ -907,31 +905,17 @@
         "title": "Közreműködés",
         "description": "Segíts építeni egy jobb npm élményt.",
         "cta": "Megtekintés GitHubon"
-      },
-      "community": {
-        "title": "Csatlakozz a közösséghez",
-        "description": "Chat, kérdések és ötletelés.",
-        "cta": "Csatlakozás a Discord-hoz"
-      },
-      "builders": {},
-      "follow": {
-        "title": "Maradj naprakész",
-        "description": "Értesülj a legújabb npmx hírekről.",
-        "cta": "Követés a Bluesky-on"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "csatlakozás",
-    "account": "Fiók",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Csomagok és szervezetek kezelése",
-    "atmosphere_desc": "Szociális funkciók és identitás",
-    "connect_npm_cli": "Csatlakozás az npm CLI-hez",
-    "connect_atmosphere": "Csatlakozás az Atmosphere-hez",
-    "connecting": "Csatlakoztatás...",
-    "ops": "{count} op | {count} ops"
+    "account": "Fiók"
   },
   "auth": {
     "modal": {
@@ -943,7 +927,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Csatlakozás",
       "create_account": "Új fiók létrehozása",
-      "connect_bluesky": "Csatlakozás Bluesky-vel",
       "what_is_atmosphere": "Mi az Atmosphere fiók?",
       "atmosphere_explanation": "{npmx} az {atproto} -t használja sok szociális funkciójának meghajtásához, lehetővé téve a felhasználók számára az adatok tulajdonlását és egy fiók használatát az összes kompatibilis alkalmazásban. Miután létrehozol egy fiókot, más appokkal is használhatod ugyanazzal a fiókkal, mint a {bluesky} és a {tangled}.",
       "default_input_error": "Kérjük, adj meg egy érvényes kezelőt, DID-t vagy egy teljes PDS URL-t",
@@ -994,6 +977,9 @@
       "remove_package": "{package} eltávolítása",
       "packages_selected": "{count}/{max} csomag kiválasztva.",
       "add_hint": "Adj hozzá legalább 2 csomagot az összehasonlításhoz."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Nincs függőség)",
@@ -1069,7 +1055,10 @@
         "vulnerabilities": {
           "label": "Sebezhetőségek",
           "description": "Ismert biztonsági sebezhetőségek"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Bármely",
@@ -1121,9 +1110,8 @@
     "filter_files_label": "Fájlok szűrése módosítás típusa szerint"
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "adatvédelmi nyilatkozat",
@@ -1174,13 +1162,6 @@
       "li3": "Nem követ nyomon felhasználókat az összes weboldal között",
       "li4": "Minden adat összesítve és anonimizálva van",
       "p3": "Az egyetlen gyűjtött információ a következőket tartalmazza: oldal URL-ek, referrer, ország/régió, eszköz típusa, böngésző és operációs rendszer. Az adatokat nem lehet egyedi felhasználók azonosítására használni."
-    },
-    "authenticated": {
-      "title": "Hitelesített felhasználók",
-      "p1": "Amikor az {bold} fiókot csatlakoztatod az npmx-hez, az OAuth hozzáférési tokent egy biztonságos, HTTP-only munkamenet cookie-ban tároljuk. Ezt a tokent kizárólag a kérések hitelesítésére használjuk az Ön nevében.",
-      "bold": "Atmosphere",
-      "p2": "Nem tároljuk a hitelesítési adataidat, és nem férünk hozzá az használt funkciók biztosításához szükségesnél több adathoz. Fiókod bármikor szétkapcsolhatod a(z) {settings} oldalról.",
-      "settings": "beállítások"
     },
     "data_retention": {
       "title": "Adatmegőrzés",
@@ -1238,5 +1219,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

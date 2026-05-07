@@ -15,8 +15,6 @@
     "about": "за нас",
     "docs": "документация",
     "source": "код",
-    "social": "социални мрежи",
-    "chat": "чат",
     "keyboard_shortcuts": "клавишни комбинации"
   },
   "shortcuts": {
@@ -40,7 +38,6 @@
     "label": "Търсене на npm пакети",
     "placeholder": "търсене на пакети...",
     "button": "търсене",
-    "searching": "Търсене...",
     "found_packages": "Няма намерени пакети | Намерен е 1 пакет | Намерени са {count} пакета",
     "found_packages_sorted": "Няма намерени резултати | Сортиране на топ {count} резултат | Сортиране на топ {count} резултата",
     "updating": "(обновяване...)",
@@ -51,10 +48,6 @@
     "title_packages": "търсене на пакети",
     "meta_description": "Резултати от търсенето за '{search}'",
     "meta_description_packages": "Търсене на npm пакети",
-    "not_taken": "{name} не е заето",
-    "claim_prompt": "Резервирайте това име на пакет в npm",
-    "claim_button": "Резервиране на \"{name}\"",
-    "want_to_claim": "Искате ли да резервирате това име на пакет?",
     "start_typing": "Започнете да пишете за търсене на пакети",
     "algolia_disclaimer": "Захранено от Algolia",
     "exact_match": "точно",
@@ -64,6 +57,23 @@
       "view_user_packages": "Показване на пакети от този потребител",
       "view_org_packages": "Показване на пакети от тази организация"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Главна",
@@ -95,16 +105,11 @@
     "data_source": {
       "label": "Източник на данни",
       "description": "Изберете откъде npmx получава данни за търсене. Отделните страници на пакети винаги използват npm регистъра директно.",
-      "npm": "npm Registry",
       "npm_description": "Извлича търсене, списъци на организации и потребители директно от официалния npm регистър. Авторитетно, но може да е по-бавно.",
       "algolia": "Algolia",
       "algolia_description": "Използва Algolia за по-бързо търсене, страници на организации и потребители."
     },
     "relative_dates": "Относителни дати",
-    "include_types": "Включване на {'@'}types в инсталацията",
-    "include_types_description": "Добавяне на {'@'}types пакет към командите за инсталация за нетипизирани пакети",
-    "hide_platform_packages": "Скриване на платформо-специфични пакети при търсене",
-    "hide_platform_packages_description": "Скриване на native binary пакети като {'@'}esbuild/linux-x64 от резултатите",
     "theme": "Тема",
     "theme_light": "Светла",
     "theme_dark": "Тъмна",
@@ -174,9 +179,7 @@
     "not_found": "Профилът не е намерен",
     "not_found_message": "Профилът за {handle} не може да бъде намерен.",
     "invite": {
-      "message": "Изглежда, че все още не използват npmx. Искате ли да им кажете за него?",
-      "share_button": "Споделете в Bluesky",
-      "compose_text": "Здравей {'@'}{handle}! Проверил ли си npmx.dev? Това е браузър за npm регистъра - бърз, модерен и с отворен код.\\nhttps://npmx.dev"
+      "message": "Изглежда, че все още не използват npmx. Искате ли да им кажете за него?"
     }
   },
   "package": {
@@ -198,6 +201,7 @@
       "size": "Размерът при инсталация се е увеличил с {percent} ({size} по-голям)",
       "deps": "{count} повече зависимости"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Може да не се нуждаете от тази зависимост.",
       "native": "Това може да бъде заменено с {replacement}, налично от Node {nodeVersion}.",
@@ -356,6 +360,7 @@
         "general_description": "Стълбовидна диаграма, показваща изтеглянията по версии за {versions_count} {semver_grouping_mode} версии на пакета {package_name}, {date_range_label} от версия {first_version} до версия {last_version}. Най-изтегляната версия е {max_downloaded_version} с {max_version_downloads} изтегляния. {per_version_analysis}. {watermark}."
       }
     },
+    "timeline": {},
     "dependencies": {
       "title": "Зависимост ({count}) | Зависимости ({count})",
       "list_label": "Зависимости на пакета",
@@ -392,6 +397,7 @@
       "show_less": "(показване на по-малко)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "Гранулация",
       "granularity_daily": "Дневна",
       "granularity_weekly": "Седмична",
@@ -536,6 +542,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -880,25 +889,14 @@
         "managers": "мениджъри на пакети"
       }
     },
-    "sponsors": {
-      "title": "Спонсори"
-    },
-    "oss_partners": {
-      "title": "OSS партньори"
-    },
     "team": {
       "title": "Отбор",
       "governance": "Управление",
-      "role_steward": "управител",
-      "role_maintainer": "поддържащ",
       "sponsor": "спонсор",
       "sponsor_aria": "Спонсорирайте {name} в GitHub"
     },
     "contributors": {
-      "title": "... и {count} сътрудник повече | ... и {count} сътрудници повече",
       "description": "npmx е изцяло с отворен код, изграден от невероятна общност от сътрудници. Присъединете се към нас и нека изградим npm браузър изживяването, което винаги сме искали, заедно.",
-      "loading": "Зареждане на сътрудници...",
-      "error": "Неуспешно зареждане на сътрудници",
       "view_profile": "Преглед на GitHub профила на {name}"
     },
     "get_involved": {
@@ -907,31 +905,17 @@
         "title": "Сътрудничество",
         "description": "Помогнете ни да създадем по-добро npm изживяване.",
         "cta": "Преглед в GitHub"
-      },
-      "community": {
-        "title": "Присъединете се към общността",
-        "description": "Чат, задаване на въпроси и споделяне на идеи.",
-        "cta": "Присъединяване към Discord"
-      },
-      "builders": {},
-      "follow": {
-        "title": "Следете актуалното",
-        "description": "Научете най-новото за npmx.",
-        "cta": "Последвайте в Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "свързване",
-    "account": "Акаунт",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Управление на пакети и организации",
-    "atmosphere_desc": "Социални функции и идентичност",
-    "connect_npm_cli": "Свързване към npm CLI",
-    "connect_atmosphere": "Свързване към Atmosphere",
-    "connecting": "Свързване...",
-    "ops": "{count} операция | {count} операции"
+    "account": "Акаунт"
   },
   "auth": {
     "modal": {
@@ -943,7 +927,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Свързване",
       "create_account": "Създаване на нов акаунт",
-      "connect_bluesky": "Свързване с Bluesky",
       "what_is_atmosphere": "Какво е Atmosphere акаунт?",
       "atmosphere_explanation": "{npmx} използва {atproto} за захранване на много от своите социални функции, позволявайки на потребителите да притежават данните си и да използват един акаунт за всички съвместими приложения. След като създадете акаунт, можете да използвате други приложения като {bluesky} и {tangled} със същия акаунт.",
       "default_input_error": "Моля, въведете валиден handle, DID или пълен PDS URL",
@@ -994,6 +977,9 @@
       "remove_package": "Премахване на {package}",
       "packages_selected": "{count}/{max} избрани пакета.",
       "add_hint": "Добавете поне 2 пакета за сравнение."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Без зависимост)",
@@ -1069,7 +1055,10 @@
         "vulnerabilities": {
           "label": "Уязвимости",
           "description": "Известни уязвимости в сигурността"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Всякакъв",
@@ -1121,9 +1110,8 @@
     "filter_files_label": "Филтриране на файлове по тип на промяна"
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "политика за поверителност",
@@ -1174,13 +1162,6 @@
       "li3": "Не проследява потребители през уебсайтове",
       "li4": "Всички данни са агрегирани и анонимизирани",
       "p3": "Единствената събрана информация включва: URL адреси на страници, референт, държава/регион, тип устройство, браузър и операционна система. Тези данни не могат да се използват за идентифициране на отделни потребители."
-    },
-    "authenticated": {
-      "title": "Удостоверени потребители",
-      "p1": "Когато свържете вашия {bold} акаунт към npmx, съхраняваме вашия OAuth токен за достъп в сигурна, HTTP-only бисквитка за сесия. Този токен се използва единствено за удостоверяване на заявки от ваше име.",
-      "bold": "Atmosphere",
-      "p2": "Не съхраняваме вашите идентификационни данни и не достъпваме никакви данни извън необходимото за предоставяне на функциите, които използвате. Можете да прекратите връзката на вашия акаунт по всяко време от страницата {settings}.",
-      "settings": "настройки"
     },
     "data_retention": {
       "title": "Съхранение на данни",
@@ -1238,5 +1219,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

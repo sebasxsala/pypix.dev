@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "dokumentace",
     "source": "zdrojový kód",
-    "social": "sociální sítě",
-    "chat": "chat",
-    "builders_chat": "stavitelé",
     "keyboard_shortcuts": "klávesové zkratky",
     "brand": "značka"
   },
@@ -48,7 +45,6 @@
     "label": "Hledat npm balíčky",
     "placeholder": "Hledat balíčky...",
     "button": "Hledat",
-    "searching": "Hledání...",
     "found_packages": "Nalezen {count} balíček | Nalezeny {count} balíčky | Nalezeno {count} balíčků",
     "found_packages_sorted": "Srovnání nejlepšího {count} výsledku | Srovnání nejlepších {count} výsledků | Srovnání nejlepších {count} výsledků",
     "updating": "(aktualizace...)",
@@ -59,10 +55,6 @@
     "title_packages": "hledání balíčků",
     "meta_description": "Výsledky hledání pro '{search}'",
     "meta_description_packages": "Hledat npm balíčky",
-    "not_taken": "{name} není rezervováno",
-    "claim_prompt": "Nárokovat toto jméno balíčku na npm",
-    "claim_button": "Nárokovat \"{name}\"",
-    "want_to_claim": "Chcete nárokovat toto jméno balíčku?",
     "start_typing": "Začněte psát pro hledání balíčků",
     "algolia_disclaimer": "Poháněno pomocí Algolia",
     "exact_match": "přesná shoda",
@@ -93,7 +85,6 @@
     "empty_search_hint": "Stiskněte Enter pro hledání \"{query}\".",
     "current": "aktuální",
     "here": "tady jste",
-    "connected": "připojeno",
     "state": {
       "on": "zapnuto",
       "off": "vypnuto"
@@ -117,19 +108,8 @@
       "keyboard_shortcuts": "Klávesové zkratky",
       "help_translate": "Pomozte s překladem"
     },
-    "connections": {
-      "npm_connect": "Připojit k npm CLI",
-      "npm_connected": "npm CLI (~{username})",
-      "npm_disconnect": "Odpojit npm CLI",
-      "atmosphere_connect": "Připojit k Atmosphere",
-      "atmosphere_connected": "atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "Odpojit Atmosphere"
-    },
     "navigation": {
-      "home": "domů",
-      "packages": "balíčky (~{username})",
-      "orgs": "organizace (~{username})",
-      "profile": "profil ({'@'}{handle})"
+      "home": "domů"
     },
     "links": {
       "external": "Externí odkaz"
@@ -178,8 +158,6 @@
       "background_theme_changed": "Odstín pozadí nastaven na {theme}.",
       "download_started": "Stahování tarballu {package} zahájeno.",
       "copied_to_clipboard": "Zkopírováno do schránky.",
-      "npm_disconnected": "Odpojeno od npm CLI.",
-      "atmosphere_disconnected": "Odpojeno od Atmosphere.",
       "facets_all_selected": "Všechny vlastnosti vybrány.",
       "facets_all_deselected": "Výběr vlastností zrušen.",
       "view_switched": "Přepnuto na zobrazení {view}.",
@@ -238,7 +216,6 @@
     "data_source": {
       "label": "Zdroj dat",
       "description": "Vyberte, odkud npmx získává data pro vyhledávání. Stránky jednotlivých balíčků vždy používají přímo registr npm.",
-      "npm": "Registr npm",
       "npm_description": "Získává výsledky hledání, seznamy organizací a uživatelů přímo z oficiálního registru npm. Autoritativní, ale může být pomalejší.",
       "algolia": "Algolia",
       "algolia_description": "Používá Algolia pro rychlejší vyhledávání, stránky organizací a uživatelů."
@@ -246,10 +223,6 @@
     "instant_search": "Okamžité hledání",
     "instant_search_description": "Naviguje na stránku hledání a aktualizuje výsledky při psaní.",
     "relative_dates": "Relativní data",
-    "include_types": "Zahrnout {'@'}types při instalaci",
-    "include_types_description": "Přidat balíček {'@'}types do instalačních příkazů pro balíčky bez integrovaných typů",
-    "hide_platform_packages": "Skrýt platformně specifické balíčky ve vyhledávání",
-    "hide_platform_packages_description": "Skrýt nativní binární balíčky jako {'@'}esbuild/linux-x64 z výsledků",
     "enable_graph_pulse_loop": "Povolit smyčku efektu pulzování na mini grafu",
     "enable_graph_pulse_loop_description": "Aktivovat kontinuální animaci pulzu na grafu týdenních stažení. Tato animace může být pro některé uživatele rušivá.",
     "theme": "Téma",
@@ -356,9 +329,7 @@
     "not_found": "Profil nenalezen",
     "not_found_message": "Profil uživatele {handle} nebyl nalezen.",
     "invite": {
-      "message": "Zdá se, že ještě nepoužívají npmx. Chcete jim o tom říct?",
-      "share_button": "Sdílet na Bluesky",
-      "compose_text": "Ahoj {'@'}{handle}! Viděl jsi už npmx.dev? Je to prohlížeč pro npm registr, který je rychlý, moderní a open-source.\nhttps://npmx.dev"
+      "message": "Zdá se, že ještě nepoužívají npmx. Chcete jim o tom říct?"
     }
   },
   "package": {
@@ -380,6 +351,7 @@
       "size": "Velikost instalace se zvýšila o {percent} (větší o {size})",
       "deps": "{count} další závislostí"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Možná tuto závislost nepotřebujete.",
       "native": "Tento balíček lze nahradit {replacement}, dostupné od Node {nodeVersion}.",
@@ -557,6 +529,7 @@
       "current_tags": "Aktuální značky",
       "no_match_filter": "Žádné verze neodpovídají {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "Závislosti ({count})",
       "list_label": "Závislosti balíčku",
@@ -758,6 +731,9 @@
       "button": "Stáhnout",
       "tarball": "Stáhnout Tarball jako .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -1111,25 +1087,14 @@
         "managers": "správce balíčků"
       }
     },
-    "sponsors": {
-      "title": "Sponzoři"
-    },
-    "oss_partners": {
-      "title": "OSS partneři"
-    },
     "team": {
       "title": "Tým",
       "governance": "Správa",
-      "role_steward": "Vedoucí",
-      "role_maintainer": "Správce",
       "sponsor": "Sponzor",
       "sponsor_aria": "Sponzor {name} na GitHubu"
     },
     "contributors": {
-      "title": "Přispěvatelé | {count} přispěvatelé | {count} přispěvatelů",
       "description": "npmx je plně open source, postavený úžasnou komunitou přispěvatelů. Přidejte se k nám a společně vytvořme npm prohlížeč, jaký jsme vždy chtěli.",
-      "loading": "Načítání přispěvatelů...",
-      "error": "Nepodařilo se načíst přispěvatele",
       "view_profile": "Zobrazit GitHub profil uživatele {name}"
     },
     "get_involved": {
@@ -1138,35 +1103,17 @@
         "title": "Přispět",
         "description": "Pomozte nám vytvořit lepší npm zážitek.",
         "cta": "Zobrazit na GitHubu"
-      },
-      "community": {
-        "title": "Připojte se ke komunitě",
-        "description": "Chatujte, pokládejte otázky a sdílejte nápady.",
-        "cta": "Připojit se na Discordu"
-      },
-      "builders": {
-        "title": "Pomozte zlepšovat npmx",
-        "description": "Připojte se ke stavitelům, kteří budují budoucnost npmx.",
-        "cta": "Připojit se k Builders Discordu"
-      },
-      "follow": {
-        "title": "Zůstaňte v obraze",
-        "description": "Zjistěte nejnovější informace o npmx.",
-        "cta": "Sledovat na Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "připojit",
-    "account": "Účet",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Spravovat balíčky a organizace",
-    "atmosphere_desc": "Sociální funkce a identita",
-    "connect_npm_cli": "Připojit k npm CLI",
-    "connect_atmosphere": "Připojit k Atmosphere",
-    "connecting": "Připojování...",
-    "ops": "{count} operace | {count} operace | {count} operací"
+    "account": "Účet"
   },
   "auth": {
     "modal": {
@@ -1178,7 +1125,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Připojit",
       "create_account": "Vytvořit nový účet",
-      "connect_bluesky": "Připojit k Bluesky",
       "what_is_atmosphere": "Co je účet Atmosphere?",
       "atmosphere_explanation": "{npmx} používá {atproto} k pohánění mnoha svých sociálních funkcí, což uživatelům umožňuje vlastnit svá data a používat jeden účet pro všechny kompatibilní aplikace. Jakmile si vytvoříte účet, můžete používat i jiné aplikace jako {bluesky} a {tangled} se stejným účtem.",
       "default_input_error": "Zadejte platný handle, DID nebo úplnou URL PDS",
@@ -1235,6 +1181,9 @@
       "remove_package": "Odebrat {package}",
       "packages_selected": "Vybrané balíčky: {count}/{max}.",
       "add_hint": "Přidejte alespoň 2 balíčky ke srovnání."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Žádná závislost)",
@@ -1314,7 +1263,10 @@
         "vulnerabilities": {
           "label": "Zranitelnosti",
           "description": "Známé bezpečnostní zranitelnosti"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Jakékoliv",
@@ -1388,30 +1340,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Oficiální AT Protocol Personal Data Server (PDS) pro npmx komunitu.",
-    "join": {
-      "title": "Připojte se ke komunitě",
-      "description": "Ať už vytváříte svůj první účet na atmosféře nebo migrujete stávající, patříte sem. Můžete migrovat svůj aktuální účet, aniž byste ztratili svůj handle, příspěvky nebo sledující.",
-      "migrate": "Migrovat s PDS MOOver"
-    },
-    "server": {
-      "title": "Detaily serveru",
-      "location_label": "Umístění:",
-      "location_value": "Norimberk, Německo",
-      "infrastructure_label": "Infrastruktura:",
-      "infrastructure_value": "Hostováno u Hetzner",
-      "privacy_label": "Soukromí:",
-      "privacy_value": "Podléhá přísným zákonům EU o ochraně osobních údajů",
-      "learn_more": "Zjistěte, jak npmx využívá Atmosphere"
-    },
-    "community": {
-      "title": "Kdo je tu",
-      "description": "Některé z {count} účtů, které již nazývají npmx.social svým domovem:",
-      "loading": "Načítání komunity z PDS ...",
-      "error": "Nepodařilo se načíst komunitu z PDS.",
-      "empty": "Žádní členové komunity k zobrazení.",
-      "view_profile": "Zobrazit profil uživatele {handle}",
-      "new_accounts": "... plus {count} dalších, kteří jsou na atmosféře nováčky"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "zásady ochrany osobních údajů",
@@ -1462,13 +1392,6 @@
       "li3": "Nesleduje uživatele napříč webovými stránkami",
       "li4": "Všechna data jsou agregována a anonymizována",
       "p3": "Jediné informace, které jsou shromažďovány, zahrnují: adresy stránek, referrer, zemi/region, typ zařízení, prohlížeč a operační systém. Tato data nelze použít k identifikaci jednotlivých uživatelů."
-    },
-    "authenticated": {
-      "title": "Ověření uživatelé",
-      "p1": "Když připojíte svůj {bold} účet k npmx, ukládáme váš OAuth přístupový token do zabezpečeného, pouze HTTP session cookie. Tento token se používá výhradně k autentizaci požadavků vaším jménem.",
-      "bold": "Atmosphere",
-      "p2": "Neukládáme vaše přihlašovací údaje a nepřistupujeme k žádným datům nad rámec toho, co je nezbytné pro poskytování funkcí, které používáte. Svůj účet můžete kdykoli odpojit na stránce {settings}.",
-      "settings": "nastavení"
     },
     "data_retention": {
       "title": "Uchovávání dat",
@@ -1567,8 +1490,7 @@
     },
     "return": {
       "title": "jsme zpět!",
-      "p1": "vrátili jsme se odpočatí a připraveni na poslední přípravy před 3. březnem. {social}.",
-      "social_link": "sledujte nás na Bluesky"
+      "p1": "vrátili jsme se odpočatí a připraveni na poslední přípravy před 3. březnem. {social}."
     },
     "stats": {
       "contributors": "Přispěvatelé",
@@ -1632,8 +1554,7 @@
     },
     "guidelines": {
       "title": "jen maličkost",
-      "message": "Přístupnost je pro nás důležitá a rádi bychom, abyste se k nám připojili v této vizi. Při používání zmíněných médií zajistěte dostatečný kontrast vůči pozadí a nepoužívejte velikost menší než 24px. Pokud potřebujete další zdroje nebo další informace o projektu, neváhejte nás kontaktovat na {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "Přístupnost je pro nás důležitá a rádi bychom, abyste se k nám připojili v této vizi. Při používání zmíněných médií zajistěte dostatečný kontrast vůči pozadí a nepoužívejte velikost menší než 24px. Pokud potřebujete další zdroje nebo další informace o projektu, neváhejte nás kontaktovat na {link}."
     }
   },
   "alt_logo_kawaii": "Roztomilá, zaoblená a barevná verze loga npmx."

@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "documentación",
     "source": "código fuente",
-    "social": "social",
-    "chat": "chat",
-    "builders_chat": "builders",
     "keyboard_shortcuts": "atajos de teclado",
     "brand": "marca"
   },
@@ -45,7 +42,6 @@
     "label": "Buscar paquetes npm",
     "placeholder": "buscar paquetes...",
     "button": "buscar",
-    "searching": "Buscando...",
     "found_packages": "No se encontraron paquetes | Se encontró 1 paquete | Se encontraron {count} paquetes",
     "found_packages_sorted": "No se encontraron resultados | Ordenando el mejor resultado | Ordenando los {count} mejores resultados",
     "updating": "(actualizando...)",
@@ -56,10 +52,6 @@
     "title_packages": "búsqueda de paquetes",
     "meta_description": "Resultado de la búsqueda para '{search}'",
     "meta_description_packages": "Búsqueda de paquetes npm",
-    "not_taken": "{name} no está ocupado",
-    "claim_prompt": "Reclamar este nombre de paquete en npm",
-    "claim_button": "Reclamar \"{name}\"",
-    "want_to_claim": "¿Quieres reclamar este nombre de paquete?",
     "start_typing": "Empieza a escribir para buscar paquetes",
     "algolia_disclaimer": "Con tecnología de Algolia",
     "exact_match": "exacto",
@@ -75,6 +67,23 @@
     "instant_search_turn_on": "activar",
     "instant_search_turn_off": "desactivar",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Principal",
@@ -130,14 +139,12 @@
     "data_source": {
       "label": "Fuente de datos",
       "description": "Elige de dónde obtiene pypix los datos de búsqueda. Las páginas de paquetes individuales usan PyPI directamente.",
-      "npm": "PyPI",
       "npm_description": "Usa el índice local construido desde los endpoints oficiales de PyPI.",
       "pypi_search": "Búsqueda PyPI",
       "algolia": "Algolia",
       "algolia_search": "Búsqueda Algolia",
       "algolia_description": "Usa Algolia para búsquedas y páginas de organizaciones y usuarios más rápidas."
     },
-    "pypi_search_provider": "Búsqueda PyPI",
     "python_installer": "Instalador Python",
     "python_installer_description": "Elige el instalador usado en los comandos de instalación de paquetes.",
     "python_version_style": "Estilo de versión",
@@ -152,10 +159,6 @@
     "instant_search": "Búsqueda instantánea",
     "instant_search_description": "Navega a la página de búsqueda y actualiza los resultados mientras escribes.",
     "relative_dates": "Fechas relativas",
-    "include_types": "Incluir {'@'}types en la instalación",
-    "include_types_description": "Añadir paquete {'@'}types a los comandos de instalación para paquetes sin tipos",
-    "hide_platform_packages": "Ocultar paquetes específicos de plataforma en la búsqueda",
-    "hide_platform_packages_description": "Ocultar paquetes binarios nativos como {'@'}esbuild/linux-x64 de los resultados",
     "enable_graph_pulse_loop": "Activar bucle del efecto de pulsación en el mini gráfico",
     "enable_graph_pulse_loop_description": "Activar una animación de pulso continua en el gráfico de descargas semanales. Esta animación puede distraer a algunos usuarios.",
     "theme": "Tema",
@@ -257,9 +260,7 @@
     "not_found": "Perfil no encontrado",
     "not_found_message": "No se ha podido encontrar el perfil de {handle}.",
     "invite": {
-      "message": "Parece que aún no usa npmx. ¿Quieres contárselo?",
-      "share_button": "Compartir en Bluesky",
-      "compose_text": "¡Hola {'@'}{handle}! ¿Has probado ya npmx.dev? Es un navegador para el registro de npm rápido, moderno y de código abierto.\nhttps://npmx.dev"
+      "message": "Parece que aún no usa npmx. ¿Quieres contárselo?"
     }
   },
   "package": {
@@ -281,6 +282,7 @@
       "size": "El tamaño de instalación aumentó un {percent} ({size} más grande)",
       "deps": "{count} dependencias más"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Es posible que no necesite esta dependencia.",
       "native": "Esto se puede reemplazar con {replacement}, disponible desde Node {nodeVersion}.",
@@ -458,6 +460,7 @@
       "current_tags": "Etiquetas actuales",
       "no_match_filter": "Ninguna versión coincide con {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "Dependencias ({count})",
       "list_label": "Dependencias del paquete",
@@ -659,6 +662,9 @@
       "button": "Descargar",
       "tarball": "Descargar Tarball como .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -1008,25 +1014,14 @@
         "managers": "geniales"
       }
     },
-    "sponsors": {
-      "title": "Patrocinadores"
-    },
-    "oss_partners": {
-      "title": "Socios de OSS"
-    },
     "team": {
       "title": "Equipo",
       "governance": "Gobernanza",
-      "role_steward": "Administrador",
-      "role_maintainer": "Mantenedor",
       "sponsor": "Patrocinar",
       "sponsor_aria": "Patrocinar a {name} en GitHub"
     },
     "contributors": {
-      "title": "{count} Colaborador | {count} Colaboradores",
       "description": "npmx es completamente de código abierto, construido por una increíble comunidad de colaboradores. Únete a nosotros y construyamos juntos la experiencia de navegación de npm que siempre quisimos.",
-      "loading": "Cargando colaboradores...",
-      "error": "Error al cargar colaboradores",
       "view_profile": "Ver perfil de GitHub de {name}"
     },
     "get_involved": {
@@ -1035,35 +1030,17 @@
         "title": "Contribuir",
         "description": "Ayúdanos a construir una mejor experiencia npm.",
         "cta": "Ver en GitHub"
-      },
-      "community": {
-        "title": "Únete a la comunidad",
-        "description": "Chatea, haz preguntas y comparte ideas.",
-        "cta": "Únete a Discord"
-      },
-      "builders": {
-        "title": "Ayuda a construir npmx",
-        "description": "Únete a los builders que dan forma al futuro de npmx.",
-        "cta": "Unirse al Discord de Builders"
-      },
-      "follow": {
-        "title": "Mantente actualizado",
-        "description": "Entérate de lo último en npmx.",
-        "cta": "Síguenos en Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "conectar",
-    "account": "Cuenta",
-    "npm_cli": "CLI de npm",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Gestionar paquetes y organizaciones",
-    "atmosphere_desc": "Características sociales e identidad",
-    "connect_npm_cli": "Conectar a la CLI de npm",
-    "connect_atmosphere": "Conectar a la Atmosphere",
-    "connecting": "Conectando...",
-    "ops": "{count} op | {count} ops"
+    "account": "Cuenta"
   },
   "auth": {
     "modal": {
@@ -1075,7 +1052,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Conectar",
       "create_account": "Crear una nueva cuenta",
-      "connect_bluesky": "Conectar con Bluesky",
       "what_is_atmosphere": "¿Qué es una cuenta de la Atmosphere?",
       "atmosphere_explanation": "{npmx} utiliza {atproto} para proporcionar muchas de sus funciones sociales, lo que permite a los usuarios ser propietarios de sus datos y utilizar una cuenta para todas las aplicaciones compatibles. Una vez que crea una cuenta, puede usar otras aplicaciones como {bluesky} y {tangled} con la misma cuenta.",
       "default_input_error": "Por favor, introduce un handle, DID o URL de PDS válido",
@@ -1132,6 +1108,9 @@
       "remove_package": "Eliminar {package}",
       "packages_selected": "{count}/{max} paquetes seleccionados.",
       "add_hint": "Añade al menos 2 paquetes para comparar."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Sin dependencia)",
@@ -1211,7 +1190,10 @@
         "vulnerabilities": {
           "label": "Vulnerabilidades",
           "description": "Vulnerabilidades de seguridad conocidas"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Cualquiera",
@@ -1285,30 +1267,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "El Servidor de Datos Personales (PDS) oficial del Protocolo AT para la comunidad de npmx.",
-    "join": {
-      "title": "Únete a la comunidad",
-      "description": "Tanto si estás creando tu primera cuenta en la atmósfera como si estás migrando una existente, tu lugar está aquí. Puedes migrar tu cuenta actual sin perder tu usuario, tus publicaciones o tus seguidores.",
-      "migrate": "Migrar con PDS MOOver"
-    },
-    "server": {
-      "title": "Detalles del servidor",
-      "location_label": "Ubicación:",
-      "location_value": "Núremberg, Alemania",
-      "infrastructure_label": "Infraestructura:",
-      "infrastructure_value": "Alojado en Hetzner",
-      "privacy_label": "Privacidad:",
-      "privacy_value": "Sujeto a las estrictas leyes de protección de datos de la UE",
-      "learn_more": "Descubre cómo npmx usa la Atmósfera"
-    },
-    "community": {
-      "title": "Quién está aquí",
-      "description": "Algunas de las {count} cuentas que ya llaman hogar a npmx.social:",
-      "loading": "Cargando la comunidad del PDS...",
-      "error": "Error al cargar la comunidad del PDS.",
-      "empty": "No hay miembros de la comunidad para mostrar.",
-      "view_profile": "Ver perfil de {handle}",
-      "new_accounts": "...y {count} más que son nuevos en la atmósfera"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "política de privacidad",
@@ -1359,13 +1319,6 @@
       "li3": "No rastrea a los usuarios a través de sitios web",
       "li4": "Todos los datos son agregados y anonimizados",
       "p3": "La única información recopilada incluye: URLs de páginas, referente, país/región, tipo de dispositivo, navegador y sistema operativo. Estos datos no pueden utilizarse para identificar a usuarios individuales."
-    },
-    "authenticated": {
-      "title": "Usuarios autenticados",
-      "p1": "Cuando conectas tu cuenta de {bold} a npmx, almacenamos tu token de acceso OAuth en una cookie de sesión segura y solo HTTP. Este token se utiliza únicamente para autenticar solicitudes en tu nombre.",
-      "bold": "Atmosphere",
-      "p2": "No almacenamos tus credenciales y no accedemos a ningún dato más allá de lo necesario para proporcionar las funciones que utilizas. Puedes desconectar tu cuenta en cualquier momento desde la página de {settings}.",
-      "settings": "ajustes"
     },
     "data_retention": {
       "title": "Retención de datos",
@@ -1464,8 +1417,7 @@
     },
     "return": {
       "title": "¡regresamos!",
-      "p1": "volvimos recargados y listos para el empujón final hacia el 3 de marzo. {social} para actualizaciones.",
-      "social_link": "síguenos en Bluesky"
+      "p1": "volvimos recargados y listos para el empujón final hacia el 3 de marzo. {social} para actualizaciones."
     },
     "stats": {
       "contributors": "Colaboradores",
@@ -1529,8 +1481,7 @@
     },
     "guidelines": {
       "title": "una nota",
-      "message": "La accesibilidad es importante para nosotros, y nos encantaría que nos acompañaras en esta visión. Cuando uses los medios mencionados, asegúrate de que haya suficiente contraste con el fondo, y no uses un tamaño más pequeño que 24px. Si necesitas algún otro recurso o información adicional sobre el proyecto, no dudes en contactarnos a través de {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "La accesibilidad es importante para nosotros, y nos encantaría que nos acompañaras en esta visión. Cuando uses los medios mencionados, asegúrate de que haya suficiente contraste con el fondo, y no uses un tamaño más pequeño que 24px. Si necesitas algún otro recurso o información adicional sobre el proyecto, no dudes en contactarnos a través de {link}."
     }
   }
 }

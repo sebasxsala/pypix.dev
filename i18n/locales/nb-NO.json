@@ -16,9 +16,6 @@
     "blog": "blogg",
     "docs": "dokumentasjon",
     "source": "kildekode",
-    "social": "sosialt",
-    "chat": "chat",
-    "builders_chat": "utviklere",
     "keyboard_shortcuts": "tastatursnarveier",
     "brand": "merkevare",
     "resources": "Ressurser",
@@ -52,7 +49,6 @@
     "label": "Søk etter npm-pakker",
     "placeholder": "søk etter pakker...",
     "button": "søk",
-    "searching": "Søker...",
     "found_packages": "Ingen pakker funnet | Fant 1 pakke | Fant {count} pakker",
     "found_packages_sorted": "Sorterer topp {count} resultat | Sorterer topp {count} resultater",
     "updating": "(oppdaterer...)",
@@ -63,10 +59,6 @@
     "title_packages": "søk pakker",
     "meta_description": "Søkeresultater for '{search}'",
     "meta_description_packages": "Søk etter npm-pakker",
-    "not_taken": "{name} er ledig",
-    "claim_prompt": "Gjør krav på dette pakkenavnet på npm",
-    "claim_button": "Gjør krav på \"{name}\"",
-    "want_to_claim": "Vil du gjøre krav på dette pakkenavnet?",
     "start_typing": "Begynn å skrive for å søke etter pakker",
     "algolia_disclaimer": "Drevet av Algolia",
     "exact_match": "eksakt",
@@ -97,7 +89,6 @@
     "empty_search_hint": "Trykk Enter for å søke etter «{query}».",
     "current": "gjeldende",
     "here": "du er her",
-    "connected": "tilkoblet",
     "state": {
       "on": "på",
       "off": "av"
@@ -121,19 +112,8 @@
       "keyboard_shortcuts": "Tastatursnarveier",
       "help_translate": "Hjelp med å oversette"
     },
-    "connections": {
-      "npm_connect": "Koble til npm CLI",
-      "npm_connected": "npm CLI (~{username})",
-      "npm_disconnect": "Koble fra npm CLI",
-      "atmosphere_connect": "Koble til Atmosphere",
-      "atmosphere_connected": "atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "Koble fra Atmosphere"
-    },
     "navigation": {
-      "home": "hjem",
-      "packages": "pakker (~{username})",
-      "orgs": "organisasjoner (~{username})",
-      "profile": "profil ({'@'}{handle})"
+      "home": "hjem"
     },
     "links": {
       "external": "Ekstern lenke"
@@ -182,8 +162,6 @@
       "background_theme_changed": "Bakgrunnsnyanse satt til {theme}.",
       "download_started": "Laster ned tarball for {package}.",
       "copied_to_clipboard": "Kopiert til utklippstavlen.",
-      "npm_disconnected": "npm CLI frakoblet.",
-      "atmosphere_disconnected": "Atmosphere frakoblet.",
       "facets_all_selected": "Alle fasetter valgt.",
       "facets_all_deselected": "Alle fasetter fravalgt.",
       "view_switched": "Byttet til {view}-visning.",
@@ -242,7 +220,6 @@
     "data_source": {
       "label": "Datakilde",
       "description": "Velg hvor npmx henter søkedata. Individuelle pakkesider bruker alltid npm-registeret direkte.",
-      "npm": "npm-registeret",
       "npm_description": "Henter søk, org- og brukerlister direkte fra det offisielle npm-registeret. Autoritativt, men kan være tregere.",
       "algolia": "Algolia",
       "algolia_description": "Bruker Algolia for raskere søk, org- og brukersider."
@@ -250,10 +227,6 @@
     "instant_search": "Hurtigsøk",
     "instant_search_description": "Navigerer til søkesiden og oppdaterer resultatene mens du skriver.",
     "relative_dates": "Relative datoer",
-    "include_types": "Inkluder {'@'}types ved installasjon",
-    "include_types_description": "Legg til {'@'}types-pakken i installasjonskommandoer for pakker uten typer",
-    "hide_platform_packages": "Skjul plattformspesifikke pakker i søk",
-    "hide_platform_packages_description": "Skjul binærpakker som {'@'}esbuild/linux-x64 fra resultatene",
     "enable_graph_pulse_loop": "Aktiver pulseffekt-løkke på mini-graf",
     "enable_graph_pulse_loop_description": "Aktiver en kontinuerlig pulsanimasjon på ukentlig nedlastingsgraf. Denne animasjonen kan være forstyrrende for noen brukere.",
     "theme": "Tema",
@@ -361,9 +334,7 @@
     "not_found": "Profil ikke funnet",
     "not_found_message": "Profilen for {handle} ble ikke funnet.",
     "invite": {
-      "message": "Det ser ikke ut som de bruker npmx ennå. Vil du fortelle dem om det?",
-      "share_button": "Del på Bluesky",
-      "compose_text": "Hei {'@'}{handle}! Har du sjekket ut npmx.dev ennå? Det er en leser for npm-registeret som er rask, moderne og åpen kildekode.\nhttps://npmx.dev"
+      "message": "Det ser ikke ut som de bruker npmx ennå. Vil du fortelle dem om det?"
     }
   },
   "package": {
@@ -578,20 +549,7 @@
     },
     "timeline": {
       "load_more": "Last flere",
-      "load_error": "Kunne ikke laste tidslinje. Prøv igjen senere.",
-      "size_increase": "Installasjonsstørrelse økt med {percent}% ({size})",
-      "size_decrease": "Installasjonsstørrelse minket med {percent}% ({size})",
-      "dep_increase": "{count} avhengigheter lagt til",
-      "dep_decrease": "{count} avhengigheter fjernet",
-      "license_change": "Lisens endret fra {from} til {to}",
-      "esm_added": "Modultype endret til ESM",
-      "esm_removed": "Modultype endret fra ESM til CJS",
-      "types_added": "TypeScript-typer lagt til",
-      "types_removed": "TypeScript-typer fjernet",
-      "trusted_publisher_added": "Pålitelig publisering aktivert",
-      "trusted_publisher_removed": "Pålitelig publisering fjernet",
-      "provenance_added": "Opprinnelse aktivert",
-      "provenance_removed": "Opprinnelse fjernet"
+      "load_error": "Kunne ikke laste tidslinje. Prøv igjen senere."
     },
     "dependencies": {
       "title": "Avhengighet ({count}) | Avhengigheter ({count})",
@@ -1157,25 +1115,14 @@
         "managers": "pakkebehandlere"
       }
     },
-    "sponsors": {
-      "title": "Sponsorer"
-    },
-    "oss_partners": {
-      "title": "OSS-partnere"
-    },
     "team": {
       "title": "Team",
       "governance": "Styring",
-      "role_steward": "forvalter",
-      "role_maintainer": "vedlikeholder",
       "sponsor": "sponsor",
       "sponsor_aria": "Sponser {name} på GitHub"
     },
     "contributors": {
-      "title": "{count} Bidragsyter | {count} Bidragsytere",
       "description": "npmx er fullstendig åpen kildekode, bygget av et fantastisk fellesskap av bidragsytere. Bli med oss og la oss bygge npm-opplevelsen vi alltid har ønsket oss, sammen.",
-      "loading": "Laster bidragsytere...",
-      "error": "Kunne ikke laste bidragsytere",
       "view_profile": "Vis {name}s GitHub-profil"
     },
     "get_involved": {
@@ -1184,35 +1131,17 @@
         "title": "Bidra",
         "description": "Hjelp oss med å bygge en bedre npm-opplevelse.",
         "cta": "Vis på GitHub"
-      },
-      "community": {
-        "title": "Bli med i fellesskapet",
-        "description": "Chat, still spørsmål og del ideer.",
-        "cta": "Bli med på Discord"
-      },
-      "builders": {
-        "title": "Hjelp til med å bygge npmx",
-        "description": "Bli med utviklerne som former fremtiden til npmx.",
-        "cta": "Bli med på Builders Discord"
-      },
-      "follow": {
-        "title": "Hold deg oppdatert",
-        "description": "Få med deg det siste om npmx.",
-        "cta": "Følg på Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "koble til",
-    "account": "Konto",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Administrer pakker og orgs",
-    "atmosphere_desc": "Sosiale funksjoner og identitet",
-    "connect_npm_cli": "Koble til npm CLI",
-    "connect_atmosphere": "Koble til Atmosphere",
-    "connecting": "Kobler til...",
-    "ops": "{count} op | {count} ops"
+    "account": "Konto"
   },
   "auth": {
     "modal": {
@@ -1224,7 +1153,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Koble til",
       "create_account": "Opprett en ny konto",
-      "connect_bluesky": "Koble til med Bluesky",
       "what_is_atmosphere": "Hva er en Atmosphere-konto?",
       "atmosphere_explanation": "{npmx} bruker {atproto} for å drive mange av sine sosiale funksjoner, slik at brukere kan eie sine egne data og bruke én konto for alle kompatible applikasjoner. Når du oppretter en konto, kan du bruke andre apper som {bluesky} og {tangled} med samme konto.",
       "default_input_error": "Vennligst skriv inn et gyldig brukernavn, DID eller en full PDS-URL",
@@ -1457,30 +1385,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Den offisielle AT Protocol Personal Data Server (PDS) for npmx-fellesskapet.",
-    "join": {
-      "title": "Bli med i fellesskapet",
-      "description": "Enten du oppretter din første konto på atmosfæren eller migrerer en eksisterende, hører du hjemme her. Du kan migrere din nåværende konto uten å miste håndtaket, innleggene eller følgerne dine.",
-      "migrate": "Migrer med PDS MOOver"
-    },
-    "server": {
-      "title": "Serverdetaljer",
-      "location_label": "Plassering:",
-      "location_value": "Nürnberg, Tyskland",
-      "infrastructure_label": "Infrastruktur:",
-      "infrastructure_value": "Hostet på Hetzner",
-      "privacy_label": "Personvern:",
-      "privacy_value": "Underlagt strenge EU-personvernlover",
-      "learn_more": "Lær hvordan npmx bruker Atmosphere"
-    },
-    "community": {
-      "title": "Hvem er her",
-      "description": "Noen av de {count} kontoene som allerede kaller npmx.social hjem:",
-      "loading": "Laster PDS-fellesskap...",
-      "error": "Kunne ikke laste PDS-fellesskap.",
-      "empty": "Ingen fellesskapsmedlemmer å vise.",
-      "view_profile": "Vis {handle}s profil",
-      "new_accounts": "...pluss {count} flere som er nye i atmosfæren"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "personvernpolicy",
@@ -1531,13 +1437,6 @@
       "li3": "Den sporer ikke brukere på tvers av nettsteder",
       "li4": "Alle data er aggregerte og anonymiserte",
       "p3": "Den eneste informasjonen som samles inn inkluderer: side-URLer, henviser, land/region, enhetstype, nettleser og operativsystem. Disse dataene kan ikke brukes til å identifisere individuelle brukere."
-    },
-    "authenticated": {
-      "title": "Autentiserte brukere",
-      "p1": "Når du kobler din {bold}-konto til npmx, lagrer vi ditt OAuth-tilgangstoken i en sikker, HTTP-only øktkapsel. Dette tokenet brukes kun til å autentisere forespørsler på dine vegne.",
-      "bold": "Atmosphere",
-      "p2": "Vi lagrer ikke legitimasjonen din, og vi har ikke tilgang til data utover det som er nødvendig for å tilby funksjonene du bruker. Du kan koble fra kontoen din når som helst fra {settings}-siden.",
-      "settings": "innstillinger"
     },
     "data_retention": {
       "title": "Dataoppbevaring",
@@ -1636,8 +1535,7 @@
     },
     "return": {
       "title": "vi kom tilbake!",
-      "p1": "vi kom tilbake oppladet og klare for den siste innspurten til 3. mars. {social} for oppdateringer.",
-      "social_link": "følg oss på Bluesky"
+      "p1": "vi kom tilbake oppladet og klare for den siste innspurten til 3. mars. {social} for oppdateringer."
     },
     "stats": {
       "contributors": "Bidragsytere",
@@ -1701,8 +1599,7 @@
     },
     "guidelines": {
       "title": "bare en merknad",
-      "message": "Tilgjengelighet er viktig for oss, og vi vil gjerne at du følger oss i denne visjonen. Når du bruker nevnte media, sørg for at det er nok kontrast mot bakgrunnen, og ikke gå mindre enn 24px. Hvis du trenger andre ressurser eller tilleggsinformasjon om prosjektet, ta gjerne kontakt med oss på {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "Tilgjengelighet er viktig for oss, og vi vil gjerne at du følger oss i denne visjonen. Når du bruker nevnte media, sørg for at det er nok kontrast mot bakgrunnen, og ikke gå mindre enn 24px. Hvis du trenger andre ressurser eller tilleggsinformasjon om prosjektet, ta gjerne kontakt med oss på {link}."
     }
   },
   "alt_logo_kawaii": "En søt, avrundet og fargerik versjon av npmx-logoen."

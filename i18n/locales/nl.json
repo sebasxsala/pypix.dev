@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "documentatie",
     "source": "bron code",
-    "social": "social",
-    "chat": "chat",
-    "builders_chat": "bouwers",
     "keyboard_shortcuts": "toetsenbordnavigatie",
     "brand": "merk"
   },
@@ -48,7 +45,6 @@
     "label": "Zoek npm pakketten",
     "placeholder": "zoek pakketten...",
     "button": "zoek",
-    "searching": "Zoeken...",
     "found_packages": "Geen pakketten gevonden | 1 pakket gevonden | {count} pakketten gevonden",
     "found_packages_sorted": "Geen resultaten gevonden | Sorteer top {count} resultaat | Sorteer top {count} resultaten",
     "updating": "(updaten...)",
@@ -59,10 +55,6 @@
     "title_packages": "zoek pakketten",
     "meta_description": "Zoek resultaten voor '{search}'",
     "meta_description_packages": "Zoek npm pakketten",
-    "not_taken": "{name} is niet in gebruik",
-    "claim_prompt": "Registeer deze pakketnaam op npm",
-    "claim_button": "Registeer \"{name}\"",
-    "want_to_claim": "Wilt u deze pakket naam registeren?",
     "start_typing": "Start typen om te zoeken naar pakketten",
     "algolia_disclaimer": "Mogelijk gemaakt door Algolia",
     "exact_match": "precies",
@@ -93,7 +85,6 @@
     "empty_search_hint": "Druk op Enter om te zoeken naar \"{query}\".",
     "current": "huidige",
     "here": "u bent hier",
-    "connected": "verbonden",
     "state": {
       "on": "aan",
       "off": "uit"
@@ -117,19 +108,8 @@
       "keyboard_shortcuts": "toetsenbordnavigatie",
       "help_translate": "Help vertalen"
     },
-    "connections": {
-      "npm_connect": "Verbind met npm CLI",
-      "npm_connected": "npm CLI (~{username})",
-      "npm_disconnect": "Ontkoppel npm CLI",
-      "atmosphere_connect": "Verbind met Atmosphere",
-      "atmosphere_connected": "Atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "Ontkoppel Atmosphere"
-    },
     "navigation": {
-      "home": "start",
-      "packages": "pakketten (~{username})",
-      "orgs": "Organisaties (~{username})",
-      "profile": "profiel ({'@'}{handle})"
+      "home": "start"
     },
     "links": {
       "external": "Externe link"
@@ -178,8 +158,6 @@
       "background_theme_changed": "Achtergrondkleur ingesteld op {theme}.",
       "download_started": "Downloaden {package} tarball.",
       "copied_to_clipboard": "Gekopieerd naar klembord.",
-      "npm_disconnected": "npm CLI ontkoppeld.",
-      "atmosphere_disconnected": "Atmosphere ontkoppeld.",
       "facets_all_selected": "Alle aspecten selecteren.",
       "facets_all_deselected": "Alle aspecten zijn gedeselecteerd.",
       "view_switched": "Overschakelt naar {view} weergaven.",
@@ -238,7 +216,6 @@
     "data_source": {
       "label": "Gegevensbron",
       "description": "Kies waar npmx zoekgegevens vandaan haalt. Individuele pakketpagina's gebruiken altijd rechtstreeks het npm-register.",
-      "npm": "npm register",
       "npm_description": "haalt zoek-, org- en gebruikerslijsten rechtstreeks op uit het officiële npm-register. Betrouwbaar, maar kan trager zijn.",
       "algolia": "Algolia",
       "algolia_description": "Gebruikt Algolia voor snellere zoekopdrachten, organisatie- en gebruikerspagina's."
@@ -246,10 +223,6 @@
     "instant_search": "Direct zoeken",
     "instant_search_description": "Navigeert naar de zoekpagina en werkt de resultaten bij terwijl u typt.",
     "relative_dates": "Relatieve datums",
-    "include_types": "Voeg {'@'}types toe aan installatie",
-    "include_types_description": "Voeg {'@'}types toe aan installatie commands van pakketten zonder types.",
-    "hide_platform_packages": "Verberg platformspecifieke pakketten in zoekresultaten",
-    "hide_platform_packages_description": "Verberg native binaire pakketten zoals {'@'}esbuild/linux-x64 uit de resultaten",
     "enable_graph_pulse_loop": "Schakel het herhalen van het pulseffect in de minigrafiek in",
     "enable_graph_pulse_loop_description": "Schakel een doorlopende pulsanimatie in op de grafiek met wekelijkse downloads. Deze animatie kan voor sommige gebruikers storend zijn.",
     "theme": "Thema",
@@ -355,9 +328,7 @@
     "not_found": "Profiel niet gevonden",
     "not_found_message": "Het profiel voor {handle} kon niet gevonden worden.",
     "invite": {
-      "message": "Het lijkt erop dat ze npmx nog niet gebruiken. Wilt u ze hierop wijzen",
-      "share_button": "Deel op Bluesky",
-      "compose_text": "Hallo {'@'}{handle}! Hebt u npmx.dev al bekeken? Het is een browser voor het npm register die snel, modern en open source is.\nhttps://npmx.dev"
+      "message": "Het lijkt erop dat ze npmx nog niet gebruiken. Wilt u ze hierop wijzen"
     }
   },
   "package": {
@@ -379,6 +350,7 @@
       "size": "De installatiegrootte is toegenomen met {percent} ({size} groter)",
       "deps": "{count} meer dependencies"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "U heeft waarschijnlijk dit niet nodig",
       "native": "Dit kan vervangen worden door {replacement}, Beschikbaar sinds node {nodeVersion}.",
@@ -556,6 +528,7 @@
       "current_tags": "Huidige tags",
       "no_match_filter": "Geen versies die voldoen aan {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "Dependency ({count}) | Dependencies ({count})",
       "list_label": "Pakket dependencies",
@@ -757,6 +730,9 @@
       "button": "Download",
       "tarball": "Download Tarball als .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -1110,25 +1086,14 @@
         "managers": "pakket beheerders"
       }
     },
-    "sponsors": {
-      "title": "Sponsoren"
-    },
-    "oss_partners": {
-      "title": "Open Source Software Partners"
-    },
     "team": {
       "title": "Team",
       "governance": "Bestuur",
-      "role_steward": "Coördinator",
-      "role_maintainer": "Onderhouder",
       "sponsor": "sponsor",
       "sponsor_aria": "Sponsor {name} op GitHub"
     },
     "contributors": {
-      "title": "... en {count} meer bijdrager | ... en {count} meer bijdragers",
       "description": "npmx is volledig open source en is ontwikkeld door een geweldige community van bijdragers. Doe mee en laten we samen de npm browserervaring bouwen die we altijd al wilden hebben.",
-      "loading": "Laden bijdragers...",
-      "error": "Niet gelukt om bedragers te laden",
       "view_profile": "Bekijk het GitHub-profiel van {name}"
     },
     "get_involved": {
@@ -1137,35 +1102,17 @@
         "title": "Bijdragen",
         "description": "Help ons om een betere npm ervaring te creëren.",
         "cta": "Ga naar GitHub"
-      },
-      "community": {
-        "title": "Word lid van de community",
-        "description": "Chat, stel vragen en deel ideeën.",
-        "cta": "Word lid van de Discord"
-      },
-      "builders": {
-        "title": "Bouw mee",
-        "description": "Word lid van het team dat de toekomst van npmx bouwt.",
-        "cta": "Join de bouwsers Discord"
-      },
-      "follow": {
-        "title": "Blijf op te hoogte",
-        "description": "Ontdek het laatste nieuws van npmx.",
-        "cta": "Volg op Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "verbinden",
-    "account": "Account",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Pakketten en organisaties beheren",
-    "atmosphere_desc": "Sociale functies en identiteit",
-    "connect_npm_cli": "Verbinden met npm CLI",
-    "connect_atmosphere": "Verbinden met Atmosphere",
-    "connecting": "Verbinden...",
-    "ops": "{count} operatie | {count} operaties"
+    "account": "Account"
   },
   "auth": {
     "modal": {
@@ -1177,7 +1124,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Verbinden",
       "create_account": "Nieuw account maken",
-      "connect_bluesky": "Verbind met Bluesky",
       "what_is_atmosphere": "wat is een Atmosphere account?",
       "atmosphere_explanation": "{npmx} maakt gebruik van {atproto} voor veel van zijn sociale functies, waardoor gebruikers eigenaar zijn van hun gegevens en één account kunnen gebruiken voor alle compatibele applicaties. Zodra u een account hebt aangemaakt, kunt u andere apps zoals {bluesky} en {tangled} met hetzelfde account gebruiken.",
       "default_input_error": "Voer een geldige handle, DID of volledige PDS-URL in.",
@@ -1393,30 +1339,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "De officiële AT Protocol Persoonlijke Data Server (PDS) voor de npmx community.",
-    "join": {
-      "title": "Word lid van de Community",
-      "description": "Of u nu uw eerste account op Atmosphere account aanmaakt of een bestaand account migreert, u bent hier aan het juiste adres. U kunt uw huidige account migreren zonder uw gebruikersnaam, uw berichten of uw volgers te verliezen.",
-      "migrate": "Migreer met PDS MOOver"
-    },
-    "server": {
-      "title": "Server gegevens",
-      "location_label": "Locatie:",
-      "location_value": "Neurenberg, Duitsland",
-      "infrastructure_label": "Infrastructeur:",
-      "infrastructure_value": "Gehost door Hetzner",
-      "privacy_label": "Privacy:",
-      "privacy_value": "Onderworpen aan strenge Europese wetgeving inzake gegevensbescherming",
-      "learn_more": "Ontdek hoe npmx gebruikmaakt van Atmosphere"
-    },
-    "community": {
-      "title": "Wie is hier",
-      "description": "Vele van de {count} accounts die npmx.social al als thuis beschouwen:",
-      "loading": "Laden PDS community...",
-      "error": "Laden van PDS community mislukt.",
-      "empty": "Geen community leden om te weergeven.",
-      "view_profile": "Kijk {handle}'s profiel",
-      "new_accounts": "...plus {count} meer die nieuw zijn in de Atmosphere"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "privacy beleid",
@@ -1546,8 +1470,7 @@
     },
     "guidelines": {
       "title": "even ter informatie",
-      "message": "Toegankelijkheid is belangrijk voor ons en we zouden het geweldig vinden als u deze visie met ons deelt. Zorg bij het gebruik van de genoemde media voor voldoende contrast met de achtergrond en gebruik een minimale grootte van 24px. Heb u andere bestanden of extra informatie over het project nodig? Neem dan gerust contact met ons op via {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "Toegankelijkheid is belangrijk voor ons en we zouden het geweldig vinden als u deze visie met ons deelt. Zorg bij het gebruik van de genoemde media voor voldoende contrast met de achtergrond en gebruik een minimale grootte van 24px. Heb u andere bestanden of extra informatie over het project nodig? Neem dan gerust contact met ons op via {link}."
     }
   },
   "alt_logo_kawaii": "Een schattige, ronde en kleurrijke versie van het npmx logo."

@@ -52,15 +52,6 @@
         "source": {
           "type": "string"
         },
-        "social": {
-          "type": "string"
-        },
-        "chat": {
-          "type": "string"
-        },
-        "builders_chat": {
-          "type": "string"
-        },
         "keyboard_shortcuts": {
           "type": "string"
         },
@@ -160,9 +151,6 @@
         "button": {
           "type": "string"
         },
-        "searching": {
-          "type": "string"
-        },
         "found_packages": {
           "type": "string"
         },
@@ -191,18 +179,6 @@
           "type": "string"
         },
         "meta_description_packages": {
-          "type": "string"
-        },
-        "not_taken": {
-          "type": "string"
-        },
-        "claim_prompt": {
-          "type": "string"
-        },
-        "claim_button": {
-          "type": "string"
-        },
-        "want_to_claim": {
           "type": "string"
         },
         "start_typing": {
@@ -295,9 +271,6 @@
         "here": {
           "type": "string"
         },
-        "connected": {
-          "type": "string"
-        },
         "state": {
           "type": "object",
           "properties": {
@@ -367,43 +340,10 @@
           },
           "additionalProperties": false
         },
-        "connections": {
-          "type": "object",
-          "properties": {
-            "npm_connect": {
-              "type": "string"
-            },
-            "npm_connected": {
-              "type": "string"
-            },
-            "npm_disconnect": {
-              "type": "string"
-            },
-            "atmosphere_connect": {
-              "type": "string"
-            },
-            "atmosphere_connected": {
-              "type": "string"
-            },
-            "atmosphere_disconnect": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
         "navigation": {
           "type": "object",
           "properties": {
             "home": {
-              "type": "string"
-            },
-            "packages": {
-              "type": "string"
-            },
-            "orgs": {
-              "type": "string"
-            },
-            "profile": {
               "type": "string"
             }
           },
@@ -550,12 +490,6 @@
             "copied_to_clipboard": {
               "type": "string"
             },
-            "npm_disconnected": {
-              "type": "string"
-            },
-            "atmosphere_disconnected": {
-              "type": "string"
-            },
             "facets_all_selected": {
               "type": "string"
             },
@@ -637,6 +571,9 @@
         "draft_banner": {
           "type": "string"
         },
+        "empty_title": {
+          "type": "string"
+        },
         "no_posts": {
           "type": "string"
         },
@@ -712,6 +649,12 @@
             "search": {
               "type": "string"
             },
+            "install_commands": {
+              "type": "string"
+            },
+            "pypi_files": {
+              "type": "string"
+            },
             "language": {
               "type": "string"
             },
@@ -728,9 +671,6 @@
               "type": "string"
             },
             "description": {
-              "type": "string"
-            },
-            "npm": {
               "type": "string"
             },
             "npm_description": {
@@ -751,6 +691,39 @@
           },
           "additionalProperties": false
         },
+        "python_installer": {
+          "type": "string"
+        },
+        "python_installer_description": {
+          "type": "string"
+        },
+        "python_version_style": {
+          "type": "string"
+        },
+        "python_version_style_description": {
+          "type": "string"
+        },
+        "python_version_unpinned": {
+          "type": "string"
+        },
+        "python_version_exact": {
+          "type": "string"
+        },
+        "pypi_file_preference": {
+          "type": "string"
+        },
+        "pypi_file_preference_description": {
+          "type": "string"
+        },
+        "pypi_files_all": {
+          "type": "string"
+        },
+        "pypi_files_wheels": {
+          "type": "string"
+        },
+        "pypi_files_sdist": {
+          "type": "string"
+        },
         "instant_search": {
           "type": "string"
         },
@@ -758,18 +731,6 @@
           "type": "string"
         },
         "relative_dates": {
-          "type": "string"
-        },
-        "include_types": {
-          "type": "string"
-        },
-        "include_types_description": {
-          "type": "string"
-        },
-        "hide_platform_packages": {
-          "type": "string"
-        },
-        "hide_platform_packages_description": {
           "type": "string"
         },
         "enable_graph_pulse_loop": {
@@ -1094,12 +1055,6 @@
           "type": "object",
           "properties": {
             "message": {
-              "type": "string"
-            },
-            "share_button": {
-              "type": "string"
-            },
-            "compose_text": {
               "type": "string"
             }
           },
@@ -1745,45 +1700,6 @@
               "type": "string"
             },
             "load_error": {
-              "type": "string"
-            },
-            "size_increase": {
-              "type": "string"
-            },
-            "size_decrease": {
-              "type": "string"
-            },
-            "dep_increase": {
-              "type": "string"
-            },
-            "dep_decrease": {
-              "type": "string"
-            },
-            "license_change": {
-              "type": "string"
-            },
-            "esm_added": {
-              "type": "string"
-            },
-            "esm_removed": {
-              "type": "string"
-            },
-            "types_added": {
-              "type": "string"
-            },
-            "types_removed": {
-              "type": "string"
-            },
-            "trusted_publisher_added": {
-              "type": "string"
-            },
-            "trusted_publisher_removed": {
-              "type": "string"
-            },
-            "provenance_added": {
-              "type": "string"
-            },
-            "provenance_removed": {
               "type": "string"
             }
           },
@@ -3481,24 +3397,6 @@
           },
           "additionalProperties": false
         },
-        "sponsors": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        "oss_partners": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
         "team": {
           "type": "object",
           "properties": {
@@ -3506,12 +3404,6 @@
               "type": "string"
             },
             "governance": {
-              "type": "string"
-            },
-            "role_steward": {
-              "type": "string"
-            },
-            "role_maintainer": {
               "type": "string"
             },
             "sponsor": {
@@ -3526,16 +3418,7 @@
         "contributors": {
           "type": "object",
           "properties": {
-            "title": {
-              "type": "string"
-            },
             "description": {
-              "type": "string"
-            },
-            "loading": {
-              "type": "string"
-            },
-            "error": {
               "type": "string"
             },
             "view_profile": {
@@ -3564,51 +3447,84 @@
                 }
               },
               "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "pypi_admin": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "object",
+          "properties": {
+            "manage_projects": {
+              "type": "string"
             },
-            "community": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "cta": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
+            "manage_project": {
+              "type": "string"
             },
-            "builders": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "cta": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
+            "trusted_publisher": {
+              "type": "string"
             },
-            "follow": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "cta": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
+            "pending_publisher": {
+              "type": "string"
+            },
+            "publishing_guide": {
+              "type": "string"
+            },
+            "organizations": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "descriptions": {
+          "type": "object",
+          "properties": {
+            "manage_projects": {
+              "type": "string"
+            },
+            "manage_project": {
+              "type": "string"
+            },
+            "publishing_guide": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "guide": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "trusted_publishing": {
+              "type": "string"
+            },
+            "trusted_publishing_body": {
+              "type": "string"
+            },
+            "official_actions": {
+              "type": "string"
+            },
+            "github_workflow": {
+              "type": "string"
+            },
+            "copy_workflow": {
+              "type": "string"
+            },
+            "copied": {
+              "type": "string"
+            },
+            "no_tokens": {
+              "type": "string"
             }
           },
           "additionalProperties": false
@@ -3623,30 +3539,6 @@
           "type": "string"
         },
         "account": {
-          "type": "string"
-        },
-        "npm_cli": {
-          "type": "string"
-        },
-        "atmosphere": {
-          "type": "string"
-        },
-        "npm_cli_desc": {
-          "type": "string"
-        },
-        "atmosphere_desc": {
-          "type": "string"
-        },
-        "connect_npm_cli": {
-          "type": "string"
-        },
-        "connect_atmosphere": {
-          "type": "string"
-        },
-        "connecting": {
-          "type": "string"
-        },
-        "ops": {
           "type": "string"
         }
       },
@@ -3680,9 +3572,6 @@
               "type": "string"
             },
             "create_account": {
-              "type": "string"
-            },
-            "connect_bluesky": {
               "type": "string"
             },
             "what_is_atmosphere": {
@@ -3938,6 +3827,9 @@
               "type": "string"
             },
             "coming_soon": {
+              "type": "string"
+            },
+            "not_supported": {
               "type": "string"
             },
             "select_all": {
@@ -4381,7 +4273,7 @@
         "meta_description": {
           "type": "string"
         },
-        "join": {
+        "status": {
           "type": "object",
           "properties": {
             "title": {
@@ -4390,43 +4282,13 @@
             "description": {
               "type": "string"
             },
-            "migrate": {
+            "future": {
               "type": "string"
             }
           },
           "additionalProperties": false
         },
-        "server": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            },
-            "location_label": {
-              "type": "string"
-            },
-            "location_value": {
-              "type": "string"
-            },
-            "infrastructure_label": {
-              "type": "string"
-            },
-            "infrastructure_value": {
-              "type": "string"
-            },
-            "privacy_label": {
-              "type": "string"
-            },
-            "privacy_value": {
-              "type": "string"
-            },
-            "learn_more": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        "community": {
+        "moover": {
           "type": "object",
           "properties": {
             "title": {
@@ -4435,19 +4297,7 @@
             "description": {
               "type": "string"
             },
-            "loading": {
-              "type": "string"
-            },
-            "error": {
-              "type": "string"
-            },
-            "empty": {
-              "type": "string"
-            },
-            "view_profile": {
-              "type": "string"
-            },
-            "new_accounts": {
+            "note": {
               "type": "string"
             }
           },
@@ -4601,27 +4451,6 @@
               "type": "string"
             },
             "p3": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        "authenticated": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            },
-            "p1": {
-              "type": "string"
-            },
-            "bold": {
-              "type": "string"
-            },
-            "p2": {
-              "type": "string"
-            },
-            "settings": {
               "type": "string"
             }
           },
@@ -4920,9 +4749,6 @@
             },
             "p1": {
               "type": "string"
-            },
-            "social_link": {
-              "type": "string"
             }
           },
           "additionalProperties": false
@@ -5114,9 +4940,6 @@
               "type": "string"
             },
             "message": {
-              "type": "string"
-            },
-            "discord_link_text": {
               "type": "string"
             }
           },

@@ -16,9 +16,6 @@
     "blog": "ブログ",
     "docs": "ドキュメント",
     "source": "ソースコード",
-    "social": "ソーシャル",
-    "chat": "チャット",
-    "builders_chat": "ビルダー",
     "keyboard_shortcuts": "キーボードショートカット"
   },
   "shortcuts": {
@@ -42,7 +39,6 @@
     "label": "npmパッケージを検索",
     "placeholder": "パッケージを検索...",
     "button": "検索",
-    "searching": "検索中...",
     "found_packages": "{count} 個のパッケージが見つかりました",
     "found_packages_sorted": "上位 {count} 件の結果をソート中",
     "updating": "（更新中...）",
@@ -53,10 +49,6 @@
     "title_packages": "パッケージを検索",
     "meta_description": "'{search}' の検索結果",
     "meta_description_packages": "npmパッケージを検索",
-    "not_taken": "{name} は使用可能です",
-    "claim_prompt": "このパッケージ名をnpmで取得する",
-    "claim_button": "\"{name}\" を取得",
-    "want_to_claim": "このパッケージ名を取得しますか？",
     "start_typing": "入力を開始してパッケージを検索",
     "algolia_disclaimer": "Algoliaにより提供",
     "exact_match": "完全一致",
@@ -72,6 +64,23 @@
     "instant_search_turn_on": "オンにする",
     "instant_search_turn_off": "オフにする",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "メイン",
@@ -124,7 +133,6 @@
     "data_source": {
       "label": "データソース",
       "description": "npmxが検索データを取得する先を選択します。個別のパッケージページは常にnpmレジストリから直接取得します。",
-      "npm": "npmレジストリ",
       "npm_description": "公式npmレジストリから検索、organization、ユーザー一覧を直接取得します。正確ですが、やや遅い場合があります。",
       "algolia": "Algolia",
       "algolia_description": "Algoliaを使用して検索、organization、ユーザーページをより高速に取得します。"
@@ -132,10 +140,6 @@
     "instant_search": "インスタント検索",
     "instant_search_description": "タイピング中に検索ページに移動し、検索結果を更新します。",
     "relative_dates": "日付を相対表記",
-    "include_types": "インストール時に{'@'}typesを含める",
-    "include_types_description": "型定義のないパッケージのインストールコマンドに{'@'}typesパッケージを追加します",
-    "hide_platform_packages": "検索でプラットフォーム固有のパッケージを非表示",
-    "hide_platform_packages_description": "検索結果から{'@'}esbuild/linux-x64のようなネイティブバイナリパッケージを非表示にします",
     "theme": "テーマ",
     "theme_light": "ライト",
     "theme_dark": "ダーク",
@@ -221,9 +225,7 @@
     "not_found": "プロフィールが見つかりません",
     "not_found_message": "{handle} のプロフィールは見つかりませんでした。",
     "invite": {
-      "message": "まだnpmxを利用していないようです。npmxを紹介しますか？",
-      "share_button": "Blueskyで共有",
-      "compose_text": "{'@'}{handle} さん、npmx.devはもうチェックしましたか？ 高速でモダンなオープンソースのnpmレジストリブラウザです。\nhttps://npmx.dev"
+      "message": "まだnpmxを利用していないようです。npmxを紹介しますか？"
     }
   },
   "package": {
@@ -245,6 +247,7 @@
       "size": "インストールサイズが {percent} 増加（{size} 増）",
       "deps": "依存関係が {count} 件増加"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "この依存関係は不要な可能性があります。",
       "native": "これは Node {nodeVersion} 以降で利用可能な {replacement} で置き換え可能です。",
@@ -404,6 +407,7 @@
         "general_description": "{package_name} パッケージの {versions_count} 個の {semver_grouping_mode} バージョンにおけるバージョン別ダウンロード数を示す棒グラフ。期間は {date_range_label}（{first_version} から {last_version} まで）。最多ダウンロードはバージョン {max_downloaded_version} で {max_version_downloads} 回。{per_version_analysis}。{watermark}。"
       }
     },
+    "timeline": {},
     "dependencies": {
       "title": "依存関係（{count}）",
       "list_label": "パッケージの依存関係",
@@ -440,6 +444,7 @@
       "show_less": "（表示を減らす）"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "粒度",
       "granularity_daily": "日次",
       "granularity_weekly": "週次",
@@ -589,6 +594,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -933,25 +941,14 @@
         "managers": "存在します"
       }
     },
-    "sponsors": {
-      "title": "スポンサー"
-    },
-    "oss_partners": {
-      "title": "OSSパートナー"
-    },
     "team": {
       "title": "チーム",
       "governance": "ガバナンス",
-      "role_steward": "スチュワード",
-      "role_maintainer": "メンテナ",
       "sponsor": "スポンサー",
       "sponsor_aria": "GitHubで {name} さんをスポンサーする"
     },
     "contributors": {
-      "title": "コントリビューター",
       "description": "npmxは完全にオープンソースです。素晴らしいコントリビューターのコミュニティにより開発されています。",
-      "loading": "コントリビューターを読み込み中...",
-      "error": "コントリビューターの読み込みに失敗しました",
       "view_profile": "{name} のGitHubプロフィールを表示"
     },
     "get_involved": {
@@ -960,35 +957,17 @@
         "title": "貢献する",
         "description": "より良いnpm体験の開発に協力しましょう。",
         "cta": "GitHubで表示"
-      },
-      "community": {
-        "title": "コミュニティに参加",
-        "description": "チャット、質問、アイデアの共有。",
-        "cta": "Discordに参加"
-      },
-      "builders": {
-        "title": "npmxの開発に参加",
-        "description": "npmxの未来を形作るビルダーたちに参加しましょう。",
-        "cta": "Builders Discordに参加"
-      },
-      "follow": {
-        "title": "最新情報を入手",
-        "description": "npmxの最新情報をお届けします。",
-        "cta": "Blueskyでフォロー"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "接続",
-    "account": "アカウント",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "パッケージとorganizationの管理",
-    "atmosphere_desc": "ソーシャル機能とID",
-    "connect_npm_cli": "npm CLIに接続",
-    "connect_atmosphere": "Atmosphereに接続",
-    "connecting": "接続中...",
-    "ops": "{count} 件の操作"
+    "account": "アカウント"
   },
   "auth": {
     "modal": {
@@ -1000,7 +979,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "接続",
       "create_account": "アカウントを新規作成",
-      "connect_bluesky": "Blueskyで接続",
       "what_is_atmosphere": "Atmosphereアカウントとは？",
       "atmosphere_explanation": "{npmx} は多くのソーシャル機能に {atproto} を利用しています。AT Protocolにより、ユーザーは自分自身のデータを所有し、1つのアカウントでAT Protocolに対応するすべてのアプリケーションを利用できるようになります。アカウントを作成すると、{bluesky} や {tangled} などの他のアプリでも同じアカウントを使用できます。",
       "default_input_error": "有効なハンドル、DID、または完全なPDS URLを入力してください",
@@ -1053,6 +1031,9 @@
       "remove_package": "{package} を削除",
       "packages_selected": "{count}/{max} パッケージ選択中。",
       "add_hint": "比較するには少なくとも2つのパッケージを追加してください。"
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(依存関係なし)",
@@ -1128,7 +1109,10 @@
         "vulnerabilities": {
           "label": "脆弱性",
           "description": "既知のセキュリティ脆弱性"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "指定なし",
@@ -1183,30 +1167,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "npmxコミュニティ向けのnpmx公式ATプロトコル パーソナルデータサーバー（PDS）",
-    "join": {
-      "title": "コミュニティに参加",
-      "description": "Atmosphereで最初の書き込みを行う場合も、既存のアカウントを移行する場合も、ここがあなたの居場所です。あなたのハンドル名、投稿、フォロワーを失うことなく現在のアカウントから移行できます。",
-      "migrate": "PDS MOOverで移行する"
-    },
-    "server": {
-      "title": "サーバーの詳細",
-      "location_label": "所在地:",
-      "location_value": "ドイツ、ニュルンベルク",
-      "infrastructure_label": "インフラストラクチャ:",
-      "infrastructure_value": "Hetznerでホスト",
-      "privacy_label": "プライバシー:",
-      "privacy_value": "厳格なEUデータ保護法を適用",
-      "learn_more": "npmxによるAtmosphereの活用方法について学ぶ"
-    },
-    "community": {
-      "title": "参加メンバー",
-      "description": "すでにnpmx.socialを拠点としている {count} アカウントの一部:",
-      "loading": "PDSコミュニティを読み込み中...",
-      "error": "PDSコミュニティの読み込みに失敗しました。",
-      "empty": "表示できるコミュニティメンバーはいません。",
-      "view_profile": "{handle} のプロフィールを表示",
-      "new_accounts": "...さらに、Atmosphereに新しく参加した {count} 名"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "プライバシーポリシー",
@@ -1257,13 +1219,6 @@
       "li3": "複数のサイトを横断したユーザー追跡を行いません",
       "li4": "すべてのデータは集計および匿名化されます",
       "p3": "収集される情報は、ページURL、リファラ、国/地域、デバイスの種類、ブラウザ、OSのみです。これらのデータから個人を特定することはできません。"
-    },
-    "authenticated": {
-      "title": "認証済みユーザー",
-      "p1": "{bold}アカウントをnpmxに接続すると、OAuthアクセストークンがセキュアなHTTP-onlyセッションCookieに保存されます。このトークンは、代理でリクエストを認証するためだけに制限的に使用されます。",
-      "bold": "Atmosphere",
-      "p2": "認証情報は保存しません。また、機能提供に必要な範囲を超えたデータへのアクセスも行いません。アカウントの接続解除は、いつでも{settings}ページから行えます。",
-      "settings": "設定"
     },
     "data_retention": {
       "title": "データ保持",
@@ -1321,5 +1276,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

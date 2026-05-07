@@ -16,9 +16,6 @@
     "blog": "bloq",
     "docs": "sənədlər",
     "source": "mənbə",
-    "social": "sosial",
-    "chat": "söhbət",
-    "builders_chat": "qurucular",
     "keyboard_shortcuts": "klaviatura qısayolları"
   },
   "shortcuts": {
@@ -42,7 +39,6 @@
     "label": "npm paketlərini axtar",
     "placeholder": "paket axtar...",
     "button": "axtar",
-    "searching": "Axtarılır...",
     "found_packages": "Paket tapılmadı | 1 paket tapıldı | {count} paket tapıldı",
     "found_packages_sorted": "Nəticə tapılmadı | İlk {count} nəticə sıralanır | İlk {count} nəticə sıralanır",
     "updating": "(yenilənir...)",
@@ -53,10 +49,6 @@
     "title_packages": "paket axtar",
     "meta_description": "'{search}' üçün axtarış nəticələri",
     "meta_description_packages": "npm paketlərini axtar",
-    "not_taken": "{name} tutulmayıb",
-    "claim_prompt": "Bu paket adını npm-də tutun",
-    "claim_button": "\"{name}\" adını tut",
-    "want_to_claim": "Bu paket adını tutmaq istəyirsiniz?",
     "start_typing": "Paketləri axtarmaq üçün yazmağa başlayın",
     "algolia_disclaimer": "Algolia tərəfindən dəstəklənir",
     "exact_match": "dəqiq",
@@ -72,6 +64,23 @@
     "instant_search_turn_on": "aç",
     "instant_search_turn_off": "bağla",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Əsas",
@@ -124,7 +133,6 @@
     "data_source": {
       "label": "Məlumat mənbəyi",
       "description": "npmx-in axtarış məlumatlarını haradan aldığını seçin. Fərdi paket səhifələri həmişə birbaşa npm reyestrindən istifadə edir.",
-      "npm": "npm Reyestri",
       "npm_description": "Axtarış, təşkilat və istifadəçi siyahılarını birbaşa rəsmi npm reyestrindən alır. Etibarlıdır, lakin daha yavaş ola bilər.",
       "algolia": "Algolia",
       "algolia_description": "Daha sürətli axtarış, təşkilat və istifadəçi səhifələri üçün Algolia istifadə edir."
@@ -132,10 +140,6 @@
     "instant_search": "Ani axtarış",
     "instant_search_description": "Axtarış səhifəsinə keçir və siz yazdıqca nəticələri yeniləyir.",
     "relative_dates": "Nisbi tarixlər",
-    "include_types": "Quraşdırmaya {'@'}types daxil et",
-    "include_types_description": "Tipsiz paketlər üçün quraşdırma əmrlərinə {'@'}types paketi əlavə et",
-    "hide_platform_packages": "Axtarışda platforma-spesifik paketləri gizlət",
-    "hide_platform_packages_description": "Nəticələrdə {'@'}esbuild/linux-x64 kimi yerli binar paketləri gizlət",
     "theme": "Tema",
     "theme_light": "Açıq",
     "theme_dark": "Tünd",
@@ -211,9 +215,7 @@
     "not_found": "Profil Tapılmadı",
     "not_found_message": "{handle} üçün profil tapıla bilmədi.",
     "invite": {
-      "message": "Deyəsən onlar hələ npmx istifadə etmirlər. Onlara bu barədə demək istəyirsiniz?",
-      "share_button": "Bluesky-da paylaş",
-      "compose_text": "Salam {'@'}{handle}! npmx.dev-i yoxlamısan? Bu, npm reyestri üçün sürətli, müasir və açıq mənbəli brauzerdir.\nhttps://npmx.dev"
+      "message": "Deyəsən onlar hələ npmx istifadə etmirlər. Onlara bu barədə demək istəyirsiniz?"
     }
   },
   "package": {
@@ -235,6 +237,7 @@
       "size": "Quraşdırma həcmi {percent} artıb ({size} daha böyük)",
       "deps": "{count} daha çox asılılıq"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Bu asılılığa ehtiyacınız olmaya bilər.",
       "native": "Bu, Node {nodeVersion}-dən bəri mövcud olan {replacement} ilə əvəz edilə bilər.",
@@ -393,6 +396,7 @@
         "general_description": "{package_name} paketinin {versions_count} {semver_grouping_mode} versiyası üçün versiya başına endirmələri göstərən çubuq diaqramı, {date_range_label} {first_version} versiyasından {last_version} versiyasına qədər. Ən çox endirilən versiya {max_version_downloads} endirmə ilə {max_downloaded_version}-dir. {per_version_analysis}. {watermark}."
       }
     },
+    "timeline": {},
     "dependencies": {
       "title": "Asılılıq ({count}) | Asılılıqlar ({count})",
       "list_label": "Paket asılılıqları",
@@ -429,6 +433,7 @@
       "show_less": "(daha az göstər)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "Dərəcəlilik",
       "granularity_daily": "Günlük",
       "granularity_weekly": "Həftəlik",
@@ -575,6 +580,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -919,25 +927,14 @@
         "managers": "var"
       }
     },
-    "sponsors": {
-      "title": "Sponsorlar"
-    },
-    "oss_partners": {
-      "title": "OSS Tərəfdaşlar"
-    },
     "team": {
       "title": "Komanda",
       "governance": "İdarəetmə",
-      "role_steward": "idarəçi",
-      "role_maintainer": "dəstəkçi",
       "sponsor": "sponsor",
       "sponsor_aria": "GitHub-da {name} sponsorluq et"
     },
     "contributors": {
-      "title": "Əməkdaşlar",
       "description": "npmx tam açıq mənbəlidir, möhtəşəm əməkdaşlar icması tərəfindən hazırlanır. Bizə qoşulun və həmişə istədiyimiz npm baxış təcrübəsini birlikdə quraq.",
-      "loading": "Əməkdaşlar yüklənir...",
-      "error": "Əməkdaşlar yüklənə bilmədi",
       "view_profile": "{name} GitHub profilinə bax"
     },
     "get_involved": {
@@ -946,35 +943,17 @@
         "title": "Töhfə verin",
         "description": "Daha yaxşı npm təcrübəsi qurmağımıza kömək edin.",
         "cta": "GitHub-da bax"
-      },
-      "community": {
-        "title": "İcmaya qoşulun",
-        "description": "Söhbət edin, suallar verin və fikirlər paylaşın.",
-        "cta": "Discord-a qoşul"
-      },
-      "builders": {
-        "title": "Qurucular",
-        "description": "Qurucular icmasamıza qoşulun və npmx-in gələcəyini formalaşdırın",
-        "cta": "Qurucular söhbətinə qoşul"
-      },
-      "follow": {
-        "title": "Yeniliklərdən xəbərdar olun",
-        "description": "npmx haqqında son yenilikləri öyrənin.",
-        "cta": "Bluesky-da izlə"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "qoşul",
-    "account": "Hesab",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Paketləri və təşkilatları idarə et",
-    "atmosphere_desc": "Sosial funksiyalar və identifikasiya",
-    "connect_npm_cli": "npm CLI-yə qoşul",
-    "connect_atmosphere": "Atmosphere-ə qoşul",
-    "connecting": "Qoşulur...",
-    "ops": "{count} əməliyyat | {count} əməliyyat"
+    "account": "Hesab"
   },
   "auth": {
     "modal": {
@@ -986,7 +965,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Qoşul",
       "create_account": "Yeni hesab yarat",
-      "connect_bluesky": "Bluesky ilə qoşul",
       "what_is_atmosphere": "Atmosphere hesabı nədir?",
       "atmosphere_explanation": "{npmx} sosial funksiyalarını gücləndirmək üçün {atproto} istifadə edir, istifadəçilərə öz məlumatlarına sahib olmağa və bütün uyğun tətbiqlər üçün bir hesab istifadə etməyə imkan verir. Hesab yaratdıqdan sonra eyni hesabla {bluesky} və {tangled} kimi digər tətbiqlərdən istifadə edə bilərsiniz.",
       "default_input_error": "Xahiş edirik düzgün istifadəçi adı, DID və ya tam PDS URL daxil edin",
@@ -1037,6 +1015,9 @@
       "remove_package": "{package} sil",
       "packages_selected": "{count}/{max} paket seçilib.",
       "add_hint": "Müqayisə üçün ən azı 2 paket əlavə edin."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Asılılıq yoxdur)",
@@ -1112,7 +1093,10 @@
         "vulnerabilities": {
           "label": "Zəifliklər",
           "description": "Məlum təhlükəsizlik zəiflikləri"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "İstənilən",
@@ -1167,30 +1151,8 @@
   "pds": {
     "title": "PDS",
     "meta_description": "npmx PDS - Şəxsi Məlumat Serveri",
-    "join": {
-      "title": "Qoşul",
-      "description": "npmx PDS-ə qoşulun",
-      "migrate": "Köçür"
-    },
-    "server": {
-      "title": "Server",
-      "location_label": "Yer",
-      "location_value": "Nürnberq, Almaniya",
-      "infrastructure_label": "İnfrastruktur",
-      "infrastructure_value": "Hetzner üzərində yerləşdirilir",
-      "privacy_label": "Gizlilik",
-      "privacy_value": "Sərt AB Məlumat Mühafizəsi qanunlarına tabedir",
-      "learn_more": "Ətraflı öyrən"
-    },
-    "community": {
-      "title": "İcma",
-      "description": "{count} hesab ilə icmasamıza qoşulun",
-      "loading": "Yüklənir...",
-      "error": "Xəta",
-      "empty": "Boş",
-      "view_profile": "{handle} profilinə bax",
-      "new_accounts": "{count} yeni hesab"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "gizlilik siyasəti",
@@ -1241,13 +1203,6 @@
       "li3": "İstifadəçiləri veb saytlar arasında izləmir",
       "li4": "Bütün məlumatlar yığılmış və anonim şəkildədir",
       "p3": "Toplanan yeganə məlumat bunlardır: səhifə URL-ləri, istinad mənbəyi, ölkə/region, cihaz növü, brauzer və əməliyyat sistemi. Bu məlumatlar fərdi istifadəçiləri müəyyən etmək üçün istifadə edilə bilməz."
-    },
-    "authenticated": {
-      "title": "Autentifikasiya olunmuş istifadəçilər",
-      "p1": "{bold} hesabınızı npmx-ə qoşduğunuzda, OAuth giriş tokeninizi təhlükəsiz, yalnız HTTP sessiya kukisində saxlayırıq. Bu token yalnız sizin adınıza sorğuların autentifikasiyası üçün istifadə olunur.",
-      "bold": "Atmosphere",
-      "p2": "Biz etimadnamələrinizi saxlamırıq və istifadə etdiyiniz funksiyaları təmin etmək üçün lazım olandan artıq heç bir məlumata müraciət etmirik. Hesabınızı istənilən vaxt {settings} səhifəsindən ayıra bilərsiniz.",
-      "settings": "tənzimləmələr"
     },
     "data_retention": {
       "title": "Məlumatların saxlanması",
@@ -1305,5 +1260,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

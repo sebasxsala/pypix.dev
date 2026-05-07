@@ -15,8 +15,6 @@
     "about": "info",
     "docs": "docs",
     "source": "codice",
-    "social": "social",
-    "chat": "chat",
     "keyboard_shortcuts": "shortcuts tastiera"
   },
   "shortcuts": {
@@ -39,7 +37,6 @@
     "label": "Cerca i pacchetti npm",
     "placeholder": "cerca i pacchetti...",
     "button": "cerca",
-    "searching": "Cercando...",
     "found_packages": "Trovati {count} pacchetti",
     "found_packages_sorted": "Nessun risultato trovato | Ordinando i primi {count} risultati | Ordinando i primi {count} risultati",
     "updating": "(aggiornando...)",
@@ -50,10 +47,6 @@
     "title_packages": "cerca pacchetti",
     "meta_description": "Risultati di ricerca per '{search}'",
     "meta_description_packages": "Cerca pacchetti npm",
-    "not_taken": "{name} è disponibile",
-    "claim_prompt": "Ottieni il nome di questo pacchetto su npm",
-    "claim_button": "Ottieni \"{name}\"",
-    "want_to_claim": "Vuoi ottenere il nome di questo pacchetto?",
     "start_typing": "Inizia a scrivere per cercare i pacchetti",
     "algolia_disclaimer": "Fornito da Algolia",
     "exact_match": "ricerca esatta",
@@ -63,6 +56,23 @@
       "view_user_packages": "Vedi pacchetti di questo utente",
       "view_org_packages": "Vedi pacchetti di questa organizzazione"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Principale",
@@ -93,16 +103,11 @@
     "data_source": {
       "label": "Fonte dati",
       "description": "Scegli da dove npmx ottiene i dati di ricerca. Le pagine dei singoli pacchetti usano sempre direttamente il registro npm.",
-      "npm": "npm registry",
       "npm_description": "Usa il registro npm per la ricerca. Più lento, ma sempre aggiornato.",
       "algolia": "Algolia",
       "algolia_description": "Usa Algolia per una ricerca più veloce, pagine organizzazione e utente."
     },
     "relative_dates": "Date relative",
-    "include_types": "Includi {'@'}types durante l'installazione",
-    "include_types_description": "Aggiungi il pacchetto {'@'}types al comando install per i pacchetti senza tipo",
-    "hide_platform_packages": "Nascondi pacchetti specifici della piattaforma nella ricerca",
-    "hide_platform_packages_description": "Nascondi i pacchetti binari nativi come {'@'}esbuild/linux-x64 dai risultati",
     "theme": "Tema",
     "theme_light": "Chiaro",
     "theme_dark": "Scuro",
@@ -176,6 +181,7 @@
       "size": "Dimensione di installazione aumentato del {percent} ({size} larger)",
       "deps": "{count} dipendenze in più"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Questa dipendenza potrebbe non essere necessaria.",
       "native": "Questo può essere sostituito con {replacement}, disponibile da Node {nodeVersion}.",
@@ -311,6 +317,7 @@
       "view_all": "Visualizza {count} versione | Visualizza tutte le {count} versioni",
       "copy_alt": {}
     },
+    "timeline": {},
     "dependencies": {
       "title": "Dipendenza ({count}) | Dipendenze ({count})",
       "list_label": "Dipendenze del pacchetto",
@@ -346,6 +353,7 @@
       "show_less": "(mostra meno)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "Granularità",
       "granularity_daily": "Giornaliero",
       "granularity_weekly": "Settimanale",
@@ -458,6 +466,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -802,10 +813,7 @@
     "oss_partners": {},
     "team": {},
     "contributors": {
-      "title": "{count} Collaboratore | {count} Collaboratori",
       "description": "npmx è completamente open source, costruito da una straordinaria comunità di collaboratori. Unisciti a noi e costruiamo insieme l'esperienza di navigazione npm che abbiamo sempre voluto.",
-      "loading": "Caricamento collaboratori...",
-      "error": "Impossibile caricare i collaboratori",
       "view_profile": "Visualizza il profilo GitHub di {name}"
     },
     "get_involved": {
@@ -814,31 +822,17 @@
         "title": "Contribuisci",
         "description": "Aiutaci a costruire un'esperienza npm migliore.",
         "cta": "Visualizza su GitHub"
-      },
-      "community": {
-        "title": "Unisciti alla comunità",
-        "description": "Chatta, fai domande e condividi idee.",
-        "cta": "Unisciti a Discord"
-      },
-      "builders": {},
-      "follow": {
-        "title": "Rimani aggiornato",
-        "description": "Scopri le ultime novità su npmx.",
-        "cta": "Segui su Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "connetti",
-    "account": "Account",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Gestisci pacchetti e organizzazioni",
-    "atmosphere_desc": "Funzionalità sociali e identità",
-    "connect_npm_cli": "Connetti a npm CLI",
-    "connect_atmosphere": "Connetti ad Atmosphere",
-    "connecting": "Connettendo...",
-    "ops": "{count} op | {count} op"
+    "account": "Account"
   },
   "auth": {
     "modal": {
@@ -850,7 +844,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Connetti",
       "create_account": "Crea un nuovo account",
-      "connect_bluesky": "Connetti con Bluesky",
       "what_is_atmosphere": "Cos'è un account Atmosphere?",
       "atmosphere_explanation": "{npmx} utilizza {atproto} per potenziare molte delle sue funzionalità sociali, consentendo agli utenti di possedere i loro dati e utilizzare un account per tutte le applicazioni compatibili. Una volta creato un account, puoi utilizzare altre app come {bluesky} e {tangled} con lo stesso account.",
       "default_input_error": "Inserisci un handle valido, DID o URL PDS completo"
@@ -899,6 +892,9 @@
       "remove_package": "Rimuovi {package}",
       "packages_selected": "{count}/{max} pacchetti selezionati.",
       "add_hint": "Aggiungi almeno 2 pacchetti da confrontare."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "Nessuna dipendenza",
@@ -974,7 +970,10 @@
         "vulnerabilities": {
           "label": "Vulnerabilità",
           "description": "Vulnerabilità di sicurezza note"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Qualsiasi",
@@ -994,9 +993,8 @@
     "filter": {}
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "Informativa sulla privacy",
@@ -1048,13 +1046,6 @@
       "li4": "Tutti i dati sono aggregati e anonimizzati",
       "p3": "Le uniche informazioni raccolte includono: URL delle pagine, referrer, paese/regione, tipo di dispositivo, browser e sistema operativo. Questi dati non possono essere utilizzati per identificare singoli utenti."
     },
-    "authenticated": {
-      "title": "Utenti autenticati",
-      "p1": "Quando colleghi il tuo account {bold} a npmx, memorizziamo il tuo token di accesso OAuth in un cookie di sessione sicuro e HTTP-only. Questo token viene utilizzato esclusivamente per autenticare le richieste a tuo nome.",
-      "bold": "Atmosphere",
-      "p2": "Non memorizziamo le tue credenziali e non accediamo a dati oltre a quelli necessari per fornire le funzionalità che utilizzi. Puoi disconnettere il tuo account in qualsiasi momento dalla pagina {settings}.",
-      "settings": "impostazioni"
-    },
     "data_retention": {
       "title": "Conservazione dei dati",
       "p1": "I cookie di sessione vengono eliminati automaticamente quando chiudi il browser o dopo un periodo di inattività. Le preferenze memorizzate nel local storage rimangono sul tuo dispositivo fino a quando non cancelli i dati del browser. I dati analitici vengono conservati in forma aggregata e non possono essere collegati a singoli utenti."
@@ -1087,5 +1078,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

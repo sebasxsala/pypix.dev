@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "tài liệu",
     "source": "mã nguồn",
-    "social": "kết nối",
-    "chat": "trò chuyện",
-    "builders_chat": "phát triển",
     "keyboard_shortcuts": "phím tắt",
     "brand": "thương hiệu"
   },
@@ -45,7 +42,6 @@
     "label": "Tìm package từ npm",
     "placeholder": "package abc...",
     "button": "tìm kiếm",
-    "searching": "Đang tìm...",
     "found_packages": "Không tìm thấy package nào | Tìm thấy 1 package | Tìm thấy {count} package",
     "found_packages_sorted": "Không có kết quả | Sắp xếp {count} kết quả đầu | Sắp xếp {count} kết quả đầu",
     "updating": "(đang cập nhật...)",
@@ -56,10 +52,6 @@
     "title_packages": "tìm gói",
     "meta_description": "Kết quả tìm kiếm cho '{search}'",
     "meta_description_packages": "Tìm các gói npm",
-    "not_taken": "{name} chưa được sử dụng",
-    "claim_prompt": "Nhận tên gói này trên npm",
-    "claim_button": "Nhận \"{name}\"",
-    "want_to_claim": "Bạn muốn nhận tên gói này không?",
     "start_typing": "Bắt đầu nhập để tìm gói",
     "algolia_disclaimer": "Powered by Algolia",
     "exact_match": "khớp chính xác",
@@ -75,6 +67,23 @@
     "instant_search_turn_on": "bật",
     "instant_search_turn_off": "tắt",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Trang chính",
@@ -128,7 +137,6 @@
     "data_source": {
       "label": "Nguồn dữ liệu",
       "description": "Chọn nguồn dữ liệu khi npmx tìm kiếm. Trang chi tiết package luôn sử dụng npm registry trực tiếp.",
-      "npm": "npm Registry",
       "npm_description": "Tìm kiếm tổ chức và người dùng từ registry chính thức của npm. Đáng tin cậy, nhưng có thể chậm hơn.",
       "algolia": "Algolia",
       "algolia_description": "Dùng Algolia để tìm kiếm nhanh hơn."
@@ -136,10 +144,6 @@
     "instant_search": "Tìm kiếm nhanh",
     "instant_search_description": "Hiển thị và cập nhật kết quả tìm kiếm ngay khi đang gõ",
     "relative_dates": "Hiển thị ngày tương đối",
-    "include_types": "Hiển thị {'@'}types tại phần cài đặt package",
-    "include_types_description": "Thêm package {'@'}types vào lệnh cài đặt đối với package không có sẵn types",
-    "hide_platform_packages": "Ẩn package đặc thù nền tảng khi tìm kiếm",
-    "hide_platform_packages_description": "Ẩn package binary native, v.d. {'@'}esbuild/linux-x64 trong kết quả tìm kiếm",
     "enable_graph_pulse_loop": "Hiệu ứng động trên biểu đồ",
     "enable_graph_pulse_loop_description": "Bật hiệu ứng giao động trên biểu đồ tải hàng tuần. Hiệu ứng này có thể gây sao lãng với một số người dùng",
     "theme": "Chủ đề màu",
@@ -241,9 +245,7 @@
     "not_found": "Không tìm thấy hồ sơ",
     "not_found_message": "Không tìm thấy hồ sơ của {handle}.",
     "invite": {
-      "message": "Có vẻ họ chưa dùng npmx. Bạn có muốn giới thiệu cho họ không?",
-      "share_button": "Chia sẻ trên Bluesky",
-      "compose_text": "Chào {'@'}{handle}! Bạn đã thử npmx.dev chưa? Đây là trình duyệt cho npm registry, nhanh, hiện đại và mã nguồn mở.\nhttps://npmx.dev"
+      "message": "Có vẻ họ chưa dùng npmx. Bạn có muốn giới thiệu cho họ không?"
     }
   },
   "package": {
@@ -265,6 +267,7 @@
       "size": "Kích thước cài đặt tăng {percent} (lớn hơn {size})",
       "deps": "Thêm {count} dependency"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Bạn có thể không cần dependency này.",
       "native": "Có thể thay thế bằng {replacement}, có sẵn từ Node {nodeVersion}.",
@@ -442,6 +445,7 @@
       "current_tags": "Thẻ hiện tại",
       "no_match_filter": "Không có phiên bản khớp {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "Dependency ({count}) | Dependency ({count})",
       "list_label": "Dependency của gói",
@@ -640,6 +644,9 @@
       "button": "Tải xuống",
       "tarball": "Tải tarball dạng .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -989,25 +996,14 @@
         "managers": "tuyệt vời"
       }
     },
-    "sponsors": {
-      "title": "Nhà tài trợ"
-    },
-    "oss_partners": {
-      "title": "Đối tác nguồn mở (OSS)"
-    },
     "team": {
       "title": "Đội ngũ",
       "governance": "Quản trị",
-      "role_steward": "người điều hành",
-      "role_maintainer": "người duy trì",
       "sponsor": "tài trợ",
       "sponsor_aria": "Tài trợ {name} trên GitHub"
     },
     "contributors": {
-      "title": "... và {count} người đóng góp khác | ... và {count} người đóng góp khác",
       "description": "npmx hoàn toàn là mã nguồn mở, được xây dựng bởi một cộng đồng người đóng góp tuyệt vời. Hãy tham gia cùng chúng tôi để cùng nhau xây dựng trải nghiệm tìm kiếm npm mà chúng ta luôn mong muốn.",
-      "loading": "Đang tải danh sách người đóng góp...",
-      "error": "Không thể tải danh sách người đóng góp",
       "view_profile": "Xem hồ sơ GitHub của {name}"
     },
     "get_involved": {
@@ -1016,35 +1012,17 @@
         "title": "Đóng góp",
         "description": "Giúp xây dựng một trải nghiệm npm mà ta đều mong muốn",
         "cta": "Xem tại GitHub"
-      },
-      "community": {
-        "title": "Gia nhập cộng đồng",
-        "description": "Trò chuyện, hỏi đáp, và chia sẻ ý tưởng",
-        "cta": "Tham gia Discord"
-      },
-      "builders": {
-        "title": "Phát triển npmx",
-        "description": "Tham gia nhóm phát triển, cùng vẽ ra tương lai của npmx",
-        "cta": "Vào Builders Discord"
-      },
-      "follow": {
-        "title": "Theo dõi",
-        "description": "Cập nhật thông tin mới nhất từ npmx",
-        "cta": "Theo dõi Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "kết nối",
-    "account": "Tài khoản",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Quản lý package & tổ chức",
-    "atmosphere_desc": "Mạng xã hội và định danh",
-    "connect_npm_cli": "Kết nối với npm CLI",
-    "connect_atmosphere": "Kết nối với Atmosphere",
-    "connecting": "Đang kết nối...",
-    "ops": "{count} thao tác | {count} thao tác"
+    "account": "Tài khoản"
   },
   "auth": {
     "modal": {
@@ -1056,7 +1034,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Kết nối",
       "create_account": "Tạo tài khoản mới",
-      "connect_bluesky": "Kết nối với Bluesky",
       "what_is_atmosphere": "Tài khoản Atmosphere là gì?",
       "atmosphere_explanation": "{npmx} sử dụng {atproto} để vận hành nhiều tính năng mạng xã hội, cho phép người dùng sở hữu dữ liệu của chính mình và sử dụng một tài khoản cho tất cả các ứng dụng tương thích. Một khi bạn tạo tài khoản, bạn có thể sử dụng các ứng dụng khác như {bluesky} và {tangled} với cùng một tài khoản đó.",
       "default_input_error": "Vui lòng nhập handle, DID hoặc URL PDS đầy đủ hợp lệ",
@@ -1112,6 +1089,9 @@
       "remove_package": "Gỡ {package}",
       "packages_selected": "Đã chọn {count}/{max} package.",
       "add_hint": "Thêm ít nhất 2 package để so sánh."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Không dependency)",
@@ -1191,7 +1171,10 @@
         "vulnerabilities": {
           "label": "Lỗ hổng",
           "description": "Các lỗ hổng bảo mật phổ biến"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Bất kỳ",
@@ -1265,30 +1248,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Server Dữ liệu Cá nhân (PDS) chính thức của AT Protocol cho cộng đồng npmx.",
-    "join": {
-      "title": "Gia nhập Cộng đồng",
-      "description": "Hoan nghênh bạn dù bạn đang tạo tài khoản đầu tiên trên atmosphere hay chuyển một tài khoản hiện có sang. Bạn có thể chuyển tài khoản hiện tại của mình mà không mất handle, bài đăng hoặc người theo dõi.",
-      "migrate": "Chuyển vùng với PDS MOOver"
-    },
-    "server": {
-      "title": "Chi tiết Server",
-      "location_label": "Vị trí:",
-      "location_value": "Nuremberg, Đức",
-      "infrastructure_label": "Cơ sở hạ tầng:",
-      "infrastructure_value": "Lưu trữ trên Hetzner",
-      "privacy_label": "Quyền riêng tư:",
-      "privacy_value": "Tuân thủ luật Bảo vệ Dữ liệu nghiêm ngặt của EU",
-      "learn_more": "Tìm hiểu cách npmx sử dụng Atmosphere"
-    },
-    "community": {
-      "title": "Ai đang ở đây",
-      "description": "Một số trong {count} tài khoản đã coi npmx.social là nhà:",
-      "loading": "Đang tải cộng đồng PDS...",
-      "error": "Không thể tải cộng đồng PDS.",
-      "empty": "Không có thành viên cộng đồng để hiển thị.",
-      "view_profile": "Xem hồ sơ của {handle}",
-      "new_accounts": "...cộng thêm {count} người nữa mới gia nhập atmosphere"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "chính sách bảo mật",
@@ -1339,13 +1300,6 @@
       "li3": "Không theo dõi người dùng qua các trang web khác nhau",
       "li4": "Tất cả dữ liệu được tổng hợp và ẩn danh",
       "p3": "Thông tin duy nhất được thu thập bao gồm: URL trang, trang giới thiệu, quốc gia/khu vực, loại thiết bị, trình duyệt và hệ điều hành. Dữ liệu này không thể được sử dụng để nhận dạng từng người dùng cụ thể."
-    },
-    "authenticated": {
-      "title": "Người dùng đã đăng nhập",
-      "p1": "Khi bạn kết nối tài khoản {bold} với npmx, chúng tôi lưu trữ mã xác thực OAuth của bạn trong một cookie session an toàn, chỉ dành cho HTTP. Mã này chỉ được sử dụng để xác thực các yêu cầu thay mặt cho bạn.",
-      "bold": "Atmosphere",
-      "p2": "Chúng tôi không lưu trữ thông tin đăng nhập của bạn và không truy cập bất kỳ dữ liệu nào vượt quá mức cần thiết để cung cấp các tính năng bạn sử dụng. Bạn có thể ngắt kết nối tài khoản của mình bất kỳ lúc nào từ trang {settings}.",
-      "settings": "cài đặt"
     },
     "data_retention": {
       "title": "Lưu trữ dữ liệu",
@@ -1444,8 +1398,7 @@
     },
     "return": {
       "title": "chúng tôi đã trở lại!",
-      "p1": "chúng tôi đã trở lại với năng lượng tràn đầy và sẵn sàng cho nỗ lực cuối cùng đến ngày 3 tháng 3. {social} để cập nhật thông tin.",
-      "social_link": "theo dõi chúng tôi trên Bluesky"
+      "p1": "chúng tôi đã trở lại với năng lượng tràn đầy và sẵn sàng cho nỗ lực cuối cùng đến ngày 3 tháng 3. {social} để cập nhật thông tin."
     },
     "stats": {
       "contributors": "Người đóng góp",
@@ -1509,8 +1462,7 @@
     },
     "guidelines": {
       "title": "một lưu ý nhỏ",
-      "message": "Trợ năng là vấn đề rất quan trọng đối với chúng tôi và chúng tôi rất mong bạn cùng chia sẻ tầm nhìn này. Khi sử dụng các phương tiện truyền thông đã đề cập, hãy đảm bảo có đủ độ tương phản với nền và không để kích thước nhỏ hơn 24px. Nếu bạn cần bất kỳ tài nguyên nào khác hoặc thông tin bổ sung về dự án, vui lòng liên hệ với chúng tôi tại {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "Trợ năng là vấn đề rất quan trọng đối với chúng tôi và chúng tôi rất mong bạn cùng chia sẻ tầm nhìn này. Khi sử dụng các phương tiện truyền thông đã đề cập, hãy đảm bảo có đủ độ tương phản với nền và không để kích thước nhỏ hơn 24px. Nếu bạn cần bất kỳ tài nguyên nào khác hoặc thông tin bổ sung về dự án, vui lòng liên hệ với chúng tôi tại {link}."
     }
   }
 }

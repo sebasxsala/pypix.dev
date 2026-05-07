@@ -2,7 +2,6 @@
   "$schema": "../schema.json",
   "footer": {
     "blog": "المدونة",
-    "builders_chat": "محادثة المطورين",
     "brand": "العلامة التجارية"
   },
   "shortcuts": {
@@ -110,9 +109,7 @@
     "not_found": "الملف الشخصي غير موجود",
     "not_found_message": "لم نتمكن من إيجاد هذا الملف الشخصي",
     "invite": {
-      "message": "انضم إليّ على npmx",
-      "share_button": "دعوة صديق",
-      "compose_text": "جرّب npmx، المتصفح السريع لحزم npm!"
+      "message": "انضم إليّ على npmx"
     }
   },
   "package": {
@@ -240,12 +237,6 @@
     }
   },
   "about": {
-    "sponsors": {
-      "title": "الرعاة"
-    },
-    "oss_partners": {
-      "title": "شركاء المصادر المفتوحة"
-    },
     "get_involved": {
       "builders": {
         "title": "المطورون",
@@ -434,8 +425,7 @@
     },
     "guidelines": {
       "title": "إرشادات العلامة التجارية",
-      "message": "للاستخدام التجاري، يرجى التواصل معنا.",
-      "discord_link_text": "نقاش Discord"
+      "message": "للاستخدام التجاري، يرجى التواصل معنا."
     }
   }
 }

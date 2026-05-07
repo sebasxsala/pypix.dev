@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "belgeler",
     "source": "kaynak",
-    "social": "sosyal",
-    "chat": "sohbet",
-    "builders_chat": "yapımcılar",
     "keyboard_shortcuts": "klavye kısayolları"
   },
   "shortcuts": {
@@ -42,7 +39,6 @@
     "label": "npm paketlerini ara",
     "placeholder": "paket ara...",
     "button": "ara",
-    "searching": "Aranıyor...",
     "found_packages": "Paket bulunamadı | 1 paket bulundu | {count} paket bulundu",
     "found_packages_sorted": "Sonuç bulunamadı | İlk {count} sonuç sıralanıyor | İlk {count} sonuç sıralanıyor",
     "updating": "(güncelleniyor...)",
@@ -53,10 +49,6 @@
     "title_packages": "paket ara",
     "meta_description": "'{search}' için arama sonuçları",
     "meta_description_packages": "npm paketlerini ara",
-    "not_taken": "{name} alınmamış",
-    "claim_prompt": "Bu paket adını npm'de alın",
-    "claim_button": "\"{name}\" adını al",
-    "want_to_claim": "Bu paket adını almak istiyor musunuz?",
     "start_typing": "Paketleri aramak için yazmaya başlayın",
     "algolia_disclaimer": "Algolia tarafından desteklenmektedir",
     "exact_match": "tam",
@@ -72,6 +64,23 @@
     "instant_search_turn_on": "aç",
     "instant_search_turn_off": "kapat",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Ana",
@@ -124,7 +133,6 @@
     "data_source": {
       "label": "Veri kaynağı",
       "description": "npmx'in arama verilerini nereden aldığını seçin. Bireysel paket sayfaları her zaman doğrudan npm kayıt defterini kullanır.",
-      "npm": "npm Kayıt Defteri",
       "npm_description": "Arama, organizasyon ve kullanıcı listelerini doğrudan resmi npm kayıt defterinden alır. Güvenilirdir, ancak daha yavaş olabilir.",
       "algolia": "Algolia",
       "algolia_description": "Daha hızlı arama, organizasyon ve kullanıcı sayfaları için Algolia kullanır."
@@ -132,10 +140,6 @@
     "instant_search": "Anında arama",
     "instant_search_description": "Arama sayfasına gider ve siz yazarken sonuçları günceller.",
     "relative_dates": "Göreceli tarihler",
-    "include_types": "Kuruluma {'@'}types dahil et",
-    "include_types_description": "Tipsiz paketler için kurulum komutlarına {'@'}types paketi ekle",
-    "hide_platform_packages": "Aramada platforma özgü paketleri gizle",
-    "hide_platform_packages_description": "Sonuçlarda {'@'}esbuild/linux-x64 gibi yerel binary paketleri gizle",
     "theme": "Tema",
     "theme_light": "Açık",
     "theme_dark": "Koyu",
@@ -211,9 +215,7 @@
     "not_found": "Kullanıcı bulunamadı",
     "not_found_message": "Bu kullanıcı mevcut değil",
     "invite": {
-      "message": "npmx'i deneyin - npm için daha iyi bir paket tarayıcısı",
-      "share_button": "Paylaş",
-      "compose_text": "npmx'i deneyin - npm için daha iyi bir paket tarayıcısı: {url}"
+      "message": "npmx'i deneyin - npm için daha iyi bir paket tarayıcısı"
     }
   },
   "package": {
@@ -235,6 +237,7 @@
       "size": "Kurulum boyutu {percent} arttı ({size} daha büyük)",
       "deps": "{count} daha fazla bağımlılık"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Bu bağımlılığa ihtiyacınız olmayabilir.",
       "native": "Bu, Node {nodeVersion}'dan beri mevcut olan {replacement} ile değiştirilebilir.",
@@ -393,6 +396,7 @@
         "general_description": "{package_name} paketinin {versions_count} {semver_grouping_mode} sürümü için sürüm başına indirmeleri gösteren çubuk grafiği, {date_range_label} {first_version} sürümünden {last_version} sürümüne kadar. En çok indirilen sürüm {max_version_downloads} indirme ile {max_downloaded_version}'dır. {per_version_analysis}. {watermark}."
       }
     },
+    "timeline": {},
     "dependencies": {
       "title": "Bağımlılık ({count}) | Bağımlılıklar ({count})",
       "list_label": "Paket bağımlılıkları",
@@ -429,6 +433,7 @@
       "show_less": "(daha az göster)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "Ayrıntı düzeyi",
       "granularity_daily": "Günlük",
       "granularity_weekly": "Haftalık",
@@ -575,6 +580,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -919,25 +927,14 @@
         "managers": "yöneticileri"
       }
     },
-    "sponsors": {
-      "title": "Sponsorlar"
-    },
-    "oss_partners": {
-      "title": "Açık Kaynak Ortakları"
-    },
     "team": {
       "title": "Ekip",
       "governance": "Yönetişim",
-      "role_steward": "Yönetici",
-      "role_maintainer": "Geliştirici",
       "sponsor": "Sponsor",
       "sponsor_aria": "{name} sponsoru"
     },
     "contributors": {
-      "title": "Katkıda Bulunanlar",
       "description": "npmx'i harika yapan tüm katkıda bulunanlara teşekkürler",
-      "loading": "Katkıda bulunanlar yükleniyor...",
-      "error": "Katkıda bulunanlar yüklenemedi",
       "view_profile": "Profili görüntüle"
     },
     "get_involved": {
@@ -946,35 +943,17 @@
         "title": "Katkıda bulunun",
         "description": "Kod, belgeler veya çevirilerle katkıda bulunun",
         "cta": "GitHub'da görüntüle"
-      },
-      "community": {
-        "title": "Topluluk",
-        "description": "Discord'da topluluğa katılın",
-        "cta": "Discord'a katıl"
-      },
-      "builders": {
-        "title": "Yapımcılar",
-        "description": "Yapımcı topluluğumuza katılın ve npmx'in geleceğini şekillendirin",
-        "cta": "Yapımcı sohbetine katıl"
-      },
-      "follow": {
-        "title": "Takip edin",
-        "description": "Güncellemeler için bizi takip edin",
-        "cta": "Bluesky'da takip et"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "Bağlan",
-    "account": "Hesap",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Paketleri ve organizasyonları yönetin",
-    "atmosphere_desc": "Beğenileri ve profili yönetin",
-    "connect_npm_cli": "npm CLI'ya bağlan",
-    "connect_atmosphere": "Atmosphere'e bağlan",
-    "connecting": "Bağlanıyor...",
-    "ops": "İşlemler"
+    "account": "Hesap"
   },
   "auth": {
     "modal": {
@@ -986,7 +965,6 @@
       "handle_placeholder": "kullaniciadi.bsky.social",
       "connect": "Bağlan",
       "create_account": "Hesap oluştur",
-      "connect_bluesky": "Bluesky ile bağlan",
       "what_is_atmosphere": "Atmosphere nedir?",
       "atmosphere_explanation": "Atmosphere, npmx için sosyal katmandır. Paketleri beğenin ve profilinizi özelleştirin.",
       "default_input_error": "Geçerli bir Bluesky kullanıcı adı girin",
@@ -1037,6 +1015,9 @@
       "remove_package": "{name} paketini kaldır",
       "packages_selected": "{count} paket seçildi",
       "add_hint": "Karşılaştırmak için paket ekleyin"
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "Bağımlılık yok",
@@ -1112,7 +1093,10 @@
         "vulnerabilities": {
           "label": "Güvenlik açıkları",
           "description": "Bilinen güvenlik açıkları"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Herhangi",
@@ -1166,30 +1150,8 @@
   "pds": {
     "title": "PDS",
     "meta_description": "npmx PDS - Kişisel Veri Sunucusu",
-    "join": {
-      "title": "Katıl",
-      "description": "npmx PDS'ye katılın",
-      "migrate": "Geçiş yap"
-    },
-    "server": {
-      "title": "Sunucu",
-      "location_label": "Konum",
-      "location_value": "Nürnberg, Almanya",
-      "infrastructure_label": "Altyapı",
-      "infrastructure_value": "Hetzner üzerinde barındırılıyor",
-      "privacy_label": "Gizlilik",
-      "privacy_value": "Katı AB Veri Koruma yasalarına tabidir",
-      "learn_more": "Daha fazla bilgi"
-    },
-    "community": {
-      "title": "Topluluk",
-      "description": "{count} hesap ile topluluğumuza katılın",
-      "loading": "Yükleniyor...",
-      "error": "Hata",
-      "empty": "Boş",
-      "view_profile": "{handle} profilini görüntüle",
-      "new_accounts": "{count} yeni hesap"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "Gizlilik Politikası",
@@ -1240,13 +1202,6 @@
       "li3": "Arama sorguları",
       "li4": "Tarayıcı ve cihaz bilgisi",
       "p3": "Bu veriler anonim ve topludur."
-    },
-    "authenticated": {
-      "title": "Kimlik doğrulamalı kullanıcılar",
-      "p1": "Bağlandığınızda şunları saklarız:",
-      "bold": "Profil bilgileri:",
-      "p2": "Kullanıcı adı, avatar ve tercihler",
-      "settings": "Ayarlarınızı yönetin"
     },
     "data_retention": {
       "title": "Veri saklama",
@@ -1304,5 +1259,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

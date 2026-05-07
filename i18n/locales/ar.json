@@ -15,8 +15,6 @@
     "about": "حول",
     "docs": "التوثيق",
     "source": "المصدر",
-    "social": "اجتماعي",
-    "chat": "المحادثة",
     "keyboard_shortcuts": "اختصارات لوحة المفاتيح"
   },
   "shortcuts": {
@@ -39,7 +37,6 @@
     "label": "ابحث عن حزم npm",
     "placeholder": "ابحث عن الحزم…",
     "button": "بحث",
-    "searching": "جارٍ البحث…",
     "found_packages": "تم العثور على {count} حزمة | تم العثور على حزمة واحدة | تم العثور على حزمتين | تم العثور على {count} حزم | تم العثور على {count} حزمة | تم العثور على {count} حزمة",
     "found_packages_sorted": "لم يتم العثور على نتائج | ترتيب أفضل {count} نتيجة | ترتيب أفضل {count} نتائج",
     "updating": "(جارٍ التحديث…)",
@@ -50,10 +47,6 @@
     "title_packages": "البحث عن الحزم",
     "meta_description": "نتائج البحث عن '{search}'",
     "meta_description_packages": "البحث في حزم npm",
-    "not_taken": "الاسم {name} غير مأخوذ",
-    "claim_prompt": "احجز اسم هذه الحزمة على npm",
-    "claim_button": "احجز \"{name}\"",
-    "want_to_claim": "هل تريد حجز اسم هذه الحزمة؟",
     "start_typing": "ابدأ الكتابة للبحث عن الحزم",
     "algolia_disclaimer": "مدعوم من Algolia",
     "exact_match": "مطابقة تامة",
@@ -63,6 +56,23 @@
       "view_user_packages": "عرض حزم هذا المستخدم",
       "view_org_packages": "عرض حزم هذه المؤسسة"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "الصفحة الرئيسية",
@@ -93,16 +103,11 @@
     "data_source": {
       "label": "مصدر البيانات",
       "description": "اختر من أين يحصل npmx على بيانات البحث. صفحات الحزم الفردية تستخدم دائمًا سجل npm مباشرة.",
-      "npm": "سجل npm",
       "npm_description": "يجلب نتائج البحث وقوائم المؤسسات والمستخدمين مباشرة من سجل npm الرسمي. موثوق لكن قد يكون أبطأ.",
       "algolia": "Algolia",
       "algolia_description": "يستخدم Algolia للبحث الأسرع وصفحات المؤسسات والمستخدمين."
     },
     "relative_dates": "تواريخ نسبية",
-    "include_types": "تضمين {'@'}types في التثبيت",
-    "include_types_description": "إضافة حزمة {'@'}types إلى أوامر التثبيت للحزم غير المرفقة بأنواع TypeScript.",
-    "hide_platform_packages": "إخفاء الحزم الخاصة بالمنصة في البحث",
-    "hide_platform_packages_description": "إخفاء الحزم الـ binary native مثل {'@'}esbuild/linux-x64 من النتائج",
     "theme": "السمة",
     "theme_light": "فاتحة",
     "theme_dark": "داكنة",
@@ -170,6 +175,7 @@
       "no_reason": "لم يتم تقديم سبب"
     },
     "size_increase": {},
+    "size_decrease": {},
     "replacement": {
       "title": "قد لا تحتاج إلى هذه التبعية.",
       "native": "يمكن استبدالها بـ {replacement}، المتوفرة منذ Node {nodeVersion}.",
@@ -318,6 +324,7 @@
       "no_matches": "لا توجد إصدارات تطابق هذا النطاق",
       "copy_alt": {}
     },
+    "timeline": {},
     "dependencies": {
       "title": "التبعيات ({count})",
       "list_label": "تبعيات الحزمة",
@@ -354,6 +361,7 @@
       "show_less": "(عرض أقل)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "مستوى التفصيل",
       "granularity_daily": "يومي",
       "granularity_weekly": "أسبوعي",
@@ -472,6 +480,9 @@
       "mb": "{size} ميجابايت"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -820,16 +831,11 @@
     "team": {
       "title": "الفريق",
       "governance": "الحوكمة",
-      "role_steward": "راعي",
-      "role_maintainer": "مشرف",
       "sponsor": "راعي",
       "sponsor_aria": "رعاية {name} على GitHub"
     },
     "contributors": {
-      "title": "المساهمون",
       "description": "npmx هو مشروع مفتوح المصدر بالكامل، تم بناؤه بواسطة مجتمع مذهل من المساهمين.",
-      "loading": "جارٍ تحميل المساهمين…",
-      "error": "فشل تحميل المساهمين",
       "view_profile": "عرض بروفايل {name} على GitHub"
     },
     "get_involved": {
@@ -838,31 +844,17 @@
         "title": "المساهمة",
         "description": "ساعدنا في بناء تجربة npm أفضل.",
         "cta": "عرض على GitHub"
-      },
-      "community": {
-        "title": "انضم إلى المجتمع",
-        "description": "تحدث، اطرح الأسئلة، وشارك الأفكار.",
-        "cta": "انضم إلى Discord"
-      },
-      "builders": {},
-      "follow": {
-        "title": "ابقَ على اطلاع",
-        "description": "اكتشف آخر الأخبار عن npmx.",
-        "cta": "تابع على Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "اتصال",
-    "account": "الحساب",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "إدارة الحزم والمنظمات",
-    "atmosphere_desc": "ميزات اجتماعية وهوية",
-    "connect_npm_cli": "الاتصال بـ npm CLI",
-    "connect_atmosphere": "الاتصال بـ Atmosphere",
-    "connecting": "جارٍ الاتصال…",
-    "ops": "{count} عملية | عملية واحدة | عمليتان | {count} عمليات | {count} عملية | {count} عملية"
+    "account": "الحساب"
   },
   "auth": {
     "modal": {
@@ -874,7 +866,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "اتصال",
       "create_account": "إنشاء حساب جديد",
-      "connect_bluesky": "الاتصال عبر Bluesky",
       "what_is_atmosphere": "ما هو حساب Atmosphere؟",
       "atmosphere_explanation": "{npmx} يستخدم {atproto} لتشغيل العديد من ميزاته الاجتماعية، مما يسمح للمستخدمين بامتلاك بياناتهم واستخدام حساب واحد لكل التطبيقات المتوافقة. بعد إنشاء حساب، يمكنك استخدام تطبيقات أخرى مثل {bluesky} و {tangled} بالحساب نفسه.",
       "default_input_error": "الرجاء إدخال معرّف صالح أو DID أو رابط PDS كامل"
@@ -923,6 +914,9 @@
       "remove_package": "إزالة {package}",
       "packages_selected": "{count}/{max} حزمة محددة.",
       "add_hint": "أضف حزمتين على الأقل للمقارنة."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(بدون تبعية)",
@@ -998,7 +992,10 @@
         "vulnerabilities": {
           "label": "الثغرات",
           "description": "ثغرات أمنية معروفة"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "أي من",
@@ -1020,9 +1017,8 @@
     "filter": {}
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "سياسة الخصوصية",
@@ -1073,13 +1069,6 @@
       "li3": "لا تتتبع المستخدمين عبر المواقع الإلكترونية",
       "li4": "يتم تجميع جميع البيانات وإخفاء هويتها",
       "p3": "المعلومات الوحيدة التي يتم جمعها تشمل: عناوين صفحات الويب، المرجع (Referrer)، البلد/المنطقة، نوع الجهاز، المتصفح، ونظام التشغيل. لا يمكن استخدام هذه البيانات لتحديد هوية المستخدمين الفرديين."
-    },
-    "authenticated": {
-      "title": "المستخدمون المصادق عليهم",
-      "p1": "عند ربط حساب {bold} الخاص بك بـ npmx، نقوم بتخزين رمز وصول OAuth الخاص بك في ملف تعريف ارتباط جلسة آمن من نوع HTTP-only. يُستخدم هذا الرمز حصراً لمصادقة الطلبات نيابةً عنك.",
-      "bold": "Atmosphere",
-      "p2": "نحن لا نخزّن بيانات اعتمادك، ولا نصل إلى أي بيانات تتجاوز ما يلزم لتقديم الميزات التي تستخدمها. يمكنك فصل حسابك في أي وقت من صفحة {settings}.",
-      "settings": "الإعدادات"
     },
     "data_retention": {
       "title": "الاحتفاظ بالبيانات",
@@ -1137,5 +1126,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

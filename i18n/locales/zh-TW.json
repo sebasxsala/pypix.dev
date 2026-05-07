@@ -16,9 +16,6 @@
     "blog": "部落格",
     "docs": "文件",
     "source": "原始碼",
-    "social": "社群媒體",
-    "chat": "聊天",
-    "builders_chat": "開發者聊天",
     "keyboard_shortcuts": "鍵盤快捷鍵",
     "brand": "品牌"
   },
@@ -48,7 +45,6 @@
     "label": "搜尋 npm 套件",
     "placeholder": "搜尋套件…",
     "button": "搜尋",
-    "searching": "搜尋中…",
     "found_packages": "共找到 {count} 個套件",
     "found_packages_sorted": "正在對前 {count} 個結果進行排序",
     "updating": "（更新中…）",
@@ -59,10 +55,6 @@
     "title_packages": "搜尋套件",
     "meta_description": "「{search}」的搜尋結果",
     "meta_description_packages": "搜尋 npm 套件",
-    "not_taken": "{name} 尚未被佔用",
-    "claim_prompt": "在 npm 上認領",
-    "claim_button": "認領「{name}」",
-    "want_to_claim": "想要認領這個套件名稱嗎？",
     "start_typing": "開始輸入以搜尋套件",
     "algolia_disclaimer": "由 Algolia 提供技術支持",
     "exact_match": "精確比對",
@@ -93,7 +85,6 @@
     "empty_search_hint": "按 Enter 搜尋「{query}」。",
     "current": "目前",
     "here": "你所在的位置",
-    "connected": "已連線",
     "state": {
       "on": "開",
       "off": "關"
@@ -117,19 +108,8 @@
       "keyboard_shortcuts": "鍵盤快速鍵",
       "help_translate": "幫忙翻譯"
     },
-    "connections": {
-      "npm_connect": "連線到 npm CLI",
-      "npm_connected": "npm CLI (~{username})",
-      "npm_disconnect": "中斷 npm CLI 連線",
-      "atmosphere_connect": "連線到 Atmosphere",
-      "atmosphere_connected": "atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "中斷 Atmosphere 連線"
-    },
     "navigation": {
-      "home": "首頁",
-      "packages": "套件 (~{username})",
-      "orgs": "組織 (~{username})",
-      "profile": "個人檔案 ({'@'}{handle})"
+      "home": "首頁"
     },
     "links": {
       "external": "外部連結"
@@ -178,8 +158,6 @@
       "background_theme_changed": "背景色調已設為 {theme}。",
       "download_started": "正在下載 {package} tarball。",
       "copied_to_clipboard": "已複製到剪貼簿。",
-      "npm_disconnected": "npm CLI 已中斷連線。",
-      "atmosphere_disconnected": "Atmosphere 已中斷連線。",
       "facets_all_selected": "已選取所有篩選條件。",
       "facets_all_deselected": "已取消選取所有篩選條件。",
       "view_switched": "已切換到 {view} 檢視。",
@@ -238,7 +216,6 @@
     "data_source": {
       "label": "搜尋套件庫",
       "description": "選擇 npmx 獲取搜尋結果的資料庫。個別套件頁面直接使用 npm Registry。",
-      "npm": "npm Registry",
       "npm_description": "直接從 npm Registry 搜尋套件、組織及使用者。官方來源，但速度可能較慢。",
       "algolia": "Algolia",
       "algolia_description": "使用 Algolia 以更快速的搜尋套件、組織及使用者。"
@@ -246,10 +223,6 @@
     "instant_search": "即時搜尋",
     "instant_search_description": "導航至搜尋頁面，並在您輸入時即時更新搜尋結果。",
     "relative_dates": "相對時間",
-    "include_types": "安裝時包含 {'@'}types",
-    "include_types_description": "對未提供型別定義的套件，自動在安裝指令加入 {'@'}types 套件",
-    "hide_platform_packages": "在搜尋結果中隱藏平台特定套件",
-    "hide_platform_packages_description": "在搜尋結果中隱藏平台特定的原生二進位套件（例如 {'@'}esbuild/linux-x64）",
     "enable_graph_pulse_loop": "啟用迷你圖表的脈衝循環效果",
     "enable_graph_pulse_loop_description": "在每週下載圖表上啟動連續的脈衝動畫。請注意，此動畫可能會對部分使用者造成視覺干擾。",
     "theme": "主題",
@@ -354,9 +327,7 @@
     "not_found": "找不到個人檔案",
     "not_found_message": "找不到 {handle} 的個人檔案。",
     "invite": {
-      "message": "看起來對方還沒在用 npmx。要不要跟他們分享一下？",
-      "share_button": "分享到 Bluesky",
-      "compose_text": "Hey {'@'}{handle}！你用過 npmx.dev 了嗎？它是 npm Registry 的瀏覽器，快速、現代，而且是開源的。\nhttps://npmx.dev"
+      "message": "看起來對方還沒在用 npmx。要不要跟他們分享一下？"
     }
   },
   "package": {
@@ -378,6 +349,7 @@
       "size": "安裝大小增加了 {percent}（多出 {size}）",
       "deps": "增加了 {count} 個相依套件"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "你可能不需要這個相依套件。",
       "native": "此功能自 Node.js {nodeVersion} 起已內建，可直接使用 {replacement} 取代。",
@@ -555,6 +527,7 @@
       "current_tags": "當前標籤",
       "no_match_filter": "沒有版本符合 {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "相依（{count} 個）",
       "list_label": "套件相依",
@@ -756,6 +729,9 @@
       "button": "下載",
       "tarball": "下載 Tarball（.tar.gz）"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -1109,25 +1085,14 @@
         "managers": "管理器"
       }
     },
-    "sponsors": {
-      "title": "贊助者"
-    },
-    "oss_partners": {
-      "title": "開源軟體夥伴"
-    },
     "team": {
       "title": "團隊",
       "governance": "治理",
-      "role_steward": "管理者",
-      "role_maintainer": "維護者",
       "sponsor": "贊助",
       "sponsor_aria": "在 GitHub 上贊助 {name}"
     },
     "contributors": {
-      "title": "{count} 位貢獻者",
       "description": "npmx 完全開源，由令人驚豔的社群貢獻者共同建立。",
-      "loading": "正在載入貢獻者…",
-      "error": "無法載入貢獻者",
       "view_profile": "檢視 {name} 的 GitHub 個人檔案"
     },
     "get_involved": {
@@ -1136,35 +1101,17 @@
         "title": "做出貢獻",
         "description": "幫助我們改善 npm 體驗。",
         "cta": "在 GitHub 上檢視"
-      },
-      "community": {
-        "title": "加入社群",
-        "description": "聊天、提問並分享想法。",
-        "cta": "加入 Discord"
-      },
-      "builders": {
-        "title": "幫助建立 npmx",
-        "description": "加入建立者 Discord，參與開發。",
-        "cta": "加入 Builders Discord"
-      },
-      "follow": {
-        "title": "保持更新",
-        "description": "掌握 npmx 的最新動態。",
-        "cta": "在 Bluesky 上關注"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "連線",
-    "account": "帳戶",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "管理套件與組織",
-    "atmosphere_desc": "社交功能與數位身分",
-    "connect_npm_cli": "連線到 npm CLI",
-    "connect_atmosphere": "連線到 Atmosphere",
-    "connecting": "連線中…",
-    "ops": "操作"
+    "account": "帳戶"
   },
   "auth": {
     "modal": {
@@ -1176,7 +1123,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "連線",
       "create_account": "建立新帳戶",
-      "connect_bluesky": "使用 Bluesky 連線",
       "what_is_atmosphere": "什麼是 Atmosphere 帳戶？",
       "atmosphere_explanation": "{npmx} 使用 {atproto} 為其多項社交功能提供支援，讓使用者真正擁有自己的資料並使用一個帳戶登入所有相容的應用程式。一旦建立帳戶，你便可以使用其他應用程式，例如 {bluesky} 和 {tangled}。",
       "default_input_error": "請輸入有效的 Bluesky 用戶名、DID（去中心化識別） 或完整的 PDS URL",
@@ -1323,7 +1269,10 @@
         "vulnerabilities": {
           "label": "漏洞",
           "description": "已知安全漏洞"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "不限",
@@ -1397,30 +1346,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "為 npmx 社群提供的官方 AT Protocol 個人資料伺服器（PDS）。",
-    "join": {
-      "title": "加入社群",
-      "description": "無論您是在 Atmosphere 上建立第一個帳號，還是要遷移現有帳號，這裡都歡迎您。您可以遷移目前的帳號，而不會遺失您的使用者名稱、貼文或跟隨者。",
-      "migrate": "使用 PDS MOOver 工具遷移"
-    },
-    "server": {
-      "title": "伺服器詳細資訊",
-      "location_label": "伺服器位置：",
-      "location_value": "德國紐倫堡",
-      "infrastructure_label": "基礎設施：",
-      "infrastructure_value": "托管於 Hetzner",
-      "privacy_label": "隱私保護：",
-      "privacy_value": "遵循歐盟嚴格的資料保護法規",
-      "learn_more": "瞭解 npmx 如何使用 Atmosphere"
-    },
-    "community": {
-      "title": "誰在這裡",
-      "description": "以下是在 npmx.social 落腳的 {count} 個帳號中的一部分：",
-      "loading": "正在載入 PDS 社群成員⋯⋯",
-      "error": "無法載入 PDS 社群成員。",
-      "empty": "尚無社群成員可顯示。",
-      "view_profile": "查看 {handle} 的個人檔案",
-      "new_accounts": "⋯⋯還有 {count} 個新加入 Atmosphere 的帳號"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "隱私權政策",
@@ -1471,13 +1398,6 @@
       "li3": "不進行跨網站的使用者追蹤",
       "li4": "所有數據均經過彙整與匿名處理",
       "p3": "收集的資訊僅限於：頁面網址 (URL)、來源網址 (Referrer)、國家/地區、裝置類型、瀏覽器以及作業系統。這些數據無法用於識別特定個人身分。"
-    },
-    "authenticated": {
-      "title": "已驗證使用者",
-      "p1": "當你將 {bold} 帳戶連結至 npmx 時，我們會將你的 OAuth 存取權杖 (Access Token) 儲存在安全的 HTTP-only 工作階段 Cookie 中。此權杖僅用於代表你進行請求驗證。",
-      "bold": "Atmosphere",
-      "p2": "我們不會儲存你的登入驗證資訊，也不會存取超出提供功能所需範圍外的任何資料。你可以隨時從 {settings} 頁面取消連結你的帳戶。",
-      "settings": "設定"
     },
     "data_retention": {
       "title": "資料保留",
@@ -1576,8 +1496,7 @@
     },
     "return": {
       "title": "我們回來啦！",
-      "p1": "充電完畢，準備全力衝刺到 3 月 3 日！想知道最新消息就追蹤 {social}。",
-      "social_link": "在 Bluesky 上追蹤我們"
+      "p1": "充電完畢，準備全力衝刺到 3 月 3 日！想知道最新消息就追蹤 {social}。"
     },
     "stats": {
       "contributors": "貢獻者",
@@ -1641,8 +1560,7 @@
     },
     "guidelines": {
       "title": "小提醒",
-      "message": "無障礙體驗對我們來說很重要，我們也很希望你能認同這個理念。使用上述素材時，請確保與背景有足夠的對比度，並且不要小於 24px。如果你需要其他資源或關於專案的更多資訊，隨時透過 {link} 與我們聯絡。",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "無障礙體驗對我們來說很重要，我們也很希望你能認同這個理念。使用上述素材時，請確保與背景有足夠的對比度，並且不要小於 24px。如果你需要其他資源或關於專案的更多資訊，隨時透過 {link} 與我們聯絡。"
     }
   },
   "alt_logo_kawaii": "一個可愛、圓潤且色彩繽紛的 npmx 標誌版本。"

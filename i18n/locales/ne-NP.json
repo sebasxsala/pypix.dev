@@ -14,9 +14,7 @@
   "footer": {
     "about": "बारेमा",
     "docs": "डकुमेन्टेसन",
-    "source": "स्रोत",
-    "social": "सामाजिक",
-    "chat": "च्याट"
+    "source": "स्रोत"
   },
   "shortcuts": {
     "section": {}
@@ -25,14 +23,9 @@
     "label": "npm प्याकेजहरू खोज्नुहोस्",
     "placeholder": "प्याकेज खोज्नुहोस्...",
     "button": "खोज",
-    "searching": "खोजिँदैछ...",
     "found_packages": "कुनै प्याकेज फेला परेन | {count} प्याकेज फेला पर्यो | {count} प्याकेज फेला परे",
     "updating": "(अपडेट हुँदैछ...)",
     "no_results": "\"{query}\" का लागि कुनै प्याकेज फेला परेन",
-    "not_taken": "{name} लिइएको छैन",
-    "claim_prompt": "npm मा यो प्याकेज नाम दाबी गर्नुहोस्",
-    "claim_button": "\"{name}\" दाबी गर्नुहोस्",
-    "want_to_claim": "यो प्याकेज नाम दाबी गर्न चाहनुहुन्छ?",
     "start_typing": "प्याकेज खोज्न टाइप गर्न सुरू गर्नुहोस्",
     "exact_match": "ठ्याक्कै",
     "suggestion": {
@@ -41,6 +34,23 @@
       "view_user_packages": "यस प्रयोगकर्ताका प्याकेजहरू हेर्नुहोस्",
       "view_org_packages": "यस संगठनका प्याकेजहरू हेर्नुहोस्"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "मुख्य",
@@ -69,10 +79,6 @@
     },
     "data_source": {},
     "relative_dates": "सापेक्ष मितिहरू",
-    "include_types": "इन्स्टलमा {'@'}types समावेश गर्नुहोस्",
-    "include_types_description": "टाइप नभएका प्याकेजका इन्स्टल कमाण्डहरूमा {'@'}types प्याकेज थप्नुहोस्",
-    "hide_platform_packages": "खोजमा प्लेटफर्म-विशेष प्याकेजहरू लुकाउनुहोस्",
-    "hide_platform_packages_description": "नतिजाबाट {'@'}esbuild/linux-x64 जस्ता नेटिभ बाइनरी प्याकेजहरू लुकाउनुहोस्",
     "theme": "थिम",
     "theme_light": "हल्का",
     "theme_dark": "गाढा",
@@ -137,6 +143,7 @@
       "no_reason": "कारण दिइएको छैन"
     },
     "size_increase": {},
+    "size_decrease": {},
     "replacement": {
       "title": "तपाईंलाई यो डिपेन्डेन्सी आवश्यक नपर्न सक्छ।",
       "native": "Node {nodeVersion} देखि उपलब्ध {replacement} ले यसलाई प्रतिस्थापन गर्न सक्छ।",
@@ -220,6 +227,7 @@
       "view_all": "{count} संस्करण हेर्नुहोस् | सबै {count} संस्करणहरू हेर्नुहोस्",
       "copy_alt": {}
     },
+    "timeline": {},
     "dependencies": {
       "title": "डिपेन्डेन्सीहरू ({count})",
       "list_label": "प्याकेज डिपेन्डेन्सीहरू",
@@ -255,6 +263,7 @@
       "show_less": "(कम देखाउनुहोस्)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "सूक्ष्मता",
       "granularity_daily": "दैनिक",
       "granularity_weekly": "साप्ताहिक",
@@ -355,6 +364,9 @@
     },
     "size": {},
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -691,10 +703,7 @@
     "oss_partners": {},
     "team": {},
     "contributors": {
-      "title": "कन्ट्रिब्युटरहरू",
       "description": "npmx पूर्ण रूपमा ओपन सोर्स हो, अद्भुत कन्ट्रिब्युटर समुदायले बनाएको। हामीसँग जोडिनुहोस् र हामीले चाहेको npm ब्राउजिङ अनुभव सँगै बनाऔँ।",
-      "loading": "कन्ट्रिब्युटरहरू लोड हुँदैछन्...",
-      "error": "कन्ट्रिब्युटरहरू लोड गर्न असफल",
       "view_profile": "{name} को GitHub प्रोफाइल हेर्नुहोस्"
     },
     "get_involved": {
@@ -703,31 +712,17 @@
         "title": "कन्ट्रिब्युट",
         "description": "अझ राम्रो npm अनुभव बनाउन हामीलाई सहयोग गर्नुहोस्।",
         "cta": "GitHub मा हेर्नुहोस्"
-      },
-      "community": {
-        "title": "समुदायमा जोडिनुहोस्",
-        "description": "च्याट गर्नुहोस्, प्रश्न सोध्नुहोस्, र विचार साझा गर्नुहोस्।",
-        "cta": "Discord मा जोडिनुहोस्"
-      },
-      "builders": {},
-      "follow": {
-        "title": "अपडेट रहनुहोस्",
-        "description": "npmx का ताजा अपडेटहरू जान्नुहोस्।",
-        "cta": "Bluesky मा फलो गर्नुहोस्"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "कनेक्ट",
-    "account": "अकाउन्ट",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "प्याकेज र संगठनहरू व्यवस्थापन",
-    "atmosphere_desc": "सामाजिक सुविधाहरू र पहिचान",
-    "connect_npm_cli": "npm CLI कनेक्ट गर्नुहोस्",
-    "connect_atmosphere": "Atmosphere कनेक्ट गर्नुहोस्",
-    "connecting": "कनेक्ट हुँदैछ...",
-    "ops": "{count} अपरेसन | {count} अपरेसनहरू"
+    "account": "अकाउन्ट"
   },
   "auth": {
     "modal": {
@@ -739,7 +734,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "कनेक्ट",
       "create_account": "नयाँ अकाउन्ट बनाउनुहोस्",
-      "connect_bluesky": "Bluesky सँग कनेक्ट",
       "what_is_atmosphere": "Atmosphere अकाउन्ट भनेको के हो?",
       "atmosphere_explanation": "{npmx} ले आफ्ना धेरै सामाजिक सुविधाहरू चलाउन {atproto} प्रयोग गर्छ, जसले प्रयोगकर्तालाई आफ्ना डेटा स्वामित्व गर्न र सबै कम्प्याटिबल एपहरूका लागि एउटै अकाउन्ट प्रयोग गर्न दिन्छ। एकपटक अकाउन्ट बनाएपछि, त्यही अकाउन्ट प्रयोग गरेर {bluesky} र {tangled} जस्ता अन्य एपहरू पनि चलाउन सक्नुहुन्छ।"
     }
@@ -788,6 +782,9 @@
       "packages_selected": "{count}/{max} प्याकेज चयन गरियो।",
       "add_hint": "तुलना गर्न कम्तिमा २ प्याकेज थप्नुहोस्।"
     },
+    "scatter_chart": {
+      "copy_alt": {}
+    },
     "no_dependency": {},
     "facets": {
       "all": "सबै",
@@ -814,7 +811,10 @@
         "types": {},
         "moduleFormat": {},
         "license": {},
-        "vulnerabilities": {}
+        "vulnerabilities": {},
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {},
       "trends": {}
@@ -824,9 +824,8 @@
     "filter": {}
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "cookies": {
@@ -851,5 +850,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

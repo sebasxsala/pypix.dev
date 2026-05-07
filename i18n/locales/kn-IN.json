@@ -14,9 +14,7 @@
   "footer": {
     "about": "ನಮ್ಮ ಬಗ್ಗೆ",
     "docs": "ದಸ್ತಾವೇಜುಗಳು",
-    "source": "ಮೂಲ",
-    "social": "ಸಾಮಾಜಿಕ",
-    "chat": "ಚಾಟ್"
+    "source": "ಮೂಲ"
   },
   "shortcuts": {
     "section": {}
@@ -25,14 +23,9 @@
     "label": "npm ಪ್ಯಾಕೇಜ್ ಹುಡುಕಿ",
     "placeholder": "ಪ್ಯಾಕೇಜ್ ಹುಡುಕಿ...",
     "button": "ಹುಡುಕಿ",
-    "searching": "ಹುಡುಕಲಾಗುತ್ತಿದೆ...",
     "found_packages": "ಯಾವುದೇ ಪ್ಯಾಕೇಜ್ ಕಂಡುಬಂದಿಲ್ಲ | 1 ಪ್ಯಾಕೇಜ್ ಕಂಡುಬಂದಿದೆ | {count} ಪ್ಯಾಕೇಜ್‌ಗಳು ಕಂಡುಬಂದಿವೆ",
     "updating": "(ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ...)",
     "no_results": "\"{query}\"ಗಾಗಿ ಯಾವುದೇ ಪ್ಯಾಕೇಜ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
-    "not_taken": "{name} ಲಭ್ಯವಿದೆ",
-    "claim_prompt": "npm ನಲ್ಲಿ ಈ ಪ್ಯಾಕೇಜ್ ಹೆಸರನ್ನು ಕ್ಲೇಮ್ ಮಾಡಿ",
-    "claim_button": "\"{name}\" ಕ್ಲೇಮ್ ಮಾಡಿ",
-    "want_to_claim": "ಈ ಪ್ಯಾಕೇಜ್ ಹೆಸರನ್ನು ಕ್ಲೇಮ್ ಮಾಡಲು ಇಷ್ಟವಿದೆಯೇ?",
     "start_typing": "ಪ್ಯಾಕೇಜ್ ಹುಡುಕಲು ಟೈಪ್ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿ",
     "exact_match": "ನಿಖರ ಹೊಂದಾಣಿಕೆ",
     "suggestion": {
@@ -41,6 +34,23 @@
       "view_user_packages": "ಈ ಬಳಕೆದಾರದ ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ನೋಡಿ",
       "view_org_packages": "ಈ ಸಂಸ್ಥೆಯ ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ನೋಡಿ"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "ಮುಖ್ಯ ನಾವಿಗೇಶನ್",
@@ -69,10 +79,6 @@
     },
     "data_source": {},
     "relative_dates": "ಸಾಪೇಕ್ಷ ದಿನಾಂಕಗಳು",
-    "include_types": "ಇನ್‌ಸ್ಟಾಲ್‌ನಲ್ಲಿ {'@'}types ಸೇರಿಸಿ",
-    "include_types_description": "ಟೈಪ್ ಇಲ್ಲದ ಪ್ಯಾಕೇಜ್‌ಗೆ ಇನ್‌ಸ್ಟಾಲ್ ಕಮಾಂಡ್‌ನಲ್ಲಿ {'@'}types ಪ್ಯಾಕೇಜ್ ಸೇರಿಸಿ",
-    "hide_platform_packages": "ಹುಡುಕಾಟದಲ್ಲಿ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್-ನಿರ್ದಿಷ್ಟ ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ಮರೆಮಾಡಿ",
-    "hide_platform_packages_description": "ಫಲಿತಾಂಶಗಳಿಂದ {'@'}esbuild/linux-x64 ಮಾದರಿಯ ನೆಟಿವ್ ಬೈನರಿ ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ಮರೆಮಾಡಿ",
     "theme": "ಥೀಮ್",
     "theme_light": "ಲೈಟ್",
     "theme_dark": "ಡಾರ್ಕ್",
@@ -137,6 +143,7 @@
       "no_reason": "ಕಾರಣ ನೀಡಲಾಗಿಲ್ಲ"
     },
     "size_increase": {},
+    "size_decrease": {},
     "replacement": {
       "title": "ನಿಮಗೆ ಈ ಅವಲಂಬನೆ ಅಗತ್ಯವಿಲ್ಲದಿರಬಹುದು.",
       "native": "ಇದನ್ನು {replacement} ಮೂಲಕ ಬದಲಾಯಿಸಬಹುದು, ಇದು Node {nodeVersion} ರಿಂದ ಲಭ್ಯವಿದೆ.",
@@ -234,6 +241,7 @@
       "view_all": "{count} ಆವೃತ್ತಿ ನೋಡಿ | ಎಲ್ಲಾ {count} ಆವೃತ್ತಿಗಳನ್ನು ನೋಡಿ",
       "copy_alt": {}
     },
+    "timeline": {},
     "dependencies": {
       "title": "ಅವಲಂಬನೆಗಳು ({count})",
       "list_label": "ಪ್ಯಾಕೇಜ್ ಅವಲಂಬನೆಗಳು",
@@ -269,6 +277,7 @@
       "show_less": "(ಕಡಿಮೆ ತೋರಿಸಿ)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "ಗ್ರಾನ್ಯುಲಾರಿಟಿ",
       "granularity_daily": "ದೈನಂದಿನ",
       "granularity_weekly": "ವಾರದ",
@@ -370,6 +379,9 @@
     },
     "size": {},
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -706,10 +718,7 @@
     "oss_partners": {},
     "team": {},
     "contributors": {
-      "title": "ಸಹಯೋಗಿಗಳು",
       "description": "npmx ಸಂಪೂರ್ಣ ಓಪನ್ ಸೋರ್ಸ್ ಆಗಿದ್ದು, ಅದ್ಭುತ ಸಹಯೋಗಿಗಳ ಸಮುದಾಯದಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ. ನಮ್ಮೊಂದಿಗೆ ಸೇರಿ ಮತ್ತು ನಾವು ಯಾವಾಗಲೂ ಬಯಸಿದ npm ಬ್ರೌಸಿಂಗ್ ಅನುಭವವನ್ನು ಒಟ್ಟಿಗೆ ನಿರ್ಮಿಸೋಣ.",
-      "loading": "ಸಹಯೋಗಿಗಳು ಲೋಡ್ ಆಗುತ್ತಿದ್ದಾರೆ...",
-      "error": "ಸಹಯೋಗಿಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
       "view_profile": "{name} ಅವರ GitHub ಪ್ರೊಫೈಲ್ ನೋಡಿ"
     },
     "get_involved": {
@@ -718,31 +727,17 @@
         "title": "ಸಹಕರಿಸಿ",
         "description": "ಉತ್ತಮ npm ಅನುಭವ ನಿರ್ಮಿಸಲು ನಮಗೆ ಸಹಾಯ ಮಾಡಿ.",
         "cta": "GitHub ನಲ್ಲಿ ನೋಡಿ"
-      },
-      "community": {
-        "title": "ಸಮುದಾಯಕ್ಕೆ ಸೇರಿ",
-        "description": "ಚಾಟ್ ಮಾಡಿ, ಪ್ರಶ್ನೆಗಳು ಕೇಳಿ ಮತ್ತು ಆಲೋಚನೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ.",
-        "cta": "Discord ನಲ್ಲಿ ಸೇರಿ"
-      },
-      "builders": {},
-      "follow": {
-        "title": "ನವೀಕರಣಗಳನ್ನು ಪಡೆಯಿರಿ",
-        "description": "npmx ಬಗ್ಗೆ ಇತ್ತೀಚಿನ ಮಾಹಿತಿ ಪಡೆಯಿರಿ.",
-        "cta": "Bluesky ನಲ್ಲಿ ಅನುಸರಿಸಿ"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "ಸಂಪರ್ಕಿಸಿ",
-    "account": "ಖಾತೆ",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "ಪ್ಯಾಕೇಜ್‌ಗಳು ಮತ್ತು org ಗಳನ್ನು ನಿರ್ವಹಿಸಿ",
-    "atmosphere_desc": "ಸಾಮಾಜಿಕ ವೈಶಿಷ್ಟ್ಯಗಳು ಮತ್ತು ಗುರುತು",
-    "connect_npm_cli": "npm CLI ಜೊತೆ ಸಂಪರ್ಕಿಸಿ",
-    "connect_atmosphere": "Atmosphere ಜೊತೆ ಸಂಪರ್ಕಿಸಿ",
-    "connecting": "ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...",
-    "ops": "{count} op | {count} ops"
+    "account": "ಖಾತೆ"
   },
   "auth": {
     "modal": {
@@ -754,7 +749,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "ಸಂಪರ್ಕಿಸಿ",
       "create_account": "ಹೊಸ ಖಾತೆ ರಚಿಸಿ",
-      "connect_bluesky": "Bluesky ಜೊತೆ ಸಂಪರ್ಕಿಸಿ",
       "what_is_atmosphere": "Atmosphere ಖಾತೆ ಎಂದರೇನು?",
       "atmosphere_explanation": "{npmx} ತನ್ನ ಹಲವಾರು ಸಾಮಾಜಿಕ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ನಿರ್ವಹಿಸಲು {atproto} ಬಳಸುತ್ತದೆ. ಇದು ಬಳಕೆದಾರರಿಗೆ ತಮ್ಮ ಡೇಟಾದ ಮಾಲೀಕರಾಗಲು ಮತ್ತು ಎಲ್ಲಾ ಹೊಂದಾಣಿಕೆಯ ಅಪ್ಲಿಕೇಶನ್‌ಗಳಿಗೆ ಒಂದೇ ಖಾತೆಯನ್ನು ಬಳಸಲು ಅವಕಾಶ ನೀಡುತ್ತದೆ. ನೀವು ಖಾತೆ ರಚಿಸಿದ ನಂತರ, {bluesky} ಮತ್ತು {tangled} ಮುಂತಾದ ಇತರ ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಅದೇ ಖಾತೆಯಿಂದ ಬಳಸಬಹುದು."
     }
@@ -803,6 +797,9 @@
       "packages_selected": "{count}/{max} ಪ್ಯಾಕೇಜ್‌ಗಳು ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ.",
       "add_hint": "ಹೋಲಿಸಲು ಕನಿಷ್ಠ 2 ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ಸೇರಿಸಿ."
     },
+    "scatter_chart": {
+      "copy_alt": {}
+    },
     "no_dependency": {},
     "facets": {
       "all": "ಎಲ್ಲ",
@@ -829,7 +826,10 @@
         "types": {},
         "moduleFormat": {},
         "license": {},
-        "vulnerabilities": {}
+        "vulnerabilities": {},
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {},
       "trends": {}
@@ -839,9 +839,8 @@
     "filter": {}
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "cookies": {
@@ -866,5 +865,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

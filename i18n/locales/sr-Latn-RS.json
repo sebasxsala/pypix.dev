@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "dokumentacija",
     "source": "izvor",
-    "social": "društvene mreže",
-    "chat": "ćaskanje",
-    "builders_chat": "builders",
     "keyboard_shortcuts": "prečice na tastaturi",
     "brand": "brend"
   },
@@ -45,7 +42,6 @@
     "label": "Pretražite npm pakete",
     "placeholder": "pretražite pakete...",
     "button": "pretražite",
-    "searching": "Pretražujem...",
     "found_packages": "Nije pronađen nijedan paket | Pronađen 1 paket | Pronađeno {count} paketa",
     "found_packages_sorted": "Nema rezultata | Sortiranje prvog {count} rezultata | Sortiranje prvih {count} rezultata",
     "updating": "(ažuriranje...)",
@@ -56,10 +52,6 @@
     "title_packages": "pretražite pakete",
     "meta_description": "Rezultati pretrage za '{search}'",
     "meta_description_packages": "Pretražite npm pakete",
-    "not_taken": "{name} nije zauzet",
-    "claim_prompt": "Zauzmite ovo ime paketa na npm-u",
-    "claim_button": "Zauzmite \"{name}\"",
-    "want_to_claim": "Želite da zauzmete ovo ime paketa?",
     "start_typing": "Počnite da kucate za pretragu paketa",
     "algolia_disclaimer": "Omogućio Algolia",
     "exact_match": "tačno",
@@ -75,6 +67,23 @@
     "instant_search_turn_on": "uključite",
     "instant_search_turn_off": "isključite",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Glavno",
@@ -128,7 +137,6 @@
     "data_source": {
       "label": "Izvor podataka",
       "description": "Izaberite odakle npmx dobija podatke za pretragu. Stranice pojedinačnih paketa uvek koriste direktno npm registar.",
-      "npm": "npm registar",
       "npm_description": "Dohvata pretragu, liste organizacija i korisnika direktno iz zvaničnog npm registra. Verodostojno, ali može biti sporije.",
       "algolia": "Algolia",
       "algolia_description": "Koristi Algolia za bržu pretragu, stranice organizacija i korisnika."
@@ -136,10 +144,6 @@
     "instant_search": "Trenutna pretraga",
     "instant_search_description": "Preusmerava na stranicu za pretragu i ažurira rezultate dok kucate.",
     "relative_dates": "Relativni datumi",
-    "include_types": "Uključite {'@'}types u instalaciju",
-    "include_types_description": "Dodajte {'@'}types paket u komande za instalaciju za pakete bez tipova",
-    "hide_platform_packages": "Sakrijte pakete specifične za platformu u pretrazi",
-    "hide_platform_packages_description": "Sakrijte izvorne binarne pakete poput {'@'}esbuild/linux-x64 iz rezultata",
     "enable_graph_pulse_loop": "Omogućite ponavljanje puls efekta na malom grafiku",
     "enable_graph_pulse_loop_description": "Aktivirajte neprekidnu pulsirajuću animaciju na grafiku nedeljnih preuzimanja. Ova animacija može ometati neke korisnike.",
     "theme": "Tema",
@@ -241,9 +245,7 @@
     "not_found": "Profil nije pronađen",
     "not_found_message": "Profil za {handle} nije moguće pronaći.",
     "invite": {
-      "message": "Izgleda da još uvek ne koriste npmx. Želite li da im kažete nešto više o tome?",
-      "share_button": "Podelite na Bluesky-u",
-      "compose_text": "Hej {'@'}{handle}! Da li ste već pogledali npmx.dev? To je pretraživač za npm registar koji je brz, moderan i otvorenog koda.\nhttps://npmx.dev"
+      "message": "Izgleda da još uvek ne koriste npmx. Želite li da im kažete nešto više o tome?"
     }
   },
   "package": {
@@ -265,6 +267,7 @@
       "size": "Veličina instalacije povećana za {percent} ({size} veća)",
       "deps": "{count} više zavisnosti"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Možda vam ova zavisnost ne treba.",
       "native": "Ovo se može zameniti sa {replacement}, dostupno od Node verzije {nodeVersion}.",
@@ -442,6 +445,7 @@
       "current_tags": "Trenutne oznake",
       "no_match_filter": "Nijedna verzija ne odgovara filteru {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "Zavisnost ({count}) | Zavisnosti ({count})",
       "list_label": "Zavisnosti paketa",
@@ -640,6 +644,9 @@
       "button": "Preuzmite",
       "tarball": "Preuzmite Tarball kao .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -989,25 +996,14 @@
         "managers": "package managers"
       }
     },
-    "sponsors": {
-      "title": "Sponzori"
-    },
-    "oss_partners": {
-      "title": "OSS partneri"
-    },
     "team": {
       "title": "Tim",
       "governance": "Upravljanje",
-      "role_steward": "steward",
-      "role_maintainer": "održavalac",
       "sponsor": "sponzor",
       "sponsor_aria": "Sponzorišite {name} na GitHub-u"
     },
     "contributors": {
-      "title": "... i još {count} saradnik | ... i još {count} saradnika | ... i još {count} saradnika",
       "description": "npmx je potpuno otvorenog koda, izgrađen od strane neverovatne zajednice saradnika. Pridružite nam se i zajedno izgradimo iskustvo pregledanja npm-a koje smo oduvek želeli.",
-      "loading": "Učitavanje saradnika...",
-      "error": "Neuspešno učitavanje saradnika",
       "view_profile": "Pogledajte GitHub profil {name}"
     },
     "get_involved": {
@@ -1016,35 +1012,17 @@
         "title": "Doprinesite",
         "description": "Pomozite nam da izgradimo npm iskustvo koje svi želimo.",
         "cta": "Pogledajte na GitHub-u"
-      },
-      "community": {
-        "title": "Pridružite se zajednici",
-        "description": "Ćaskajte, postavljajte pitanja i delite ideje.",
-        "cta": "Pridružite se Discord-u"
-      },
-      "builders": {
-        "title": "Pomozite u izgradnji npmx-a",
-        "description": "Pridružite se graditeljima koji oblikuju budućnost npmx-a.",
-        "cta": "Pridružite se Builders Discord-u"
-      },
-      "follow": {
-        "title": "Ostanite u toku",
-        "description": "Saznajte najnovije o npmx-u.",
-        "cta": "Zapratite na Bluesky-u"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "povežite se",
-    "account": "Nalog",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosfera",
-    "npm_cli_desc": "Upravljajte paketima i organizacijama",
-    "atmosphere_desc": "Društvene funkcije i identitet",
-    "connect_npm_cli": "Povežite se na npm CLI",
-    "connect_atmosphere": "Povežite se na Atmosferu",
-    "connecting": "Povezivanje...",
-    "ops": "{count} op | {count} ops"
+    "account": "Nalog"
   },
   "auth": {
     "modal": {
@@ -1056,7 +1034,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Povežite se",
       "create_account": "Napravite novi nalog",
-      "connect_bluesky": "Povežite se preko Bluesky-a",
       "what_is_atmosphere": "Šta je Atmosphere nalog?",
       "atmosphere_explanation": "{npmx} koristi {atproto} za pokretanje mnogih svojih društvenih funkcija, omogućavajući korisnicima da poseduju svoje podatke i koriste jedan nalog za sve kompatibilne aplikacije. Kada napravite nalog, možete ga koristiti sa drugim aplikacijama poput {bluesky} i {tangled}.",
       "default_input_error": "Unesite važeće korisničko ime, DID ili puni PDS URL",
@@ -1112,6 +1089,9 @@
       "remove_package": "Uklonite {package}",
       "packages_selected": "{count}/{max} paketa izabrano.",
       "add_hint": "Dodajte najmanje 2 paketa za poređenje."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Bez zavisnosti)",
@@ -1191,7 +1171,10 @@
         "vulnerabilities": {
           "label": "Ranjivosti",
           "description": "Poznate bezbednosne ranjivosti"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Bilo koje",
@@ -1265,30 +1248,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Zvanični AT Protocol Personal Data Server (PDS) za npmx zajednicu.",
-    "join": {
-      "title": "Pridružite se zajednici",
-      "description": "Bilo da kreirate svoj prvi nalog na atmosferi ili migrirate postojeći, pripadate ovde. Možete migrirati svoj trenutni nalog bez gubitka korisničkog imena, objava ili pratilaca.",
-      "migrate": "Migrirajte sa PDS MOOver-om"
-    },
-    "server": {
-      "title": "Detalji servera",
-      "location_label": "Lokacija:",
-      "location_value": "Nuremberg, Nemačka",
-      "infrastructure_label": "Infrastruktura:",
-      "infrastructure_value": "Hostovan na Hetzner-u",
-      "privacy_label": "Privatnost:",
-      "privacy_value": "Podleže strogim zakonima EU o zaštiti podataka",
-      "learn_more": "Saznajte kako npmx koristi Atmosferu"
-    },
-    "community": {
-      "title": "Ko je ovde",
-      "description": "Neki od {count} naloga koji već zovu npmx.social domom:",
-      "loading": "Učitavanje PDS zajednice...",
-      "error": "Neuspešno učitavanje PDS zajednice.",
-      "empty": "Nema prikazanih članova zajednice.",
-      "view_profile": "Pogledajte profil {handle}",
-      "new_accounts": "...plus još {count} koji su novi na atmosferi"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "politika privatnosti",
@@ -1339,13 +1300,6 @@
       "li3": "Ne prati korisnike na različitim veb sajtovima",
       "li4": "Svi podaci su agregirani i anonimizovani",
       "p3": "Jedine informacije koje se prikupljaju uključuju: URL-ove stranica, referer, zemlju/region, vrstu uređaja, pregledač i operativni sistem. Ovi podaci se ne mogu koristiti za identifikaciju pojedinačnih korisnika."
-    },
-    "authenticated": {
-      "title": "Autentifikovani korisnici",
-      "p1": "Kada povežete svoj {bold} nalog sa npmx-om, čuvamo vaš OAuth pristupni token u bezbednom, HTTP-only kolačiću sesije. Ovaj token se koristi isključivo za autentifikaciju zahteva u vaše ime.",
-      "bold": "Atmosfera",
-      "p2": "Ne čuvamo vaše akreditive i ne pristupamo nijednim podacima izvan onoga što je neophodno za pružanje funkcija koje koristite. Možete prekinuti vezu sa svojim nalogom u bilo kom trenutku sa stranice {settings}.",
-      "settings": "podešavanja"
     },
     "data_retention": {
       "title": "Čuvanje podataka",
@@ -1444,8 +1398,7 @@
     },
     "return": {
       "title": "vratili smo se!",
-      "p1": "vratili smo se napunjeni energijom i spremni za poslednji pritisak do 3. marta. {social} za novosti.",
-      "social_link": "zapratite nas na Bluesky-u"
+      "p1": "vratili smo se napunjeni energijom i spremni za poslednji pritisak do 3. marta. {social} za novosti."
     },
     "stats": {
       "contributors": "Saradnici",
@@ -1509,8 +1462,7 @@
     },
     "guidelines": {
       "title": "samo napomena",
-      "message": "Pristupačnost nam je važna, i voleli bismo da nas pratite u ovoj viziji. Kada koristite pomenute medije, osigurajte dovoljan kontrast u odnosu na pozadinu i nemojte ići manje od 24px. Ako su vam potrebni bilo kakvi drugi resursi ili dodatne informacije o projektu, slobodno nas kontaktirajte na {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "Pristupačnost nam je važna, i voleli bismo da nas pratite u ovoj viziji. Kada koristite pomenute medije, osigurajte dovoljan kontrast u odnosu na pozadinu i nemojte ići manje od 24px. Ako su vam potrebni bilo kakvi drugi resursi ili dodatne informacije o projektu, slobodno nas kontaktirajte na {link}."
     }
   }
 }

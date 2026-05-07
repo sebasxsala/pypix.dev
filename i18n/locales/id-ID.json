@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "dokumentasi",
     "source": "sumber",
-    "social": "sosial media",
-    "chat": "obrolan",
-    "builders_chat": "builders",
     "keyboard_shortcuts": "pintasan papan ketik",
     "brand": "merek"
   },
@@ -45,7 +42,6 @@
     "label": "Cari paket npm",
     "placeholder": "cari paket...",
     "button": "cari",
-    "searching": "Mencari...",
     "found_packages": "Paket tidak ditemukan | Ditemukan 1 paket | {count} paket ditemukan",
     "found_packages_sorted": "Tidak ada hasil ditemukan | Menyortir {count} hasil teratas | Menyortir {count} hasil teratas",
     "updating": "(memperbarui...)",
@@ -56,10 +52,6 @@
     "title_packages": "cari paket",
     "meta_description": "Hasil pencarian untuk '{search}'",
     "meta_description_packages": "Cari paket npm",
-    "not_taken": "{name} tersedia",
-    "claim_prompt": "Klaim nama paket ini di npm",
-    "claim_button": "Klaim \"{name}\"",
-    "want_to_claim": "Ingin klaim nama paket ini?",
     "start_typing": "Mulai mengetik untuk mencari paket",
     "algolia_disclaimer": "Ditenagai oleh Algolia",
     "exact_match": "persis",
@@ -75,6 +67,23 @@
     "instant_search_turn_on": "aktifkan",
     "instant_search_turn_off": "nonaktifkan",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Utama",
@@ -128,7 +137,6 @@
     "data_source": {
       "label": "Sumber data",
       "description": "Pilih dari mana npmx mendapatkan data pencarian. Halaman paket individu selalu menggunakan registri npm secara langsung.",
-      "npm": "Registri npm",
       "npm_description": "Mengambil pencarian, daftar organisasi, dan profil pengguna langsung dari registri npm resmi. Autoritatif, tetapi bisa lebih lambat.",
       "algolia": "Algolia",
       "algolia_description": "Menggunakan Algolia untuk pencarian, halaman organisasi, dan pengguna yang lebih cepat."
@@ -136,10 +144,6 @@
     "instant_search": "Pencarian instan",
     "instant_search_description": "Langsung membuka halaman pencarian dan memperbarui hasil saat Anda mengetik.",
     "relative_dates": "Format tanggal relatif",
-    "include_types": "Sertakan {'@'}types saat instal",
-    "include_types_description": "Sertakan paket {'@'}types ke perintah instalasi untuk paket yang tidak memiliki types",
-    "hide_platform_packages": "Sembunyikan paket spesifik-platform",
-    "hide_platform_packages_description": "Sembunyikan paket biner spesifik platform seperti {'@'}esbuild/linux-x64 dari hasil",
     "enable_graph_pulse_loop": "Aktifkan animasi pulse berulang pada grafik unduhan mingguan",
     "enable_graph_pulse_loop_description": "Aktifkan animasi pulse berulang pada grafik unduhan mingguan. Animasi ini mungkin mengganggu bagi sebagian pengguna.",
     "theme": "Tema",
@@ -241,9 +245,7 @@
     "not_found": "Profil tidak ditemukan",
     "not_found_message": "Profil untuk {handle} tidak dapat ditemukan.",
     "invite": {
-      "message": "Sepertinya mereka belum menggunakan npmx. Ingin memberi tahu mereka?",
-      "share_button": "Bagikan di Bluesky",
-      "compose_text": "Hai {'@'}{handle}! Sudah pernah mencoba npmx.dev? Ini adalah browser untuk npm registry yang cepat, modern, dan open-source.\nhttps://npmx.dev"
+      "message": "Sepertinya mereka belum menggunakan npmx. Ingin memberi tahu mereka?"
     }
   },
   "package": {
@@ -265,6 +267,7 @@
       "size": "Ukuran instalasi meningkat sebesar {percent} ({size} lebih besar)",
       "deps": "{count} lebih banyak dependensi"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Mungkin Anda tidak butuh dependensi ini.",
       "native": "Paket ini dapat diganti dengan {replacement}, tersedia sejak Node {nodeVersion}.",
@@ -442,6 +445,7 @@
       "current_tags": "Tag Saat Ini",
       "no_match_filter": "Tidak ada versi yang cocok dengan {filter}"
     },
+    "timeline": {},
     "dependencies": {
       "title": "Dependensi ({count})",
       "list_label": "Dependensi paket",
@@ -643,6 +647,9 @@
       "button": "Unduh",
       "tarball": "Unduh Tarball sebagai .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -992,25 +999,14 @@
         "managers": "yang keren"
       }
     },
-    "sponsors": {
-      "title": "Sponsor"
-    },
-    "oss_partners": {
-      "title": "Mitra OSS"
-    },
     "team": {
       "title": "Tim",
       "governance": "Tata Kelola",
-      "role_steward": "pengurus",
-      "role_maintainer": "pemelihara",
       "sponsor": "sponsor",
       "sponsor_aria": "Sponsori {name} di GitHub"
     },
     "contributors": {
-      "title": "Kontributor",
       "description": "npmx sepenuhnya sumber terbuka (open source), dibangun oleh komunitas kontributor yang luar biasa. Bergabunglah dengan kami dan mari bangun pengalaman menjelajah npm yang selalu kita inginkan, bersama-sama.",
-      "loading": "Memuat kontributor...",
-      "error": "Gagal memuat kontributor",
       "view_profile": "Lihat profil GitHub {name}"
     },
     "get_involved": {
@@ -1019,35 +1015,17 @@
         "title": "Kontribusi",
         "description": "Bantu kami membangun pengalaman npm yang lebih baik.",
         "cta": "Lihat di GitHub"
-      },
-      "community": {
-        "title": "Gabung komunitas",
-        "description": "Obrolkan, ajukan pertanyaan, dan bagikan ide.",
-        "cta": "Gabung Discord"
-      },
-      "builders": {
-        "title": "Bantu membangun npmx",
-        "description": "Bergabunglah dengan para builder yang membentuk masa depan npmx.",
-        "cta": "Gabung Builders Discord"
-      },
-      "follow": {
-        "title": "Tetap terbarui",
-        "description": "Temukan kabar terbaru tentang npmx.",
-        "cta": "Ikuti di Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "hubungkan",
-    "account": "Akun",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Kelola paket & org",
-    "atmosphere_desc": "Fitur sosial & identitas",
-    "connect_npm_cli": "Hubungkan ke npm CLI",
-    "connect_atmosphere": "Hubungkan ke Atmosphere",
-    "connecting": "Menghubungkan...",
-    "ops": "{count} op | {count} op"
+    "account": "Akun"
   },
   "auth": {
     "modal": {
@@ -1059,7 +1037,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Hubungkan",
       "create_account": "Buat akun baru",
-      "connect_bluesky": "Hubungkan dengan Bluesky",
       "what_is_atmosphere": "Apa itu akun Atmosphere?",
       "atmosphere_explanation": "{npmx} menggunakan {atproto} untuk mendukung berbagai fitur sosialnya, memungkinkan pengguna memiliki data mereka sendiri dan menggunakan satu akun untuk semua aplikasi yang kompatibel. Setelah membuat akun, Anda dapat menggunakan aplikasi lain seperti {bluesky} dan {tangled} dengan akun yang sama.",
       "default_input_error": "Silakan masukkan handle, DID, atau URL PDS yang valid",
@@ -1116,6 +1093,9 @@
       "remove_package": "Hapus {package}",
       "packages_selected": "{count}/{max} paket dipilih.",
       "add_hint": "Tambah setidaknya 2 paket untuk dibandingkan."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(Tanpa Ketergantungan)",
@@ -1195,7 +1175,10 @@
         "vulnerabilities": {
           "label": "Kerentanan",
           "description": "Kerentanan keamanan yang diketahui"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Apa saja",
@@ -1269,30 +1252,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Personal Data Server (PDS) resmi berbasis AT Protocol untuk komunitas npmx.",
-    "join": {
-      "title": "Bergabung dengan Komunitas",
-      "description": "Baik Anda membuat akun pertama di atmosphere atau memigrasikan akun yang sudah ada, Anda tetap dapat bergabung di sini. Anda dapat memigrasikan akun Anda tanpa kehilangan handle, postingan, atau pengikut.",
-      "migrate": "Migrasi dengan PDS MOOver"
-    },
-    "server": {
-      "title": "Detail Server",
-      "location_label": "Lokasi:",
-      "location_value": "Nuremberg, Jerman",
-      "infrastructure_label": "Infrastruktur:",
-      "infrastructure_value": "Dihosting di Hetzner",
-      "privacy_label": "Privasi:",
-      "privacy_value": "Tunduk pada hukum perlindungan data ketat Uni Eropa",
-      "learn_more": "Pelajari bagaimana npmx menggunakan Atmosphere"
-    },
-    "community": {
-      "title": "Siapa saja di sini",
-      "description": "Beberapa dari {count} akun yang sudah menjadikan npmx.social sebagai rumah:",
-      "loading": "Memuat komunitas PDS...",
-      "error": "Gagal memuat komunitas PDS.",
-      "empty": "Tidak ada anggota komunitas untuk ditampilkan.",
-      "view_profile": "Lihat profil {handle}",
-      "new_accounts": "...ditambah {count} lainnya yang baru di atmosphere"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "kebijakan privasi",
@@ -1343,13 +1304,6 @@
       "li3": "Hal ini tidak mengumpulkan data antar website",
       "li4": "Semua data dikelompokan secara umum dan bersifat anonim",
       "p3": "Informasi yang dikumpulkan termasuk: URL halaman web, referrer, negara, tipe perangkat, browser, dan sistem operasi. Data ini tidak dapat digunakan untuk mengidentifikasi penguna secara individual."
-    },
-    "authenticated": {
-      "title": "Pengguna Terautentikasi",
-      "p1": "Saat Anda menghubungkan akun {bold} Anda ke npmx, kami menyimpan token akses OAuth Anda di dalam session cookie yang aman dan bersifat HTTP-only. Token ini hanya digunakan untuk mengautentikasi permintaan atas nama Anda.",
-      "bold": "Atmosphere",
-      "p2": "Kami tidak menyimpan kredensial Anda, dan kami tidak mengakses data apa pun di luar yang diperlukan untuk menyediakan fitur yang Anda gunakan. Anda dapat memutuskan koneksi akun Anda kapan saja melalui halaman {settings}.",
-      "settings": "pengaturan"
     },
     "data_retention": {
       "title": "Penyimpanan Data",
@@ -1448,8 +1402,7 @@
     },
     "return": {
       "title": "kami kembali!",
-      "p1": "kami kembali dengan energi penuh dan siap untuk dorongan terakhir menuju 3 Maret. {social} untuk pembaruan.",
-      "social_link": "ikuti kami di Bluesky"
+      "p1": "kami kembali dengan energi penuh dan siap untuk dorongan terakhir menuju 3 Maret. {social} untuk pembaruan."
     },
     "stats": {
       "contributors": "Kontributor",
@@ -1513,8 +1466,7 @@
     },
     "guidelines": {
       "title": "hanya catatan",
-      "message": "Aksesibilitas penting bagi kami, dan kami ingin Anda ikut mendukung visi ini. Saat menggunakan media yang disebutkan, pastikan kontras dengan latar cukup, dan jangan gunakan ukuran kurang dari 24px. Jika Anda membutuhkan sumber daya lain atau informasi tambahan tentang proyek ini, silakan hubungi kami di {link}.",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "Aksesibilitas penting bagi kami, dan kami ingin Anda ikut mendukung visi ini. Saat menggunakan media yang disebutkan, pastikan kontras dengan latar cukup, dan jangan gunakan ukuran kurang dari 24px. Jika Anda membutuhkan sumber daya lain atau informasi tambahan tentang proyek ini, silakan hubungi kami di {link}."
     }
   }
 }

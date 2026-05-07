@@ -16,9 +16,6 @@
     "blog": "博客",
     "docs": "文档",
     "source": "源码",
-    "social": "社交媒体",
-    "chat": "聊天",
-    "builders_chat": "构建者",
     "keyboard_shortcuts": "键盘快捷键",
     "brand": "品牌"
   },
@@ -48,7 +45,6 @@
     "label": "搜索 npm 包",
     "placeholder": "搜索包…",
     "button": "搜索",
-    "searching": "搜索中…",
     "found_packages": "共找到 {count} 个包",
     "found_packages_sorted": "正在排序前 {count} 个结果",
     "updating": "（更新中…）",
@@ -59,10 +55,6 @@
     "title_packages": "搜索包",
     "meta_description": "“{search}” 的搜索结果",
     "meta_description_packages": "搜索 npm 包",
-    "not_taken": "{name} 尚未被占用",
-    "claim_prompt": "在 npm 上声明",
-    "claim_button": "声明“{name}”",
-    "want_to_claim": "想要声明这个包名吗？",
     "start_typing": "输入以搜索软件包",
     "algolia_disclaimer": "由 Algolia 提供支持",
     "exact_match": "精确匹配",
@@ -93,7 +85,6 @@
     "empty_search_hint": "按 Enter 搜索 \"{query}\".",
     "current": "当前",
     "here": "你在这里",
-    "connected": "已连接",
     "state": {
       "on": "开启",
       "off": "关闭"
@@ -117,19 +108,8 @@
       "keyboard_shortcuts": "键盘快捷键",
       "help_translate": "帮助翻译"
     },
-    "connections": {
-      "npm_connect": "连接到 npm CLI",
-      "npm_connected": "npm CLI (~{username})",
-      "npm_disconnect": "断开 npm CLI",
-      "atmosphere_connect": "连接到 Atmosphere",
-      "atmosphere_connected": "atmosphere ({'@'}{handle})",
-      "atmosphere_disconnect": "断开 Atmosphere"
-    },
     "navigation": {
-      "home": "首页",
-      "packages": "包 (~{username})",
-      "orgs": "组织 (~{username})",
-      "profile": "个人资料 ({'@'}{handle})"
+      "home": "首页"
     },
     "links": {
       "external": "外部链接"
@@ -178,8 +158,6 @@
       "background_theme_changed": "背景主题设置为 {theme}.",
       "download_started": "下载 {package} tarball.",
       "copied_to_clipboard": "已复制到剪贴板。",
-      "npm_disconnected": "npm CLI 断开连接。",
-      "atmosphere_disconnected": "Atmosphere 断开连接。",
       "facets_all_selected": "已选择所有筛选条件",
       "facets_all_deselected": "已取消选择所有筛选条件。",
       "view_switched": "切换到 {view} 视图。",
@@ -238,7 +216,6 @@
     "data_source": {
       "label": "数据来源",
       "description": "选择 npmx 从哪里获取搜索数据。单独的包页面始终直接使用 npm registry。",
-      "npm": "npm Registry",
       "npm_description": "直接从 npm 官方注册表获取搜索、组织和用户列表。权威可靠，但速度可能较慢。",
       "algolia": "Algolia",
       "algolia_description": "使用 Algolia 来实现更快的搜索，适用于组织页和用户页。"
@@ -246,10 +223,6 @@
     "instant_search": "即时搜索",
     "instant_search_description": "导航到搜索页面并在输入时更新结果。",
     "relative_dates": "相对时间",
-    "include_types": "在安装时包含 {'@'}types",
-    "include_types_description": "为未提供类型定义的包自动添加 {'@'}types 包到安装命令",
-    "hide_platform_packages": "在搜索结果隐藏平台特定包",
-    "hide_platform_packages_description": "在搜索结果中隐藏平台特定的原生二进制包（例如 {'@'}esbuild/linux-x64）",
     "enable_graph_pulse_loop": "启用迷你图表脉冲循环效果",
     "enable_graph_pulse_loop_description": "在周下载量图表上启用持续脉冲动画。部分用户可能会觉得该动画效果易造成视觉干扰。",
     "theme": "主题",
@@ -356,9 +329,7 @@
     "not_found": "未找到个人资料",
     "not_found_message": "找不到 {handle} 的个人资料。",
     "invite": {
-      "message": "看起来他们还没有使用 npmx，去邀请一下？",
-      "share_button": "分享到 Bluesky",
-      "compose_text": "嗨 {'@'}{handle}！您用过 npmx.dev 吗？它是一个快速、现代且开源的 npm registry 浏览器。\nhttps://npmx.dev"
+      "message": "看起来他们还没有使用 npmx，去邀请一下？"
     }
   },
   "package": {
@@ -380,6 +351,7 @@
       "size": "安装大小增加了 {percent} (增大了 {size})",
       "deps": "{count} 个依赖项"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "你可能不需要这个依赖。",
       "native": "该功能自 Node.js {nodeVersion} 起已被内置，可直接使用 {replacement} 替代。",
@@ -557,6 +529,7 @@
       "current_tags": "当前标签",
       "no_match_filter": "没有与“{filter}”匹配的版本"
     },
+    "timeline": {},
     "dependencies": {
       "title": "依赖（{count} 个）",
       "list_label": "包依赖",
@@ -758,6 +731,9 @@
       "button": "下载",
       "tarball": "下载 Tarball 作为 .tar.gz"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -1111,25 +1087,14 @@
         "managers": "管理器"
       }
     },
-    "sponsors": {
-      "title": "赞助商"
-    },
-    "oss_partners": {
-      "title": "开源合作伙伴"
-    },
     "team": {
       "title": "团队",
       "governance": "治理",
-      "role_steward": "管理者",
-      "role_maintainer": "维护者",
       "sponsor": "赞助",
       "sponsor_aria": "在 GitHub 上赞助 {name}"
     },
     "contributors": {
-      "title": "{count} 位贡献者",
       "description": "npmx 是完全开源的，由令人惊叹的社区贡献者们共同构建。",
-      "loading": "正在加载贡献者…",
-      "error": "无法加载贡献者",
       "view_profile": "查看 {name} 的 GitHub 个人资料"
     },
     "get_involved": {
@@ -1138,35 +1103,17 @@
         "title": "作出贡献",
         "description": "帮助我们打造更好的 npm 体验。",
         "cta": "在 GitHub 上查看"
-      },
-      "community": {
-        "title": "加入社区",
-        "description": "聊天、提出问题并分享想法。",
-        "cta": "加入 Discord"
-      },
-      "builders": {
-        "title": "参与构建 npmx",
-        "description": "加入构建者团队，共同塑造 npmx 的未来。",
-        "cta": "加入构建者 Discord"
-      },
-      "follow": {
-        "title": "保持更新",
-        "description": "了解 npmx 的最新动态。",
-        "cta": "在 Bluesky 上关注"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "连接",
-    "account": "账户",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "管理包和组织",
-    "atmosphere_desc": "社交功能与数字身份",
-    "connect_npm_cli": "连接到 npm CLI",
-    "connect_atmosphere": "连接到 Atmosphere",
-    "connecting": "连接中…",
-    "ops": "{count} 个操作"
+    "account": "账户"
   },
   "auth": {
     "modal": {
@@ -1178,7 +1125,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "连接",
       "create_account": "创建一个新账户",
-      "connect_bluesky": "使用 Bluesky 账户登录",
       "what_is_atmosphere": "什么是 Atmosphere 账户？",
       "atmosphere_explanation": "{npmx} 使用 {atproto} 为其多项社交功能提供支持，让用户真正拥有自己的数据并使用一个账户登录所有兼容的应用。一旦创建账户，你便可以使用其他应用，例如 {bluesky} 和 {tangled}。",
       "default_input_error": "请输入有效的 handle、DID 或完整的 PDS URL",
@@ -1411,30 +1357,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "npmx 社区的官方 AT Protocol 个人数据服务器 (PDS)。",
-    "join": {
-      "title": "加入社区",
-      "description": "无论你是第一次在 Atmosphere 上创建账户，还是迁移现有账户，这里都是你的归属。你可以迁移当前账户，而不会丢失你的账户、帖子或关注者。",
-      "migrate": "使用 PDS MOOver 迁移"
-    },
-    "server": {
-      "title": "服务器详情",
-      "location_label": "位置：",
-      "location_value": "德国，纽伦堡",
-      "infrastructure_label": "基础设施：",
-      "infrastructure_value": "托管于 Hetzner",
-      "privacy_label": "隐私：",
-      "privacy_value": "受欧盟严格的数据保护法律约束",
-      "learn_more": "了解 npmx 如何使用 Atmosphere"
-    },
-    "community": {
-      "title": "谁在这里",
-      "description": "在 {count} 个已将 npmx.social 视为家的账户中，这里有一些：",
-      "loading": "正在加载 PDS 社区...",
-      "error": "加载 PDS 社区失败。",
-      "empty": "没有社区成员可显示。",
-      "view_profile": "查看 {handle} 的资料",
-      "new_accounts": "...以及 {count} 个新加入 Atmosphere 的账户"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "隐私政策",
@@ -1485,13 +1409,6 @@
       "li3": "它不跨网站追踪用户",
       "li4": "所有数据都是汇总和匿名的",
       "p3": "收集的唯一信息包括：页面 URL、引荐来源、国家/地区、设备类型、浏览器和操作系统。这些数据不能用于识别个人用户。"
-    },
-    "authenticated": {
-      "title": "已认证用户",
-      "p1": "当你将 {bold} 账户连接到 npmx 时，我们将你的 OAuth 访问令牌存储在安全的、仅限 HTTP 的会话 Cookie 中。此令牌仅用于代表你验证请求。",
-      "bold": "Atmosphere",
-      "p2": "我们不存储你的凭证，也不访问提供你使用的功能所必需的任何数据。你可以随时从 {settings} 页面断开账户连接。",
-      "settings": "设置"
     },
     "data_retention": {
       "title": "数据保留",
@@ -1590,8 +1507,7 @@
     },
     "return": {
       "title": "我们回来啦！",
-      "p1": "充完电回来，全力冲刺 3 月 3 日！想蹲最新消息就关注 {social}。",
-      "social_link": "去 Bluesky 上关注我们"
+      "p1": "充完电回来，全力冲刺 3 月 3 日！想蹲最新消息就关注 {social}。"
     },
     "stats": {
       "contributors": "贡献者",
@@ -1655,8 +1571,7 @@
     },
     "guidelines": {
       "title": "一点小提醒",
-      "message": "我们一直很在意无障碍体验，也非常希望你能和我们想得一样。使用这些素材时，记得让内容和背景有足够的对比度，尺寸也别小于 24 像素。如果还需要其他资源，或者想了解更多项目信息，随时通过 {link} 找我们。",
-      "discord_link_text": "chat.npmx.dev"
+      "message": "我们一直很在意无障碍体验，也非常希望你能和我们想得一样。使用这些素材时，记得让内容和背景有足够的对比度，尺寸也别小于 24 像素。如果还需要其他资源，或者想了解更多项目信息，随时通过 {link} 找我们。"
     }
   },
   "alt_logo_kawaii": "一个圆润可爱、色彩活泼的 npmx logo 版本。"

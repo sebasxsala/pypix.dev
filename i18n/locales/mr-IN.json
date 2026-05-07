@@ -16,9 +16,6 @@
     "blog": "ब्लॉग",
     "docs": "दस्तऐवज",
     "source": "स्रोत",
-    "social": "सोशल",
-    "chat": "चॅट",
-    "builders_chat": "बिल्डर्स",
     "keyboard_shortcuts": "कीबोर्ड शॉर्टकट"
   },
   "shortcuts": {
@@ -28,7 +25,6 @@
     "label": "npm पॅकेजेस शोधा",
     "placeholder": "पॅकेजेस शोधा...",
     "button": "शोधा",
-    "searching": "शोधत आहे...",
     "found_packages": "कोणतेही पॅकेज सापडले नाही | 1 पॅकेज सापडले | {count} पॅकेजेस सापडल्या",
     "found_packages_sorted": "कोणतेही परिणाम सापडले नाहीत | शीर्ष {count} परिणाम क्रमबद्ध करत आहे | शीर्ष {count} परिणाम क्रमबद्ध करत आहे",
     "updating": "(अद्यतनित करत आहे...)",
@@ -39,10 +35,6 @@
     "title_packages": "पॅकेजेस शोधा",
     "meta_description": "'{search}' साठी शोध परिणाम",
     "meta_description_packages": "npm पॅकेजेस शोधा",
-    "not_taken": "{name} उपलब्ध आहे",
-    "claim_prompt": "npm वर हे पॅकेज नाव दावा करा",
-    "claim_button": "\"{name}\" दावा करा",
-    "want_to_claim": "हे पॅकेज नाव दावा करायचे आहे का?",
     "start_typing": "पॅकेजेस शोधण्यासाठी टाइप करणे सुरू करा",
     "algolia_disclaimer": "Algolia द्वारे समर्थित",
     "exact_match": "अचूक",
@@ -58,6 +50,23 @@
     "instant_search_turn_on": "चालू करा",
     "instant_search_turn_off": "बंद करा",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "मुख्य",
@@ -111,7 +120,6 @@
     "data_source": {
       "label": "डेटा स्रोत",
       "description": "npmx ला शोध डेटा कुठून मिळवायचा ते निवडा. स्वतंत्र पॅकेज पृष्ठे नेहमी थेट npm नोंदणी वापरतात.",
-      "npm": "npm नोंदणी",
       "npm_description": "शोध, संस्था आणि वापरकर्ता सूची थेट अधिकृत npm नोंदणीतून आणते. अधिकृत, पण थोडे मंद असू शकते.",
       "algolia": "Algolia",
       "algolia_description": "जलद शोध, संस्था आणि वापरकर्ता पृष्ठांसाठी Algolia वापरते."
@@ -119,10 +127,6 @@
     "instant_search": "तात्काळ शोध",
     "instant_search_description": "शोध पृष्ठावर नेते आणि तुम्ही टाइप करताच परिणाम अद्यतनित करते.",
     "relative_dates": "सापेक्ष तारखा",
-    "include_types": "स्थापनेत {'@'}types समाविष्ट करा",
-    "include_types_description": "अनटाइप केलेल्या पॅकेजसाठी स्थापना आदेशात {'@'}types पॅकेज जोडा",
-    "hide_platform_packages": "शोधात प्लॅटफॉर्म-विशिष्ट पॅकेजेस लपवा",
-    "hide_platform_packages_description": "परिणामांमधून {'@'}esbuild/linux-x64 सारखी मूळ बायनरी पॅकेजेस लपवा",
     "enable_graph_pulse_loop": "लघु आलेखावर पल्स प्रभावाचा लूप सक्षम करा",
     "enable_graph_pulse_loop_description": "साप्ताहिक डाउनलोड आलेखावर सतत पल्स अॅनिमेशन सक्रिय करा. हे अॅनिमेशन काही वापरकर्त्यांसाठी विचलित करणारे असू शकते.",
     "theme": "थीम",
@@ -234,6 +238,7 @@
       "size": "इंस्टॉल आकार {percent} ने वाढला ({size} ने मोठा)",
       "deps": "{count} अधिक निर्भरता"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "कदाचित तुम्हाला या निर्भरतेची गरज नसेल.",
       "native": "हे {replacement} सह बदलले जाऊ शकते, Node {nodeVersion} पासून उपलब्ध आहे.",
@@ -411,6 +416,7 @@
       "current_tags": "सध्याचे टॅग्स",
       "no_match_filter": "{filter} शी जुळणारी कोणतीही आवृत्ती नाही"
     },
+    "timeline": {},
     "dependencies": {
       "title": "{count} निर्भरता | {count} निर्भरता",
       "list_label": "पॅकेज निर्भरता",
@@ -603,6 +609,9 @@
       "button": "डाउनलोड",
       "tarball": ".tar.gz स्वरूपात टारबॉल डाउनलोड करा"
     }
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -952,25 +961,14 @@
         "managers": "मॅनेजर्स आहेत"
       }
     },
-    "sponsors": {
-      "title": "प्रायोजक"
-    },
-    "oss_partners": {
-      "title": "OSS भागीदार"
-    },
     "team": {
       "title": "टीम",
       "governance": "शासन",
-      "role_steward": "विश्वस्त",
-      "role_maintainer": "देखभालकर्ता",
       "sponsor": "प्रायोजक",
       "sponsor_aria": "GitHub वर {name} ला प्रायोजित करा"
     },
     "contributors": {
-      "title": "... आणि आणखी {count} योगदानकर्ता | ... आणि आणखी {count} योगदानकर्ते",
       "description": "npmx पूर्णपणे मुक्त-स्रोत आहे आणि अप्रतिम योगदानकर्त्यांच्या समुदायाने तयार केले आहे. आमच्यात सामील व्हा आणि आपण नेहमी हवी होती ती npm ब्राउझिंगची अनुभूती एकत्र तयार करूया.",
-      "loading": "योगदानकर्ते लोड करत आहे...",
-      "error": "योगदानकर्ते लोड करण्यात अयशस्वी",
       "view_profile": "{name} चे GitHub प्रोफाइल पहा"
     },
     "get_involved": {
@@ -979,35 +977,17 @@
         "title": "योगदान द्या",
         "description": "आपल्याला हवा असलेला npm अनुभव तयार करण्यात आम्हाला मदत करा.",
         "cta": "GitHub वर पहा"
-      },
-      "community": {
-        "title": "समुदायात सामील व्हा",
-        "description": "गप्पा मारा, प्रश्न विचारा आणि कल्पना शेअर करा.",
-        "cta": "Discord मध्ये सामील व्हा"
-      },
-      "builders": {
-        "title": "npmx तयार करण्यात मदत करा",
-        "description": "npmx चे भविष्य घडवणाऱ्या बिल्डर्समध्ये सामील व्हा.",
-        "cta": "Builders Discord मध्ये सामील व्हा"
-      },
-      "follow": {
-        "title": "अद्ययावत रहा",
-        "description": "npmx बद्दलचे ताजे अपडेट्स जाणून घ्या.",
-        "cta": "Bluesky वर फॉलो करा"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "जोडा",
-    "account": "खाते",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "पॅकेजेस आणि संस्था व्यवस्थापित करा",
-    "atmosphere_desc": "सामाजिक वैशिष्ट्ये आणि ओळख",
-    "connect_npm_cli": "npm CLI शी जोडा",
-    "connect_atmosphere": "Atmosphere शी जोडा",
-    "connecting": "जोडत आहे...",
-    "ops": "{count} ऑपरेशन | {count} ऑपरेशन्स"
+    "account": "खाते"
   },
   "auth": {
     "modal": {
@@ -1019,7 +999,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "जोडा",
       "create_account": "नवीन खाते तयार करा",
-      "connect_bluesky": "Bluesky सह जोडा",
       "what_is_atmosphere": "Atmosphere खाते काय आहे?",
       "atmosphere_explanation": "{npmx} आपल्या अनेक सामाजिक वैशिष्ट्यांसाठी {atproto} वापरते, ज्यामुळे वापरकर्ते आपला डेटा स्वतःकडे ठेवू शकतात आणि सर्व सुसंगत अॅप्ससाठी एकच खाते वापरू शकतात. एकदा तुम्ही खाते तयार केले की, तुम्ही त्याच खात्याने {bluesky} आणि {tangled} सारखी इतर अॅप्सही वापरू शकता.",
       "default_input_error": "कृपया वैध हँडल, DID किंवा पूर्ण PDS URL प्रविष्ट करा",
@@ -1073,6 +1052,9 @@
       "remove_package": "{package} काढा",
       "packages_selected": "{count}/{max} पॅकेजेस निवडली.",
       "add_hint": "तुलनेसाठी किमान 2 पॅकेजेस जोडा."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(निर्भरता नाही)",
@@ -1148,7 +1130,10 @@
         "vulnerabilities": {
           "label": "असुरक्षितता",
           "description": "ज्ञात सुरक्षा असुरक्षितता"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "कोणतेही",
@@ -1222,30 +1207,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "npmx समुदायासाठी अधिकृत AT Protocol Personal Data Server (PDS).",
-    "join": {
-      "title": "समुदायात सामील व्हा",
-      "description": "तुम्ही atmosphere वर पहिले खाते तयार करत असाल किंवा विद्यमान खाते स्थलांतरित करत असाल, तुमचे येथे स्वागत आहे. तुमचे सध्याचे खाते तुम्ही तुमचे handle, पोस्ट्स किंवा followers न गमावता स्थलांतरित करू शकता.",
-      "migrate": "PDS MOOver सह स्थलांतर करा"
-    },
-    "server": {
-      "title": "सर्व्हर तपशील",
-      "location_label": "ठिकाण:",
-      "location_value": "न्युरेमबर्ग, जर्मनी",
-      "infrastructure_label": "पायाभूत सुविधा:",
-      "infrastructure_value": "Hetzner वर होस्ट केलेले",
-      "privacy_label": "गोपनीयता:",
-      "privacy_value": "कडक EU डेटा संरक्षण कायद्यांच्या अधीन",
-      "learn_more": "npmx Atmosphere कसा वापरतो ते जाणून घ्या"
-    },
-    "community": {
-      "title": "इथे कोण आहेत",
-      "description": "आधीच npmx.social ला आपले घर म्हणणाऱ्या {count} खात्यांपैकी काही:",
-      "loading": "PDS समुदाय लोड करत आहे...",
-      "error": "PDS समुदाय लोड करण्यात अयशस्वी.",
-      "empty": "दाखवण्यासाठी समुदाय सदस्य नाहीत.",
-      "view_profile": "{handle} चे प्रोफाइल पहा",
-      "new_accounts": "...आणि atmosphere मध्ये नवीन असलेली आणखी {count} खाती"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "गोपनीयता धोरण",
@@ -1296,13 +1259,6 @@
       "li3": "ते वापरकर्त्यांचा विविध वेबसाइट्सवर मागोवा घेत नाही",
       "li4": "सर्व डेटा एकत्रित आणि अनामिक केला जातो",
       "p3": "गोळा होणाऱ्या माहितीत फक्त हे समाविष्ट असते: पृष्ठ URL, referrer, देश/प्रदेश, डिव्हाइस प्रकार, ब्राउझर आणि ऑपरेटिंग सिस्टम. या डेटावरून स्वतंत्र वापरकर्त्यांची ओळख पटू शकत नाही."
-    },
-    "authenticated": {
-      "title": "प्रमाणित वापरकर्ते",
-      "p1": "तुम्ही तुमचे {bold} खाते npmx शी जोडल्यावर, आम्ही तुमचा OAuth access token सुरक्षित, HTTP-only सत्र कुकीमध्ये साठवतो. हा token फक्त तुमच्या वतीने विनंत्यांचे प्रमाणीकरण करण्यासाठी वापरला जातो.",
-      "bold": "Atmosphere",
-      "p2": "आम्ही तुमची credentials साठवत नाही आणि तुम्ही वापरत असलेल्या वैशिष्ट्यांसाठी जेवढा आवश्यक आहे त्यापेक्षा अधिक डेटा आम्ही वापरत नाही. तुम्ही {settings} पृष्ठावरून कधीही तुमचे खाते वियोग करू शकता.",
-      "settings": "सेटिंग्ज"
     },
     "data_retention": {
       "title": "डेटा जतन",
@@ -1393,5 +1349,12 @@
     "selection": "0 निवडले | 1 निवडले | {count} निवडले",
     "shortcut": "\"{key}\" दाबून क्रियांवर फोकस करा",
     "button_close_aria_label": "क्रिया पट्टी बंद करा"
+  },
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
   }
 }

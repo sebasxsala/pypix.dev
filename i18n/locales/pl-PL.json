@@ -16,9 +16,6 @@
     "blog": "blog",
     "docs": "dokumentacja",
     "source": "kod źródłowy",
-    "social": "social",
-    "chat": "czat",
-    "builders_chat": "czat twórców",
     "keyboard_shortcuts": "skróty klawiaturowe"
   },
   "shortcuts": {
@@ -42,7 +39,6 @@
     "label": "Szukaj pakietów npm",
     "placeholder": "szukaj pakietów...",
     "button": "szukaj",
-    "searching": "Wyszukiwanie...",
     "found_packages": "Nie znaleziono pakietów | Znaleziono 1 pakiet | Znaleziono {count} pakiety | Znaleziono {count} pakietów | Znaleziono {count} pakietów",
     "found_packages_sorted": "Nie znaleziono wyników | Sortowanie {count} wyniku | Sortowanie pierwszych {count} wyników",
     "updating": "(aktualizowanie...)",
@@ -53,10 +49,6 @@
     "title_packages": "szukaj pakietów",
     "meta_description": "Wyniki wyszukiwania dla '{search}'",
     "meta_description_packages": "Wyszukuj pakiety z rejestru npm",
-    "not_taken": "{name} jest wolne",
-    "claim_prompt": "Zajmij tę nazwę pakietu w npm",
-    "claim_button": "Zajmij \"{name}\"",
-    "want_to_claim": "Chcesz zająć tę nazwę pakietu?",
     "start_typing": "Zacznij pisać, aby wyszukać pakiety",
     "algolia_disclaimer": "Zasilane przez Algolia",
     "exact_match": "dokładne",
@@ -72,6 +64,23 @@
     "instant_search_turn_on": "włącz",
     "instant_search_turn_off": "wyłącz",
     "instant_search_advisory": "{label} {state} — {action}"
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "Główne",
@@ -124,7 +133,6 @@
     "data_source": {
       "label": "Źródło danych",
       "description": "Wybierz skąd npmx pobiera dane wyszukiwania. Strony pakietów zawsze używają danych bezpośrednio z npm.",
-      "npm": "Rejestr npm",
       "npm_description": "Wyniki wyszukiwania oraz strony organizacji i użytkowników pochodzą z oficjalnego rejestru npm. Oficjalne dane, może działać wolniej.",
       "algolia": "Algolia",
       "algolia_description": "Do wyszukiwania oraz stron organizacji i użytkowników używana jest Algolia."
@@ -132,10 +140,6 @@
     "instant_search": "Wyszukiwanie natychmiastowe",
     "instant_search_description": "Przekierowuje na stronę wyszukiwania i aktualizuje wyniki w trakcie pisania.",
     "relative_dates": "Daty względne",
-    "include_types": "Dodaj {'@'}types do instalacji",
-    "include_types_description": "Dodawaj pakiet {'@'}types do komend instalacji dla pakietów bez typów",
-    "hide_platform_packages": "Ukrywaj pakiety specyficzne dla platformy w wynikach",
-    "hide_platform_packages_description": "Ukrywaj natywne paczki binarne jak {'@'}esbuild/linux-x64 z wyników",
     "theme": "Motyw",
     "theme_light": "Jasny",
     "theme_dark": "Ciemny",
@@ -221,9 +225,7 @@
     "not_found": "Nie znaleziono profilu",
     "not_found_message": "Nie znaleziono profilu {handle}.",
     "invite": {
-      "message": "Wygląda na to, że jeszcze nie korzystają z npmx. Chcesz ich powiadomić?",
-      "share_button": "Podziel się na Bluesky",
-      "compose_text": "Hej {'@'}{handle}! Czy znasz już npmx.dev? To szybka, nowoczesna przeglądarka rejestru npm z otwartym kodem źródłowym.\nhttps://npmx.dev"
+      "message": "Wygląda na to, że jeszcze nie korzystają z npmx. Chcesz ich powiadomić?"
     }
   },
   "package": {
@@ -245,6 +247,7 @@
       "size": "Rozmiar instalacji wzrósł o {percent} ({size} więcej)",
       "deps": "{count} więcej zależności"
     },
+    "size_decrease": {},
     "replacement": {
       "title": "Możliwe, że nie potrzebujesz tej zależności.",
       "native": "Można to zastąpić {replacement}, dostępne od Node {nodeVersion}.",
@@ -404,6 +407,7 @@
         "general_description": "Wykres słupkowy pokazujący liczbę pobrań dla każdej z {version_count} {semver_grouping_mode} wersji pakietu {package_name}, {date_range_label} od wersji {first_version} do wersji {last_version}. Najczęściej pobieraną wersją jest {max_downloaded_version}, pobrana została {max_version_downloads} razy. {per_version_analysis}. {watermark}."
       }
     },
+    "timeline": {},
     "dependencies": {
       "title": "Zależności ({count})",
       "list_label": "Zależności pakietu",
@@ -440,6 +444,7 @@
       "show_less": "(pokaż mniej)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "Agregacja",
       "granularity_daily": "Dzienna",
       "granularity_weekly": "Tygodniowa",
@@ -589,6 +594,9 @@
       "mb": "{size} MB"
     },
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -933,25 +941,14 @@
         "managers": "menedżery pakietów"
       }
     },
-    "sponsors": {
-      "title": "Sponsorzy"
-    },
-    "oss_partners": {
-      "title": "Partnerzy OSS"
-    },
     "team": {
       "title": "Zespół",
       "governance": "Zarządzanie",
-      "role_steward": "steward",
-      "role_maintainer": "maintainer",
       "sponsor": "sponsor",
       "sponsor_aria": "Zasponsoruj {name} na GitHubie"
     },
     "contributors": {
-      "title": "Współtwórcy",
       "description": "npmx jest w pełni open source, tworzony przez niesamowitą społeczność współtwórców. Dołącz do nas — zbudujmy razem przeglądanie npm takie, jakiego zawsze chcieliśmy.",
-      "loading": "Ładowanie współtwórców...",
-      "error": "Nie udało się wczytać współtwórców",
       "view_profile": "Zobacz profil GitHub użytkownika {name}"
     },
     "get_involved": {
@@ -960,35 +957,17 @@
         "title": "Współtwórz",
         "description": "Pomóż nam zbudować lepsze doświadczenie npm.",
         "cta": "Zobacz na GitHub"
-      },
-      "community": {
-        "title": "Dołącz do społeczności",
-        "description": "Pogadaj, zadaj pytania i dziel się pomysłami.",
-        "cta": "Dołącz do Discorda"
-      },
-      "builders": {
-        "title": "Pomóż budować npmx",
-        "description": "Dołącz do twórców kształtujących przyszłość npmx.",
-        "cta": "Dołącz do Discorda dla twórców"
-      },
-      "follow": {
-        "title": "Bądź na bieżąco",
-        "description": "Sprawdź, co nowego w npmx.",
-        "cta": "Obserwuj na Bluesky"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "połącz",
-    "account": "Konto",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "Zarządzaj pakietami i organizacjami",
-    "atmosphere_desc": "Funkcje społecznościowe i tożsamość",
-    "connect_npm_cli": "Połącz z npm CLI",
-    "connect_atmosphere": "Połącz z Atmosphere",
-    "connecting": "Łączenie...",
-    "ops": "{count} operacja | {count} operacje | {count} operacji | {count} operacji | {count} operacji"
+    "account": "Konto"
   },
   "auth": {
     "modal": {
@@ -1000,7 +979,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "Połącz",
       "create_account": "Utwórz nowe konto",
-      "connect_bluesky": "Połącz z Bluesky",
       "what_is_atmosphere": "Czym jest konto Atmosphere?",
       "atmosphere_explanation": "{npmx} używa {atproto} do zasilania wielu funkcji społecznościowych, umożliwiając użytkownikom posiadanie swoich danych i korzystanie z jednego konta we wszystkich kompatybilnych aplikacjach. Gdy utworzysz konto, możesz używać innych aplikacji, takich jak {bluesky} i {tangled}, z tym samym kontem.",
       "default_input_error": "Wprowadź poprawny identyfikator, DID lub pełny adres do PDS",
@@ -1053,6 +1031,9 @@
       "remove_package": "Usuń {package}",
       "packages_selected": "Wybrano pakiety: {count}/{max}.",
       "add_hint": "Dodaj co najmniej 2 pakiety do porównania."
+    },
+    "scatter_chart": {
+      "copy_alt": {}
     },
     "no_dependency": {
       "label": "(brak zależności)",
@@ -1128,7 +1109,10 @@
         "vulnerabilities": {
           "label": "Podatności",
           "description": "Znane luki bezpieczeństwa"
-        }
+        },
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {
         "any": "Dowolne",
@@ -1183,30 +1167,8 @@
   "pds": {
     "title": "npmx.social",
     "meta_description": "Oficjalny AT Protocol Personal Data Server (PDS) dla społeczności npmx.",
-    "join": {
-      "title": "Dołącz do społeczności",
-      "description": "Niezależnie od tego, czy tworzysz nowe konto w Atmosphere, czy migrujesz istniejące - pasujesz tutaj. Możesz zmigrować konto, zachowując swój nick, posty oraz obserwujących.",
-      "migrate": "Zmigruj przy pomocy PDS MOOver"
-    },
-    "server": {
-      "title": "Szczegóły serwera",
-      "location_label": "Lokalizacja:",
-      "location_value": "Norymberga, Niemcy",
-      "infrastructure_label": "Infrastruktura:",
-      "infrastructure_value": "Hostowane na serwerach Hetzner",
-      "privacy_label": "Prywatność:",
-      "privacy_value": "Zgodnie z przepisami UE o ochronie danych",
-      "learn_more": "Dowiedz się jak npmx korzysta z Atmosphere"
-    },
-    "community": {
-      "title": "Kto tu jest",
-      "description": "Jedne z {count} kont, które już mogą nazywać npmx.social swoim domem:",
-      "loading": "Wczytywanie danych społeczności PDS...",
-      "error": "Nie udało się wczytać danych społeczności PDS.",
-      "empty": "Brak członków do wyświetlenia.",
-      "view_profile": "Zobacz profil {handle}",
-      "new_accounts": "...plus {count} więcej, którzy są nowi w środowisku atmosphere"
-    }
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "title": "polityka prywatności",
@@ -1257,13 +1219,6 @@
       "li3": "Nie śledzi użytkowników między stronami",
       "li4": "Wszystkie dane są agregowane i anonimizowane",
       "p3": "Zbierane informacje obejmują wyłącznie: adresy URL stron, stronę odsyłającą, kraj/region, typ urządzenia, przeglądarkę i system operacyjny. Tych danych nie można użyć do identyfikacji pojedynczych użytkowników."
-    },
-    "authenticated": {
-      "title": "Użytkownicy uwierzytelnieni",
-      "p1": "Gdy łączysz konto {bold} z npmx, przechowujemy token dostępu OAuth w bezpiecznym pliku cookie sesji HTTP-only. Ten token służy wyłącznie do uwierzytelniania żądań w Twoim imieniu.",
-      "bold": "Atmosphere",
-      "p2": "Nie przechowujemy Twoich danych logowania i nie uzyskujemy dostępu do danych wykraczających poza to, co jest niezbędne do działania używanych funkcji. W każdej chwili możesz odłączyć konto na stronie {settings}.",
-      "settings": "ustawień"
     },
     "data_retention": {
       "title": "Przechowywanie danych",
@@ -1321,5 +1276,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }

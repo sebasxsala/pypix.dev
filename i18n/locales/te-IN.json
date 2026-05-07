@@ -14,9 +14,7 @@
   "footer": {
     "about": "మా గురించి సమాచారం",
     "docs": "డాక్యుమెంటేషన్",
-    "source": "మూలం",
-    "social": "సోషల్",
-    "chat": "చాట్"
+    "source": "మూలం"
   },
   "shortcuts": {
     "section": {}
@@ -25,14 +23,9 @@
     "label": "npm ప్యాకేజ్‌ను శోధించండి",
     "placeholder": "ప్యాకేజ్‌ను శోధించండి...",
     "button": "శోధించండి",
-    "searching": "శోధిస్తున్నారు...",
     "found_packages": "ప్యాకేజ్ కనుగొనబడలేదు | 1 ప్యాకేజ్ కనుగొనబడింది | {count} ప్యాకేజ్‌లు కనుగొనబడ్డాయి",
     "updating": "(నవీకరిస్తున్నారు...)",
     "no_results": "\"{query}\" కోసం ప్యాకేజ్‌లు కనుగొనబడలేదు",
-    "not_taken": "{name} అందుబాటులో ఉంది",
-    "claim_prompt": "npm లో ఈ ప్యాకేజ్ పేరును క్లెయిమ్ చేయండి",
-    "claim_button": "\"{name}\" క్లెయిమ్ చేయండి",
-    "want_to_claim": "ఈ ప్యాకేజ్ పేరును క్లెయిమ్ చేయాలనుకుంటున్నారా?",
     "start_typing": "ప్యాకేజ్‌ను శోధించడానికి టైప్ చేయడం ప్రారంభించండి",
     "exact_match": "ఖచ్చితమైన",
     "suggestion": {
@@ -41,6 +34,23 @@
       "view_user_packages": "ఈ వినియోగదారు ప్యాకేజ్‌లను వీక్షించండి",
       "view_org_packages": "ఈ సంస్థ ప్యాకేజ్‌లను వీక్షించండి"
     }
+  },
+  "command_palette": {
+    "state": {},
+    "groups": {},
+    "actions": {},
+    "connections": {},
+    "navigation": {},
+    "links": {},
+    "package_links": {},
+    "theme": {},
+    "package": {},
+    "package_actions": {},
+    "code": {},
+    "diff": {},
+    "version": {},
+    "status": {},
+    "announcements": {}
   },
   "nav": {
     "main_navigation": "ప్రధాన",
@@ -69,10 +79,6 @@
     },
     "data_source": {},
     "relative_dates": "సాపేక్ష తేదీలు",
-    "include_types": "ఇన్‌స్టాల్‌లో {'@'}types చేర్చండి",
-    "include_types_description": "టైప్ చేయని ప్యాకేజ్‌కు ఇన్‌స్టాల్ కమాండ్‌లో {'@'}types ప్యాకేజ్‌ను జోడించండి",
-    "hide_platform_packages": "శోధనలో ప్లాట్‌ఫార్మ్-నిర్దిష్ట ప్యాకేజ్‌లను దాచండి",
-    "hide_platform_packages_description": "ఫలితాల నుండి {'@'}esbuild/linux-x64 వంటి నేటివ్ బైనరీ ప్యాకేజ్‌లను దాచండి",
     "theme": "థీమ్",
     "theme_light": "లైట్",
     "theme_dark": "డార్క్",
@@ -137,6 +143,7 @@
       "no_reason": "కారణం అందించబడలేదు"
     },
     "size_increase": {},
+    "size_decrease": {},
     "replacement": {
       "title": "మీకు ఈ డిపెండెన్సీ అవసరం లేకపోవచ్చు.",
       "native": "దీనిని {replacement} తో భర్తీ చేయవచ్చు, ఇది Node {nodeVersion} నుండి అందుబాటులో ఉంది.",
@@ -234,6 +241,7 @@
       "view_all": "{count} వెర్షన్‌లను వీక్షించండి | అన్ని {count} వెర్షన్‌లను వీక్షించండి",
       "copy_alt": {}
     },
+    "timeline": {},
     "dependencies": {
       "title": "డిపెండెన్సీలు ({count})",
       "list_label": "ప్యాకేజ్ డిపెండెన్సీలు",
@@ -269,6 +277,7 @@
       "show_less": "(తక్కువ చూపించండి)"
     },
     "trends": {
+      "chart_assistive_text": {},
       "granularity": "గ్రాన్యులారిటీ",
       "granularity_daily": "రోజువారీ",
       "granularity_weekly": "వారపు",
@@ -370,6 +379,9 @@
     },
     "size": {},
     "download": {}
+  },
+  "leaderboard": {
+    "likes": {}
   },
   "connector": {
     "modal": {
@@ -706,10 +718,7 @@
     "oss_partners": {},
     "team": {},
     "contributors": {
-      "title": "కంట్రిబ్యూటర్‌లు",
       "description": "npmx పూర్తిగా ఓపెన్ సోర్స్, అద్భుతమైన కంట్రిబ్యూటర్‌ల కమ్యూనిటీ ద్వారా నిర్మించబడింది. మాతో చేరండి మరియు మేము ఎప్పుడూ కోరుకున్న npm బ్రౌజింగ్ అనుభవాన్ని కలిసి సృష్టిద్దాం.",
-      "loading": "కంట్రిబ్యూటర్‌లు లోడ్ అవుతున్నారు...",
-      "error": "కంట్రిబ్యూటర్‌లను లోడ్ చేయడంలో విఫలమైంది",
       "view_profile": "{name} యొక్క GitHub ప్రొఫైల్‌ను వీక్షించండి"
     },
     "get_involved": {
@@ -718,31 +727,17 @@
         "title": "కంట్రిబ్యూట్ చేయండి",
         "description": "మెరుగైన npm అనుభవాన్ని సృష్టించడంలో మాకు సహాయం చేయండి.",
         "cta": "GitHub లో వీక్షించండి"
-      },
-      "community": {
-        "title": "కమ్యూనిటీతో చేరండి",
-        "description": "చాట్ చేయండి, ప్రశ్నలు అడగండి, మరియు ఆలోచనలను పంచుకోండి.",
-        "cta": "Discord లో చేరండి"
-      },
-      "builders": {},
-      "follow": {
-        "title": "నవీకరణలతో ఉండండి",
-        "description": "npmx లో తాజా సమాచారాన్ని పొందండి.",
-        "cta": "Bluesky లో ఫాలో చేయండి"
       }
     }
   },
+  "pypi_admin": {
+    "actions": {},
+    "descriptions": {},
+    "guide": {}
+  },
   "account_menu": {
     "connect": "కనెక్ట్ చేయండి",
-    "account": "ఖాతా",
-    "npm_cli": "npm CLI",
-    "atmosphere": "Atmosphere",
-    "npm_cli_desc": "ప్యాకేజ్‌లు మరియు orgs నిర్వహించండి",
-    "atmosphere_desc": "సోషల్ ఫీచర్‌లు మరియు గుర్తింపు",
-    "connect_npm_cli": "npm CLI తో కనెక్ట్ చేయండి",
-    "connect_atmosphere": "Atmosphere తో కనెక్ట్ చేయండి",
-    "connecting": "కనెక్ట్ అవుతున్నది...",
-    "ops": "{count} op | {count} ops"
+    "account": "ఖాతా"
   },
   "auth": {
     "modal": {
@@ -754,7 +749,6 @@
       "handle_placeholder": "alice.npmx.social",
       "connect": "కనెక్ట్ చేయండి",
       "create_account": "కొత్త ఖాతాను సృష్టించండి",
-      "connect_bluesky": "Bluesky తో కనెక్ట్ చేయండి",
       "what_is_atmosphere": "Atmosphere ఖాతా అంటే ఏమిటి?",
       "atmosphere_explanation": "{npmx} దాని అనేక సోషల్ ఫీచర్‌లను నడపడానికి {atproto} ఉపయోగిస్తుంది, ఇది వినియోగదారులు తమ డేటా యొక్క యజమానులుగా మారడానికి మరియు అన్ని అనుకూల అప్లికేషన్‌ల కోసం ఒక ఖాతాను ఉపయోగించడానికి అనుమతిస్తుంది. మీరు ఖాతాను సృష్టించిన తర్వాత, మీరు {bluesky} మరియు {tangled} వంటి ఇతర అప్లికేషన్‌లను అదే ఖాతాతో ఉపయోగించవచ్చు."
     }
@@ -803,6 +797,9 @@
       "packages_selected": "{count}/{max} ప్యాకేజ్‌లు ఎంచుకోబడ్డాయి.",
       "add_hint": "పోల్చడానికి కనీసం 2 ప్యాకేజ్‌లను జోడించండి."
     },
+    "scatter_chart": {
+      "copy_alt": {}
+    },
     "no_dependency": {},
     "facets": {
       "all": "అన్నీ",
@@ -829,7 +826,10 @@
         "types": {},
         "moduleFormat": {},
         "license": {},
-        "vulnerabilities": {}
+        "vulnerabilities": {},
+        "githubStars": {},
+        "githubIssues": {},
+        "createdAt": {}
       },
       "values": {},
       "trends": {}
@@ -839,9 +839,8 @@
     "filter": {}
   },
   "pds": {
-    "join": {},
-    "server": {},
-    "community": {}
+    "status": {},
+    "moover": {}
   },
   "privacy_policy": {
     "cookies": {
@@ -866,5 +865,20 @@
   "translation_status": {
     "table": {}
   },
-  "action_bar": {}
+  "vacations": {
+    "what": {},
+    "meantime": {},
+    "return": {},
+    "stats": {
+      "subtitle": {}
+    }
+  },
+  "action_bar": {},
+  "logo_menu": {},
+  "brand": {
+    "logos": {},
+    "customize": {},
+    "typography": {},
+    "guidelines": {}
+  }
 }
