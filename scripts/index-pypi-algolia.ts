@@ -114,6 +114,19 @@ interface IndexOptions {
   concurrency?: number
 }
 
+interface ProjectSelectionOptions {
+  targetRecords?: number
+  seedProjects?: PypiSimpleProject[]
+  mode?: 'balanced' | 'refresh-listed'
+}
+
+interface RetryOptions {
+  retries?: number
+  baseDelayMs?: number
+  jitterMs?: number
+  sleep?: (delayMs: number) => Promise<void>
+}
+
 interface AlgoliaIndexClient {
   saveObjects: (options: {
     indexName: string
@@ -261,14 +274,6 @@ function getOptionalNumberEnv(name: string): number | undefined {
   return Number.isFinite(value) && value > 0 ? value : undefined
 }
 
-function getProjectSeedEnv(): PypiSimpleProject[] | undefined {
-  const names = process.env.PYPI_INDEX_PROJECTS?.split(',')
-    .map(name => name.trim())
-    .filter(Boolean)
-
-  return names?.length ? names.map(name => ({ name })) : undefined
-}
-
 function getProjectSeedFile(): PypiSimpleProject[] | undefined {
   const path = process.env.PYPI_INDEX_PROJECTS_FILE || 'scripts/pypi-seed-packages.txt'
   if (!existsSync(path)) return undefined
@@ -279,6 +284,126 @@ function getProjectSeedFile(): PypiSimpleProject[] | undefined {
     .filter(line => line && !line.startsWith('#'))
 
   return names.length ? names.map(name => ({ name })) : undefined
+}
+
+function sleep(delayMs: number) {
+  return new Promise(resolve => setTimeout(resolve, delayMs))
+}
+
+function getErrorStatus(error: unknown): number | undefined {
+  const status = (error as { status?: unknown })?.status
+  return typeof status === 'number' ? status : undefined
+}
+
+function getRetryAfterDelay(error: unknown): number | undefined {
+  const retryAfter = (error as { retryAfter?: unknown })?.retryAfter
+  if (typeof retryAfter !== 'string') return undefined
+
+  const seconds = Number.parseInt(retryAfter, 10)
+  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000
+
+  const timestamp = Date.parse(retryAfter)
+  if (!Number.isFinite(timestamp)) return undefined
+
+  return Math.max(0, timestamp - Date.now())
+}
+
+function isRetryableIndexerError(error: unknown): boolean {
+  const status = getErrorStatus(error)
+  if (status === undefined) return true
+  return status === 408 || status === 429 || status >= 500
+}
+
+export async function withPypiIndexerRetry<T>(
+  operation: () => Promise<T>,
+  options: RetryOptions = {},
+): Promise<T> {
+  const retries = options.retries ?? 4
+  const baseDelayMs = options.baseDelayMs ?? 1000
+  const jitterMs = options.jitterMs ?? 250
+  const sleepFn = options.sleep ?? sleep
+
+  let attempt = 0
+  while (true) {
+    try {
+      return await operation()
+    } catch (error) {
+      if (attempt >= retries || !isRetryableIndexerError(error)) throw error
+
+      const retryAfterDelay = getRetryAfterDelay(error)
+      const backoffDelay = baseDelayMs * 2 ** attempt
+      const jitter = jitterMs > 0 ? Math.floor(Math.random() * jitterMs) : 0
+      await sleepFn(retryAfterDelay ?? backoffDelay + jitter)
+      attempt += 1
+    }
+  }
+}
+
+function getProjectByNormalizedName(projects: PypiSimpleProject[]) {
+  const byName = new Map<string, PypiSimpleProject>()
+  for (const project of projects) {
+    const normalizedName = normalizePypiSearchTerm(project.name)
+    if (normalizedName && !byName.has(normalizedName)) byName.set(normalizedName, project)
+  }
+  return byName
+}
+
+function getBucketKey(normalizedName: string) {
+  const firstChar = normalizedName[0]
+  return firstChar && /[a-z0-9]/.test(firstChar) ? firstChar : '#'
+}
+
+export function selectPypiProjectsForAlgolia(
+  projects: PypiSimpleProject[],
+  options: ProjectSelectionOptions = {},
+): PypiSimpleProject[] {
+  const targetRecords = options.targetRecords ?? projects.length
+  const seedProjects = options.seedProjects ?? []
+  const mode = options.mode ?? 'balanced'
+  const allProjectsByName = getProjectByNormalizedName(projects)
+
+  if (mode === 'refresh-listed') {
+    return dedupePypiProjectsForAlgolia(seedProjects)
+      .slice(0, targetRecords)
+      .map(project => allProjectsByName.get(project.normalizedName) ?? { name: project.name })
+  }
+
+  const selected: PypiSimpleProject[] = []
+  const seen = new Set<string>()
+
+  for (const project of dedupePypiProjectsForAlgolia(seedProjects)) {
+    if (selected.length >= targetRecords) break
+    const resolvedProject = allProjectsByName.get(project.normalizedName) ?? { name: project.name }
+    selected.push(resolvedProject)
+    seen.add(project.normalizedName)
+  }
+
+  const buckets = new Map<string, PypiSimpleProject[]>()
+  for (const project of dedupePypiProjectsForAlgolia(projects)) {
+    if (seen.has(project.normalizedName)) continue
+
+    const key = getBucketKey(project.normalizedName)
+    const bucket = buckets.get(key) ?? []
+    bucket.push({ name: project.name })
+    buckets.set(key, bucket)
+  }
+
+  const keys = [...buckets.keys()].sort()
+  let bucketIndex = 0
+  while (selected.length < targetRecords && keys.length > 0) {
+    const key = keys[bucketIndex]
+    const bucket = buckets.get(key)
+    const project = bucket?.shift()
+    if (project) {
+      selected.push(project)
+      seen.add(normalizePypiSearchTerm(project.name))
+    }
+    if (!bucket?.length) keys.splice(bucketIndex, 1)
+    else bucketIndex += 1
+    if (bucketIndex >= keys.length) bucketIndex = 0
+  }
+
+  return selected
 }
 
 async function mapWithConcurrency<T, R>(
@@ -338,26 +463,48 @@ export async function buildPypiAlgoliaIndexBatch(
 }
 
 async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
-  const response = await fetch(`${PYPI_SIMPLE_API}/`, {
-    headers: {
-      'Accept': 'application/vnd.pypi.simple.v1+json',
-      'User-Agent': 'pypix.dev Algolia indexer',
-    },
+  const response = await withPypiIndexerRetry(async () => {
+    const response = await fetch(`${PYPI_SIMPLE_API}/`, {
+      headers: {
+        'Accept': 'application/vnd.pypi.simple.v1+json',
+        'User-Agent': 'pypix.dev Algolia indexer',
+      },
+    })
+    if (!response.ok) {
+      const error = new Error(`Failed to fetch PyPI Simple index: ${response.status}`) as Error & {
+        status?: number
+        retryAfter?: string | null
+      }
+      error.status = response.status
+      error.retryAfter = response.headers.get('Retry-After')
+      throw error
+    }
+    return response
   })
-  if (!response.ok) throw new Error(`Failed to fetch PyPI Simple index: ${response.status}`)
 
   const body = (await response.json()) as { projects?: PypiSimpleProject[] }
   return body.projects ?? []
 }
 
 async function fetchPypiProject(name: string): Promise<PypiProjectJson> {
-  const response = await fetch(`${PYPI_JSON_API}/${encodeURIComponent(name)}/json`, {
-    headers: {
-      'Accept': 'application/json',
-      'User-Agent': 'pypix.dev Algolia indexer',
-    },
+  const response = await withPypiIndexerRetry(async () => {
+    const response = await fetch(`${PYPI_JSON_API}/${encodeURIComponent(name)}/json`, {
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'pypix.dev Algolia indexer',
+      },
+    })
+    if (!response.ok) {
+      const error = new Error(`Failed to fetch ${name}: ${response.status}`) as Error & {
+        status?: number
+        retryAfter?: string | null
+      }
+      error.status = response.status
+      error.retryAfter = response.headers.get('Retry-After')
+      throw error
+    }
+    return response
   })
-  if (!response.ok) throw new Error(`Failed to fetch ${name}: ${response.status}`)
 
   return (await response.json()) as PypiProjectJson
 }
@@ -370,28 +517,51 @@ async function run() {
   const indexName = process.env.ALGOLIA_INDEX_NAME || ALGOLIA_INDEX_NAME
   const batchSize = getNumberEnv('PYPI_INDEX_BATCH_SIZE', 100)
   const concurrency = getNumberEnv('PYPI_INDEX_CONCURRENCY', 5)
-  const maxProjects = getOptionalNumberEnv('PYPI_INDEX_MAX_PROJECTS')
-  const seededProjects = getProjectSeedEnv() ?? getProjectSeedFile()
+  const saveBatchSize = getNumberEnv('PYPI_INDEX_SAVE_BATCH_SIZE', 1000)
+  const batchDelayMs = getNumberEnv('PYPI_INDEX_BATCH_DELAY_MS', 0)
+  const targetRecords = getOptionalNumberEnv('PYPI_INDEX_TARGET_RECORDS')
+  const selectionMode =
+    process.env.PYPI_INDEX_MODE === 'refresh-listed' ? 'refresh-listed' : 'balanced'
+  const waitForTasks = process.env.PYPI_INDEX_WAIT_FOR_TASKS !== 'false'
+  const seededProjects = getProjectSeedFile()
 
   if (!appId || !adminApiKey) {
     throw new Error('ALGOLIA_APP_ID and ALGOLIA_ADMIN_API_KEY are required')
   }
 
   const client = algoliasearch(appId, adminApiKey) as AlgoliaIndexClient
-  await client.setSettings({ indexName, indexSettings: getPypiAlgoliaIndexSettings() })
+  await withPypiIndexerRetry(() =>
+    client.setSettings({ indexName, indexSettings: getPypiAlgoliaIndexSettings() }),
+  )
 
-  const projects = seededProjects ?? (await fetchPypiSimpleProjects())
-  const selectedProjects = maxProjects ? projects.slice(0, maxProjects) : projects
+  const projects = await fetchPypiSimpleProjects()
+  const selectedProjects = selectPypiProjectsForAlgolia(projects, {
+    targetRecords: targetRecords ?? projects.length,
+    seedProjects: seededProjects,
+    mode: selectionMode,
+  })
+
+  console.log(
+    `Indexing ${selectedProjects.length} projects into ${indexName} with ${selectionMode} mode`,
+  )
 
   for (let offset = 0; offset < selectedProjects.length; offset += batchSize) {
     const batch = selectedProjects.slice(offset, offset + batchSize)
     const records = await buildPypiAlgoliaIndexBatch(batch, fetchPypiProject, { concurrency })
     if (records.length > 0) {
-      await client.saveObjects({ indexName, objects: records, batchSize: 1000, waitForTasks: true })
+      await withPypiIndexerRetry(() =>
+        client.saveObjects({
+          indexName,
+          objects: records,
+          batchSize: saveBatchSize,
+          waitForTasks,
+        }),
+      )
     }
     console.log(
       `Indexed ${Math.min(offset + batch.length, selectedProjects.length)} / ${selectedProjects.length}`,
     )
+    if (batchDelayMs > 0 && offset + batchSize < selectedProjects.length) await sleep(batchDelayMs)
   }
 }
 

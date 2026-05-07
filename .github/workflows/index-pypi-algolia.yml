@@ -2,13 +2,21 @@ name: index-pypi-algolia
 
 on:
   schedule:
-    - cron: '17 3 * * *'
+    - cron: '17 3 * * 0'
   workflow_dispatch:
     inputs:
-      max-projects:
-        description: 'Optional cap for beta indexing runs'
+      target-records:
+        description: 'Optional target record count for indexing runs'
         required: false
         type: string
+      mode:
+        description: 'Indexing mode: balanced or refresh-listed'
+        required: false
+        default: balanced
+        type: choice
+        options:
+          - balanced
+          - refresh-listed
 
 permissions:
   contents: read
@@ -17,6 +25,10 @@ jobs:
   index:
     name: Index PyPI packages in Algolia
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    concurrency:
+      group: index-pypi-algolia
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -38,6 +50,9 @@ jobs:
           ALGOLIA_INDEX_NAME: ${{ vars.ALGOLIA_INDEX_NAME || 'pypix_packages' }}
           PYPI_INDEX_BATCH_SIZE: ${{ vars.PYPI_INDEX_BATCH_SIZE || '100' }}
           PYPI_INDEX_CONCURRENCY: ${{ vars.PYPI_INDEX_CONCURRENCY || '5' }}
-          PYPI_INDEX_MAX_PROJECTS: ${{ github.event.inputs.max-projects || vars.PYPI_INDEX_MAX_PROJECTS || '1000' }}
-          PYPI_INDEX_PROJECTS: ${{ vars.PYPI_INDEX_PROJECTS }}
+          PYPI_INDEX_TARGET_RECORDS: ${{ inputs['target-records'] || vars.PYPI_INDEX_TARGET_RECORDS || '90000' }}
+          PYPI_INDEX_MODE: ${{ inputs.mode || vars.PYPI_INDEX_MODE || 'balanced' }}
           PYPI_INDEX_PROJECTS_FILE: ${{ vars.PYPI_INDEX_PROJECTS_FILE || 'scripts/pypi-seed-packages.txt' }}
+          PYPI_INDEX_SAVE_BATCH_SIZE: ${{ vars.PYPI_INDEX_SAVE_BATCH_SIZE || '1000' }}
+          PYPI_INDEX_BATCH_DELAY_MS: ${{ vars.PYPI_INDEX_BATCH_DELAY_MS || '0' }}
+          PYPI_INDEX_WAIT_FOR_TASKS: ${{ vars.PYPI_INDEX_WAIT_FOR_TASKS || 'true' }}

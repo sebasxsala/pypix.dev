@@ -4,8 +4,13 @@ vi.stubGlobal('defineCachedFunction', (fn: Function) => fn)
 vi.stubGlobal('PYPI_JSON_API', 'https://pypi.org/pypi')
 vi.stubGlobal('PYPI_SIMPLE_API', 'https://pypi.org/simple')
 
-const { buildPypiAlgoliaIndexBatch, buildPypiAlgoliaRecord, getPypiAlgoliaIndexSettings } =
-  await import('~~/scripts/index-pypi-algolia')
+const {
+  buildPypiAlgoliaIndexBatch,
+  buildPypiAlgoliaRecord,
+  getPypiAlgoliaIndexSettings,
+  selectPypiProjectsForAlgolia,
+  withPypiIndexerRetry,
+} = await import('~~/scripts/index-pypi-algolia')
 
 describe('index-pypi-algolia script helpers', () => {
   it('dedupes simple projects, hydrates metadata, and builds Algolia records', async () => {
@@ -74,5 +79,77 @@ describe('index-pypi-algolia script helpers', () => {
     expect(record.keywords).toHaveLength(24)
     expect(record.classifiers).toHaveLength(40)
     expect(Object.keys(record.projectUrls)).toHaveLength(16)
+  })
+
+  it('selects seeded packages first and fills the target with balanced prefix buckets', () => {
+    const projects = [
+      { name: 'requests' },
+      { name: 'alpha-one' },
+      { name: 'alpha-two' },
+      { name: 'alpha-three' },
+      { name: 'beta-one' },
+      { name: 'beta-two' },
+      { name: 'beta-three' },
+      { name: 'zope-interface' },
+      { name: 'zope-event' },
+    ]
+
+    const selected = selectPypiProjectsForAlgolia(projects, {
+      targetRecords: 7,
+      seedProjects: [{ name: 'requests' }, { name: 'zope.interface' }],
+      mode: 'balanced',
+    })
+
+    expect(selected.map(project => project.name)).toEqual([
+      'requests',
+      'zope-interface',
+      'alpha-one',
+      'beta-one',
+      'zope-event',
+      'alpha-two',
+      'beta-two',
+    ])
+  })
+
+  it('refreshes only the explicit project list when requested', () => {
+    const selected = selectPypiProjectsForAlgolia(
+      [{ name: 'requests' }, { name: 'fastapi' }, { name: 'django' }],
+      {
+        targetRecords: 90_000,
+        seedProjects: [{ name: 'Requests' }, { name: 'missing-package' }],
+        mode: 'refresh-listed',
+      },
+    )
+
+    expect(selected.map(project => project.name)).toEqual(['requests', 'missing-package'])
+  })
+
+  it('retries retryable indexer failures with exponential delays', async () => {
+    const delays: number[] = []
+    let attempts = 0
+
+    const result = await withPypiIndexerRetry(
+      async () => {
+        attempts += 1
+        if (attempts < 3) {
+          const error = new Error('rate limited') as Error & { status?: number }
+          error.status = 429
+          throw error
+        }
+        return 'ok'
+      },
+      {
+        retries: 3,
+        baseDelayMs: 100,
+        jitterMs: 0,
+        sleep: async delay => {
+          delays.push(delay)
+        },
+      },
+    )
+
+    expect(result).toBe('ok')
+    expect(attempts).toBe(3)
+    expect(delays).toEqual([100, 200])
   })
 })
