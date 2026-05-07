@@ -129,6 +129,22 @@ vi.mock('vue-data-ui/vue-ui-xy', () => {
   }
 })
 
+vi.mock('vue-data-ui/vue-ui-scatter', () => {
+  return {
+    VueUiScatter: defineComponent({
+      name: 'VueUiScatter',
+      inheritAttrs: false,
+      props: {
+        dataset: { type: Array, default: () => [] },
+        config: { type: Object, default: () => ({}) },
+      },
+      setup(_, { slots }) {
+        return () => h('div', { 'data-test-id': 'vue-ui-scatter-stub' }, slots.default?.() ?? [])
+      },
+    }),
+  }
+})
+
 vi.mock('~/composables/useCanGoBack', () => {
   return {
     useCanGoBack: () => shallowRef(true),
@@ -222,11 +238,13 @@ import {
   PackageVersions,
   PackageVulnerabilityTree,
   PaginationControls,
+  PyPIAdminActions,
   ProgressBar,
   ProvenanceBadge,
   Readme,
   ReadmeTocDropdown,
   SearchProviderToggle,
+  SearchResultsSkeleton,
   SearchSuggestionCard,
   SelectBase,
   SelectField,
@@ -360,6 +378,43 @@ describe('component accessibility audits', () => {
   describe('LandingIntroHeader', () => {
     it('should have no accessibility violations', async () => {
       const component = await mountSuspended(LandingIntroHeader)
+      const results = await runAxe(component)
+      expect(results.violations).toEqual([])
+    })
+  })
+
+  describe('PyPIAdminActions', () => {
+    it('should have no accessibility violations in menu context', async () => {
+      const component = await mountSuspended({
+        components: { PyPIAdminActions },
+        template: '<div role="menu"><PyPIAdminActions /></div>',
+      })
+      const results = await runAxe(component)
+      expect(results.violations).toEqual([])
+    })
+
+    it('should have no accessibility violations for package actions', async () => {
+      const component = await mountSuspended({
+        components: { PyPIAdminActions },
+        template:
+          '<div role="menu"><PyPIAdminActions package-name="requests" variant="contextual" /></div>',
+      })
+      const results = await runAxe(component)
+      expect(results.violations).toEqual([])
+    })
+  })
+
+  describe('SearchResultsSkeleton', () => {
+    it('should have no accessibility violations in table mode', async () => {
+      const component = await mountSuspended(SearchResultsSkeleton)
+      const results = await runAxe(component)
+      expect(results.violations).toEqual([])
+    })
+
+    it('should have no accessibility violations in list mode', async () => {
+      const component = await mountSuspended(SearchResultsSkeleton, {
+        props: { viewMode: 'cards', paginationMode: 'infinite' },
+      })
       const results = await runAxe(component)
       expect(results.violations).toEqual([])
     })

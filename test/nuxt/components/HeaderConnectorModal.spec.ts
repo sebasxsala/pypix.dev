@@ -374,7 +374,7 @@ describe('HeaderConnectorModal', () => {
 
     it('shows the CLI command to run', async () => {
       const dialog = await mountAndOpen()
-      expect(dialog?.textContent).toContain('npmx-connector')
+      expect(dialog?.textContent).toContain('pypix does not provide a local admin connector')
     })
 
     it('has a copy button for the command', async () => {

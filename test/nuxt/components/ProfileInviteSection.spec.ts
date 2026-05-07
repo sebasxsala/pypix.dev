@@ -60,7 +60,7 @@ describe('Profile invite section', () => {
       route: '/profile/test-handle',
     })
 
-    expect(wrapper.text()).toContain("It doesn't look like they're using npmx yet")
+    expect(wrapper.text()).toContain("It doesn't look like they're using pypix yet")
   })
 
   it('does not show invite section for profile owner', async () => {

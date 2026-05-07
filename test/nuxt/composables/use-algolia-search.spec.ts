@@ -8,6 +8,12 @@ vi.mock('algoliasearch/lite', () => ({
 
 describe('useAlgoliaSearch', () => {
   it('maps isSecurityHeld through to NpmSearchResult.package', async () => {
+    useRuntimeConfig().public.algolia = {
+      appId: 'test-app',
+      apiKey: 'test-key',
+      indexName: 'test-index',
+    }
+
     mockSearch.mockResolvedValue({
       results: [{ hits: fixture, nbHits: fixture.length }],
     })

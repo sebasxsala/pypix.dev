@@ -149,13 +149,13 @@ describe('CommandPalette', () => {
     await mountPalette()
 
     const settingsLink = document.querySelector('a[data-command-item="true"][href$="/settings"]')
-    const chatLink = document.querySelector(
-      'a[data-command-item="true"][href="https://chat.npmx.dev"]',
+    const pypiAdminLink = document.querySelector(
+      'a[data-command-item="true"][href="https://pypi.org/manage/projects/"]',
     )
 
     expect(settingsLink?.tagName).toBe('A')
-    expect(chatLink?.tagName).toBe('A')
-    expect(chatLink?.getAttribute('target')).toBe('_blank')
+    expect(pypiAdminLink?.tagName).toBe('A')
+    expect(pypiAdminLink?.getAttribute('target')).toBe('_blank')
   })
 
   it('renders color previews for the current accent color and background shade on the root view', async () => {

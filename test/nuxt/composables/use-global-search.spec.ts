@@ -119,7 +119,7 @@ describe('useGlobalSearch', () => {
     expect(search!.committedModel.value).toBe('requests')
   })
 
-  it('always exposes PyPI search even when the legacy provider setting is Algolia', async () => {
+  it('uses Algolia search when explicitly selected in settings', async () => {
     const { settings } = useSettings()
     settings.value.searchProvider = 'algolia'
 
@@ -137,6 +137,6 @@ describe('useGlobalSearch', () => {
       { route: '/search?p=npm&q=requests' },
     )
 
-    expect(search!.provider.value).toBe('npm')
+    expect(search!.provider.value).toBe('algolia')
   })
 })

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { mountSuspended } from '@nuxt/test-utils/runtime'
+import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { ref } from 'vue'
 import type { ComparisonFacet } from '#shared/types/comparison'
 import {
@@ -15,6 +15,10 @@ const mockRouteQuery = ref('')
 vi.mock('@vueuse/router', () => ({
   useRouteQuery: () => mockRouteQuery,
 }))
+
+mockNuxtImport('useRouteQuery', () => {
+  return () => mockRouteQuery
+})
 
 /**
  * Helper to test useFacetSelection by wrapping it in a component.
@@ -99,32 +103,32 @@ describe('useFacetSelection', () => {
   })
 
   it('parses facets from query param', async () => {
-    mockRouteQuery.value = 'downloads,types,license'
+    mockRouteQuery.value = 'totalLikes,engines,license'
 
     const { isFacetSelected } = await useFacetSelectionInComponent()
 
-    expect(isFacetSelected('downloads')).toBe(true)
-    expect(isFacetSelected('types')).toBe(true)
+    expect(isFacetSelected('totalLikes')).toBe(true)
+    expect(isFacetSelected('engines')).toBe(true)
     expect(isFacetSelected('license')).toBe(true)
     expect(isFacetSelected('packageSize')).toBe(false)
   })
 
   it('filters out invalid facets from query', async () => {
-    mockRouteQuery.value = 'downloads,invalidFacet,types'
+    mockRouteQuery.value = 'totalLikes,invalidFacet,engines'
 
     const { isFacetSelected } = await useFacetSelectionInComponent()
 
-    expect(isFacetSelected('downloads')).toBe(true)
-    expect(isFacetSelected('types')).toBe(true)
+    expect(isFacetSelected('totalLikes')).toBe(true)
+    expect(isFacetSelected('engines')).toBe(true)
   })
 
   it.runIf(hasComingSoonFacets)('filters out comingSoon facets from query', async () => {
-    mockRouteQuery.value = 'downloads,totalDependencies,types'
+    mockRouteQuery.value = 'totalLikes,totalDependencies,engines'
 
     const { isFacetSelected } = await useFacetSelectionInComponent()
 
-    expect(isFacetSelected('downloads')).toBe(true)
-    expect(isFacetSelected('types')).toBe(true)
+    expect(isFacetSelected('totalLikes')).toBe(true)
+    expect(isFacetSelected('engines')).toBe(true)
     expect(isFacetSelected('totalDependencies')).toBe(false)
   })
 
@@ -141,7 +145,7 @@ describe('useFacetSelection', () => {
 
   describe('selectedFacets enriched data', () => {
     it('includes label and description for each facet', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { selectedFacets } = await useFacetSelectionInComponent()
 
@@ -154,83 +158,83 @@ describe('useFacetSelection', () => {
     })
 
     it('includes category info for each facet', async () => {
-      mockRouteQuery.value = 'downloads,packageSize'
+      mockRouteQuery.value = 'totalLikes,packageSize'
 
       const { selectedFacets } = await useFacetSelectionInComponent()
 
-      const downloadsFacet = selectedFacets.value.find(f => f.id === 'downloads')
+      const totalLikesFacet = selectedFacets.value.find(f => f.id === 'totalLikes')
       const packageSizeFacet = selectedFacets.value.find(f => f.id === 'packageSize')
 
-      expect(downloadsFacet?.category).toBe('health')
+      expect(totalLikesFacet?.category).toBe('health')
       expect(packageSizeFacet?.category).toBe('performance')
     })
   })
 
   describe('isFacetSelected', () => {
     it('returns true for selected facets', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { isFacetSelected } = await useFacetSelectionInComponent()
 
-      expect(isFacetSelected('downloads')).toBe(true)
-      expect(isFacetSelected('types')).toBe(true)
+      expect(isFacetSelected('totalLikes')).toBe(true)
+      expect(isFacetSelected('engines')).toBe(true)
     })
 
     it('returns false for unselected facets', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { isFacetSelected } = await useFacetSelectionInComponent()
 
       expect(isFacetSelected('license')).toBe(false)
-      expect(isFacetSelected('engines')).toBe(false)
+      expect(isFacetSelected('packageSize')).toBe(false)
     })
   })
 
   describe('toggleFacet', () => {
     it('adds facet when not selected', async () => {
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isFacetSelected, toggleFacet } = await useFacetSelectionInComponent()
 
-      toggleFacet('types')
+      toggleFacet('engines')
 
-      expect(isFacetSelected('downloads')).toBe(true)
-      expect(isFacetSelected('types')).toBe(true)
+      expect(isFacetSelected('totalLikes')).toBe(true)
+      expect(isFacetSelected('engines')).toBe(true)
     })
 
     it('removes facet when selected', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { isFacetSelected, toggleFacet } = await useFacetSelectionInComponent()
 
-      toggleFacet('types')
+      toggleFacet('engines')
 
-      expect(isFacetSelected('downloads')).toBe(true)
-      expect(isFacetSelected('types')).toBe(false)
+      expect(isFacetSelected('totalLikes')).toBe(true)
+      expect(isFacetSelected('engines')).toBe(false)
     })
 
     it('does not remove last facet', async () => {
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isFacetSelected, toggleFacet } = await useFacetSelectionInComponent()
 
-      toggleFacet('downloads')
+      toggleFacet('totalLikes')
 
       // Should still be selected (can't remove the last one)
-      expect(isFacetSelected('downloads')).toBe(true)
+      expect(isFacetSelected('totalLikes')).toBe(true)
     })
   })
 
   describe('selectCategory', () => {
     it('selects all facets in a category', async () => {
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isFacetSelected, selectCategory } = await useFacetSelectionInComponent()
 
       selectCategory('performance')
 
       const performanceFacets = FACETS_BY_CATEGORY.performance.filter(
-        f => !FACET_INFO[f].comingSoon, // comingSoon facet
+        f => !FACET_INFO[f].comingSoon && !FACET_INFO[f].unsupported,
       )
       for (const facet of performanceFacets) {
         expect(isFacetSelected(facet)).toBe(true)
@@ -238,13 +242,13 @@ describe('useFacetSelection', () => {
     })
 
     it('preserves existing selections from other categories', async () => {
-      mockRouteQuery.value = 'downloads,license'
+      mockRouteQuery.value = 'totalLikes,license'
 
       const { isFacetSelected, selectCategory } = await useFacetSelectionInComponent()
 
       selectCategory('compatibility')
 
-      expect(isFacetSelected('downloads')).toBe(true)
+      expect(isFacetSelected('totalLikes')).toBe(true)
       expect(isFacetSelected('license')).toBe(true)
     })
   })
@@ -265,7 +269,7 @@ describe('useFacetSelection', () => {
     })
 
     it('does not deselect if it would leave no facets', async () => {
-      mockRouteQuery.value = 'packageSize,installSize'
+      mockRouteQuery.value = 'packageSize'
 
       const { isFacetSelected, deselectCategory } = await useFacetSelectionInComponent()
 
@@ -273,13 +277,13 @@ describe('useFacetSelection', () => {
 
       // Should still have at least one facet selected - since we can't
       // deselect all, the original selection should remain
-      expect(isFacetSelected('packageSize') || isFacetSelected('installSize')).toBe(true)
+      expect(isFacetSelected('packageSize')).toBe(true)
     })
   })
 
   describe('selectAll', () => {
     it('selects all default facets', async () => {
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isFacetSelected, selectAll } = await useFacetSelectionInComponent()
 
@@ -316,7 +320,7 @@ describe('useFacetSelection', () => {
     })
 
     it('returns false when not all facets selected', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { isAllSelected } = await useFacetSelectionInComponent()
 
@@ -326,7 +330,7 @@ describe('useFacetSelection', () => {
 
   describe('isNoneSelected', () => {
     it('returns true when only one facet selected', async () => {
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isNoneSelected } = await useFacetSelectionInComponent()
 
@@ -334,7 +338,7 @@ describe('useFacetSelection', () => {
     })
 
     it('returns false when multiple facets selected', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { isNoneSelected } = await useFacetSelectionInComponent()
 
@@ -344,7 +348,7 @@ describe('useFacetSelection', () => {
 
   describe('URL param behavior', () => {
     it('clears URL param when selecting all defaults', async () => {
-      mockRouteQuery.value = 'downloads,types'
+      mockRouteQuery.value = 'totalLikes,engines'
 
       const { selectAll } = await useFacetSelectionInComponent()
 
@@ -361,9 +365,9 @@ describe('useFacetSelection', () => {
 
       // Start with one facet, then add another
       deselectAll()
-      toggleFacet('types')
+      toggleFacet('engines')
 
-      expect(mockRouteQuery.value).toContain('types')
+      expect(mockRouteQuery.value).toContain('engines')
     })
   })
 
@@ -378,12 +382,12 @@ describe('useFacetSelection', () => {
 
   describe('whitespace handling', () => {
     it('trims whitespace from facet names in query', async () => {
-      mockRouteQuery.value = ' downloads , types , license '
+      mockRouteQuery.value = ' totalLikes , engines , license '
 
       const { isFacetSelected } = await useFacetSelectionInComponent()
 
-      expect(isFacetSelected('downloads')).toBe(true)
-      expect(isFacetSelected('types')).toBe(true)
+      expect(isFacetSelected('totalLikes')).toBe(true)
+      expect(isFacetSelected('engines')).toBe(true)
       expect(isFacetSelected('license')).toBe(true)
     })
   })
@@ -391,21 +395,21 @@ describe('useFacetSelection', () => {
   describe('duplicate handling', () => {
     it('handles duplicate facets in query by deduplication via Set', async () => {
       // When adding facets, the code uses Set for deduplication
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isFacetSelected, selectCategory } = await useFacetSelectionInComponent()
 
-      // downloads is in health category, selecting health should dedupe
+      // totalLikes is in health category, selecting health should dedupe
       selectCategory('health')
 
-      // downloads should be selected exactly once (verified by isFacetSelected working)
-      expect(isFacetSelected('downloads')).toBe(true)
+      // totalLikes should be selected exactly once (verified by isFacetSelected working)
+      expect(isFacetSelected('totalLikes')).toBe(true)
     })
   })
 
   describe('multiple category operations', () => {
     it('can select multiple categories', async () => {
-      mockRouteQuery.value = 'downloads'
+      mockRouteQuery.value = 'totalLikes'
 
       const { isFacetSelected, selectCategory } = await useFacetSelectionInComponent()
 
@@ -415,7 +419,7 @@ describe('useFacetSelection', () => {
       // Should have facets from both categories plus original
       expect(isFacetSelected('packageSize')).toBe(true)
       expect(isFacetSelected('license')).toBe(true)
-      expect(isFacetSelected('downloads')).toBe(true)
+      expect(isFacetSelected('totalLikes')).toBe(true)
     })
 
     it('can deselect multiple categories', async () => {
@@ -428,7 +432,7 @@ describe('useFacetSelection', () => {
 
       // Should not have performance or health facets
       expect(isFacetSelected('packageSize')).toBe(false)
-      expect(isFacetSelected('downloads')).toBe(false)
+      expect(isFacetSelected('totalLikes')).toBe(false)
     })
   })
 })

@@ -12,10 +12,10 @@ describe('settings page', () => {
     expect(text).toContain('Version style')
     expect(text).toContain('PyPI files')
     expect(text).toContain('File preference')
+    expect(text).toContain('Data source')
+    expect(text).toContain('Algolia search')
 
     expect(text).not.toContain('@types')
-    expect(text).not.toContain('Algolia')
-    expect(text).not.toContain('Data source')
     expect(text).not.toContain('platform-specific packages')
   })
 })
