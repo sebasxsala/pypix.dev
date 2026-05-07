@@ -7,6 +7,7 @@ vi.stubGlobal('PYPI_SIMPLE_API', 'https://pypi.org/simple')
 const {
   buildPypiAlgoliaIndexBatch,
   buildPypiAlgoliaRecord,
+  clampPypiAlgoliaRecordsToTarget,
   getPypiAlgoliaIndexSettings,
   selectPypiProjectsForAlgolia,
   withPypiIndexerRetry,
@@ -151,5 +152,19 @@ describe('index-pypi-algolia script helpers', () => {
     expect(result).toBe('ok')
     expect(attempts).toBe(3)
     expect(delays).toEqual([100, 200])
+  })
+
+  it('clamps the final save batch to the remaining target records', () => {
+    const records = [
+      buildPypiAlgoliaRecord({ info: { name: 'requests', version: '1.0.0' } }),
+      buildPypiAlgoliaRecord({ info: { name: 'fastapi', version: '1.0.0' } }),
+      buildPypiAlgoliaRecord({ info: { name: 'django', version: '1.0.0' } }),
+    ]
+
+    expect(clampPypiAlgoliaRecordsToTarget(records, 1, 3).map(record => record.name)).toEqual([
+      'requests',
+      'fastapi',
+    ])
+    expect(clampPypiAlgoliaRecordsToTarget(records, 3, 3)).toEqual([])
   })
 })

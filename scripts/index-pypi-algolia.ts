@@ -462,6 +462,15 @@ export async function buildPypiAlgoliaIndexBatch(
   )
 }
 
+export function clampPypiAlgoliaRecordsToTarget(
+  records: PypiAlgoliaRecord[],
+  savedRecords: number,
+  targetRecords: number,
+) {
+  const remainingRecords = Math.max(0, targetRecords - savedRecords)
+  return records.slice(0, remainingRecords)
+}
+
 async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
   const response = await withPypiIndexerRetry(async () => {
     const response = await fetch(`${PYPI_SIMPLE_API}/`, {
@@ -535,31 +544,37 @@ async function run() {
   )
 
   const projects = await fetchPypiSimpleProjects()
+  const targetRecordCount = targetRecords ?? projects.length
   const selectedProjects = selectPypiProjectsForAlgolia(projects, {
-    targetRecords: targetRecords ?? projects.length,
+    targetRecords: projects.length,
     seedProjects: seededProjects,
     mode: selectionMode,
   })
 
   console.log(
-    `Indexing ${selectedProjects.length} projects into ${indexName} with ${selectionMode} mode`,
+    `Indexing up to ${targetRecordCount} records into ${indexName} with ${selectionMode} mode`,
   )
 
+  let savedRecords = 0
   for (let offset = 0; offset < selectedProjects.length; offset += batchSize) {
+    if (savedRecords >= targetRecordCount) break
+
     const batch = selectedProjects.slice(offset, offset + batchSize)
     const records = await buildPypiAlgoliaIndexBatch(batch, fetchPypiProject, { concurrency })
-    if (records.length > 0) {
+    const recordsToSave = clampPypiAlgoliaRecordsToTarget(records, savedRecords, targetRecordCount)
+    if (recordsToSave.length > 0) {
       await withPypiIndexerRetry(() =>
         client.saveObjects({
           indexName,
-          objects: records,
+          objects: recordsToSave,
           batchSize: saveBatchSize,
           waitForTasks,
         }),
       )
+      savedRecords += recordsToSave.length
     }
     console.log(
-      `Indexed ${Math.min(offset + batch.length, selectedProjects.length)} / ${selectedProjects.length}`,
+      `Indexed ${savedRecords} / ${targetRecordCount} records (${Math.min(offset + batch.length, selectedProjects.length)} candidates checked)`,
     )
     if (batchDelayMs > 0 && offset + batchSize < selectedProjects.length) await sleep(batchDelayMs)
   }
