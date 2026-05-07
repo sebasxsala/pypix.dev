@@ -2,21 +2,11 @@
  * Fetch all packages for an npm organization.
  *
  * 1. Gets the authoritative package list from the npm registry (single request)
- * 2. Fetches metadata from Algolia by exact name (single request)
- * 3. Falls back to lightweight server-side package-meta lookups
+ * 2. Fetches lightweight metadata via server-side package-meta lookups
  */
 export function useOrgPackages(orgName: MaybeRefOrGetter<string>) {
-  const route = useRoute()
-  const { searchProvider } = useSearchProvider()
-  const searchProviderValue = computed(() => {
-    const p = normalizeSearchParam(route.query.p)
-    if (p === 'npm' || searchProvider.value === 'npm') return 'npm'
-    return 'algolia'
-  })
-  const { getPackagesByName } = useAlgoliaSearch()
-
   const asyncData = useLazyAsyncData(
-    () => `org-packages:${searchProviderValue.value}:${toValue(orgName)}`,
+    () => `org-packages:npm:${toValue(orgName)}`,
     async ({ ssrContext }, { signal }) => {
       const org = toValue(orgName)
       if (!org) {
@@ -52,19 +42,6 @@ export function useOrgPackages(orgName: MaybeRefOrGetter<string>) {
         return emptySearchResponse()
       }
 
-      // Fetch metadata + downloads from Algolia (single request via getObjects)
-      if (searchProviderValue.value === 'algolia') {
-        try {
-          const response = await getPackagesByName(packageNames)
-          if (response.objects.length > 0) {
-            return response
-          }
-        } catch {
-          // Fall through to npm registry path
-        }
-      }
-
-      // npm fallback: fetch lightweight metadata via server proxy
       const metaResults = await mapWithConcurrency(
         packageNames,
         async name => {

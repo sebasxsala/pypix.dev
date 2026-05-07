@@ -231,7 +231,29 @@ useSeoMeta({
           <h2 class="text-xs text-fg-muted uppercase tracking-wider mb-4">
             {{ $t('settings.sections.search') }}
           </h2>
-          <div class="bg-bg-subtle border border-border rounded-lg p-4 sm:p-6">
+          <div class="bg-bg-subtle border border-border rounded-lg p-4 sm:p-6 space-y-6">
+            <div class="space-y-2">
+              <label for="search-provider-select" class="block text-sm text-fg font-medium">
+                {{ $t('settings.data_source.label') }}
+              </label>
+              <p class="text-xs text-fg-muted mb-3">
+                {{ $t('settings.data_source.description') }}
+              </p>
+              <SelectField
+                id="search-provider-select"
+                v-model="settings.searchProvider"
+                block
+                size="sm"
+                class="max-w-52"
+                :items="[
+                  { label: $t('settings.data_source.pypi_search'), value: 'npm' },
+                  { label: $t('settings.data_source.algolia_search'), value: 'algolia' },
+                ]"
+              />
+            </div>
+
+            <div class="border-t border-border" />
+
             <!-- Instant Search toggle -->
             <SettingsToggle
               :label="$t('settings.instant_search')"

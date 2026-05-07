@@ -37,7 +37,7 @@ Current search MVP:
 
 Future search direction:
 
-- Build or adopt a real PyPI search index. Good candidates are Meilisearch, Typesense, Algolia, Postgres full-text search, or a custom scheduled import pipeline backed by PyPI Simple/JSON plus a downloads provider.
+- Algolia is the beta hosted search provider. `/api/pypi/search` keeps the local Simple/Index search as a fallback and only uses Algolia server-side when the request asks for `provider=algolia` and search credentials are configured. The scheduled indexer reads PyPI Simple JSON, deduplicates by PEP 503-normalized project name, hydrates PyPI JSON metadata, and writes records to `pypix_packages` without using deprecated PyPI JSON download counters.
 - Index at least normalized name, canonical name, summary, keywords, classifiers, latest version, upload time, project URLs, yanked status, vulnerability signals, and optional popularity/download fields from a documented provider.
 - Keep download stats out of the synchronous search request. Load them from the index if precomputed, or hydrate them lazily in package cards/details.
 

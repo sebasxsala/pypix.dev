@@ -1,6 +1,9 @@
+import type { SearchProvider } from '~/composables/useSettings'
+
 interface NpmSearchOptions {
   size?: number
   from?: number
+  provider?: SearchProvider
 }
 
 async function checkOrgExists(name: string): Promise<boolean> {
@@ -25,6 +28,7 @@ async function search(
   const params = new URLSearchParams()
   params.set('q', query)
   params.set('size', String(options.size ?? 25))
+  params.set('provider', options.provider === 'algolia' ? 'algolia' : 'local')
   if (options.from) {
     params.set('from', String(options.from))
   }

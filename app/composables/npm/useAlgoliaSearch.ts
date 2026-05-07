@@ -128,14 +128,29 @@ interface AlgoliaSearchWithSuggestionsResult {
  * Must be called during component setup.
  */
 export function useAlgoliaSearch() {
-  const { algolia } = useRuntimeConfig().public
-  const client = getOrCreateClient(algolia.appId, algolia.apiKey)
-  const indexName = algolia.indexName
+  const config = useRuntimeConfig() as unknown as {
+    public: { algolia?: { appId?: string; apiKey?: string; indexName?: string } }
+  }
+  const algolia = config.public.algolia
+
+  function getClient() {
+    if (!algolia?.appId || !algolia.apiKey || !algolia.indexName) {
+      throw new Error('Algolia browser search is not configured')
+    }
+
+    return {
+      client: getOrCreateClient(algolia.appId, algolia.apiKey),
+      indexName: algolia.indexName,
+      appId: algolia.appId,
+      apiKey: algolia.apiKey,
+    }
+  }
 
   async function search(
     query: string,
     options: AlgoliaSearchOptions = {},
   ): Promise<NpmSearchResponse> {
+    const { client, indexName } = getClient()
     const { results } = await client.search({
       requests: [
         {
@@ -169,6 +184,7 @@ export function useAlgoliaSearch() {
     ownerName: string,
     options: { maxResults?: number } = {},
   ): Promise<NpmSearchResponse> {
+    const { client, indexName } = getClient()
     const max = options.maxResults ?? 1000
 
     const allHits: AlgoliaHit[] = []
@@ -219,17 +235,18 @@ export function useAlgoliaSearch() {
 
   /** Fetch metadata for specific packages by exact name using Algolia's getObjects API. */
   async function getPackagesByName(packageNames: string[]): Promise<NpmSearchResponse> {
+    const { appId, apiKey, indexName } = getClient()
     if (packageNames.length === 0) {
       return { isStale: false, objects: [], total: 0, time: new Date().toISOString() }
     }
 
     const response = await $fetch<{ results: (AlgoliaHit | null)[] }>(
-      `https://${algolia.appId}-dsn.algolia.net/1/indexes/*/objects`,
+      `https://${appId}-dsn.algolia.net/1/indexes/*/objects`,
       {
         method: 'POST',
         headers: {
-          'x-algolia-api-key': algolia.apiKey,
-          'x-algolia-application-id': algolia.appId,
+          'x-algolia-api-key': apiKey,
+          'x-algolia-application-id': appId,
         },
         body: {
           requests: packageNames.map(name => ({
@@ -259,6 +276,7 @@ export function useAlgoliaSearch() {
     options: AlgoliaSearchOptions = {},
     checks?: AlgoliaMultiSearchChecks,
   ): Promise<AlgoliaSearchWithSuggestionsResult> {
+    const { client, indexName } = getClient()
     const requests: SearchQuery[] = [
       {
         indexName,

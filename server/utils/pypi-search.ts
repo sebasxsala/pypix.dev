@@ -1,5 +1,6 @@
 import type { NpmPerson, NpmSearchResponse, NpmSearchResult } from '#shared/types/npm-registry'
 import { CACHE_MAX_AGE_ONE_DAY, PYPI_SIMPLE_API } from '#shared/utils/constants'
+import { getPypiAlgoliaSearchConfig, searchPypiAlgolia } from './pypi-algolia'
 import { fetchPypiProject, type PypiProjectJson } from './pypi-package'
 import {
   getPypiSearchIndex,
@@ -212,6 +213,17 @@ export async function searchPypiProjects(
   query: string,
   size: number,
   from = 0,
+  provider: 'local' | 'algolia' = 'local',
 ): Promise<NpmSearchResponse> {
+  if (provider === 'algolia') {
+    const algoliaResult = await searchPypiAlgolia(
+      { ...getPypiAlgoliaSearchConfig(), provider: 'algolia' },
+      query,
+      size,
+      from,
+    )
+    if (algoliaResult && algoliaResult.objects.length > 0) return algoliaResult
+  }
+
   return await searchCachedPypiProjects(query, size, from)
 }

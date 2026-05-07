@@ -25,6 +25,7 @@
     "preview": "nuxt preview",
     "postinstall": "(pnpm rebuild @resvg/resvg-js || true) && vp run generate:lexicons && vp run generate:sprite && nuxt prepare && nuxt prepare --cwd docs && vp config",
     "generate:fixtures": "node scripts/generate-fixtures.ts",
+    "index:pypi:algolia": "node scripts/index-pypi-algolia.ts",
     "generate:jwk": "node scripts/gen-jwk.ts",
     "test": "vp test",
     "test:a11y": "vp run build:test && LIGHTHOUSE_COLOR_MODE=dark vp run test:a11y:prebuilt && LIGHTHOUSE_COLOR_MODE=light vp run test:a11y:prebuilt",

@@ -247,7 +247,9 @@
       "description": "Choose where pypix gets search data. Individual package pages should use PyPI directly as the migration progresses.",
       "npm": "PyPI",
       "npm_description": "Fetches package metadata from official PyPI endpoints. Search still needs a PyPI-specific index.",
+      "pypi_search": "PyPI search",
       "algolia": "Algolia",
+      "algolia_search": "Algolia search",
       "algolia_description": "Uses Algolia for faster search, org and user pages."
     },
     "pypi_search_provider": "PyPI search",

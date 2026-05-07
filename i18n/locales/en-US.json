@@ -1,3 +1,29 @@
 {
-  "$schema": "../schema.json"
+  "$schema": "../schema.json",
+  "common": {
+    "copy": "copy"
+  },
+  "package": {
+    "links": {
+      "main": "main",
+      "docs": "docs",
+      "code": "code",
+      "timeline": "timeline",
+      "compare_this_package": "compare this package"
+    },
+    "size": {
+      "b": "{size} B",
+      "kb": "{size} kB",
+      "mb": "{size} MB"
+    }
+  },
+  "code": {
+    "file_path": "File path",
+    "toggle_tree": "Toggle file tree",
+    "toggle_container": "Toggle code container width",
+    "table": {
+      "name": "Name",
+      "size": "Size"
+    }
+  }
 }

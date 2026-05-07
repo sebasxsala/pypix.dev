@@ -39,7 +39,6 @@ export function useSearch(
   options: MaybeRefOrGetter<SearchOptions> = {},
   config: UseSearchConfig = {},
 ) {
-  const { search: searchAlgolia, searchWithSuggestions: algoliaMultiSearch } = useAlgoliaSearch()
   const {
     search: searchNpm,
     checkOrgExists: checkOrgNpm,
@@ -63,97 +62,11 @@ export function useSearch(
   const suggestionRequestId = shallowRef(0)
 
   function effectiveSearchProvider() {
-    // MVP PyPI migration: keep the inherited setting shape but always route search through PyPI.
-    void toValue(searchProvider)
-    return 'npm' as SearchProvider
+    return toValue(searchProvider)
   }
 
-  /**
-   * Determine which extra checks to include in the Algolia multi-search.
-   * Returns `undefined` when nothing uncached needs checking.
-   */
-  function buildAlgoliaChecks(q: string): AlgoliaMultiSearchChecks | undefined {
-    if (!config.suggestions) return undefined
-
-    const { intent, name } = parseSuggestionIntent(q)
-    const lowerName = name.toLowerCase()
-
-    const checks: AlgoliaMultiSearchChecks = {}
-    let hasChecks = false
-
-    if (intent && name) {
-      const wantOrg = intent === 'org' || intent === 'both'
-      const wantUser = intent === 'user' || intent === 'both'
-
-      if (wantOrg && existenceCache.value[`org:${lowerName}`] === undefined) {
-        checks.name = name
-        checks.checkOrg = true
-        hasChecks = true
-      }
-      if (wantUser && existenceCache.value[`user:${lowerName}`] === undefined) {
-        checks.name = name
-        checks.checkUser = true
-        hasChecks = true
-      }
-    }
-
-    const trimmed = q.trim()
-    if (isValidNewPackageName(trimmed)) {
-      checks.checkPackage = trimmed
-      hasChecks = true
-    }
-
-    return hasChecks ? checks : undefined
-  }
-
-  /**
-   * Update suggestion and package-availability state from multi-search results.
-   * Only writes to the cache for checks that were actually sent; reads from
-   * existing cache for the rest.
-   */
-  function processAlgoliaChecks(
-    q: string,
-    checks: AlgoliaMultiSearchChecks | undefined,
-    result: { orgExists: boolean; userExists: boolean; packageExists: boolean | null },
-  ) {
-    const { intent, name } = parseSuggestionIntent(q)
-
-    if (intent && name) {
-      const lowerName = name.toLowerCase()
-      const wantOrg = intent === 'org' || intent === 'both'
-      const wantUser = intent === 'user' || intent === 'both'
-
-      const updates: Record<string, boolean> = {}
-      if (checks?.checkOrg) updates[`org:${lowerName}`] = result.orgExists
-      if (checks?.checkUser) updates[`user:${lowerName}`] = result.userExists
-      if (Object.keys(updates).length > 0) {
-        existenceCache.value = { ...existenceCache.value, ...updates }
-      }
-
-      // Prefer org over user when both match (orgs always match owner.name too)
-      const isOrg = wantOrg && existenceCache.value[`org:${lowerName}`]
-      const isUser = wantUser && existenceCache.value[`user:${lowerName}`]
-
-      const newSuggestions: SearchSuggestion[] = []
-      if (isOrg) {
-        newSuggestions.push({ type: 'org', name: lowerName, exists: true })
-      }
-      if (isUser && !isOrg) {
-        newSuggestions.push({ type: 'user', name: lowerName, exists: true })
-      }
-      suggestions.value = newSuggestions
-    } else {
-      suggestions.value = []
-    }
-
-    const trimmed = q.trim()
-    if (result.packageExists !== null && isValidNewPackageName(trimmed)) {
-      packageAvailability.value = { name: trimmed, available: !result.packageExists }
-    } else if (!isValidNewPackageName(trimmed)) {
-      packageAvailability.value = null
-    }
-
-    suggestionsLoading.value = false
+  function suggestionsEnabled() {
+    return config.suggestions === true
   }
 
   const asyncData = useLazyAsyncData(
@@ -170,42 +83,8 @@ export function useSearch(
       const opts = toValue(options)
       cache.value = null
 
-      if (provider === 'algolia') {
-        const checks = config.suggestions ? buildAlgoliaChecks(q) : undefined
-
-        if (config.suggestions) {
-          suggestionsLoading.value = true
-          const result = await algoliaMultiSearch(q, { size: opts.size ?? 25 }, checks)
-
-          if (q !== toValue(query)) {
-            return emptySearchPayload()
-          }
-
-          isRateLimited.value = false
-          processAlgoliaChecks(q, checks, result)
-          return searchPayload(q, provider, {
-            searchResponse: result.search,
-            suggestions: suggestions.value,
-            packageAvailability: packageAvailability.value,
-          })
-        }
-
-        const response = await searchAlgolia(q, { size: opts.size ?? 25 })
-
-        if (q !== toValue(query)) {
-          return emptySearchPayload()
-        }
-
-        isRateLimited.value = false
-        return searchPayload(q, provider, {
-          searchResponse: response,
-          suggestions: [],
-          packageAvailability: null,
-        })
-      }
-
       try {
-        const response = await searchNpm(q, { size: opts.size ?? 25 }, signal)
+        const response = await searchNpm(q, { size: opts.size ?? 25, provider }, signal)
 
         if (q !== toValue(query)) {
           return emptySearchPayload()
@@ -254,7 +133,7 @@ export function useSearch(
       return
     }
 
-    // Seed cache from asyncData for Algolia (which skips cache on initial fetch)
+    // Seed cache from asyncData after the initial server-backed search.
     if (!cache.value && asyncData.data.value) {
       const { searchResponse } = asyncData.data.value
       cache.value = {
@@ -278,8 +157,7 @@ export function useSearch(
       const from = currentCount
       const size = Math.min(targetSize - currentCount, total - currentCount)
 
-      const doSearch = provider === 'algolia' ? searchAlgolia : searchNpm
-      const response = await doSearch(q, { size, from })
+      const response = await searchNpm(q, { size, from, provider })
 
       const beforeCount = cache.value?.objects.length ?? 0
 
@@ -473,6 +351,7 @@ export function useSearch(
     () => `npm-suggestions:${toValue(searchProvider)}:${toValue(query)}`,
     async () => {
       const q = toValue(query).trim()
+      if (!suggestionsEnabled()) return { suggestions: [], packageAvailability: null }
       if (!q) return { suggestions: [], packageAvailability: null }
       const { intent, name } = parseSuggestionIntent(q)
       if (!intent || !name) return { suggestions: [], packageAvailability: null }
@@ -484,6 +363,7 @@ export function useSearch(
   watch(
     [() => asyncData.data.value.suggestions, () => npmSuggestions.data.value.suggestions],
     ([algoliaSuggestions, npmSuggestionsValue]) => {
+      if (!suggestionsEnabled()) return
       if (algoliaSuggestions.length || npmSuggestionsValue.length) {
         suggestions.value = algoliaSuggestions.length ? algoliaSuggestions : npmSuggestionsValue
       }
@@ -497,6 +377,7 @@ export function useSearch(
       () => npmSuggestions.data.value.packageAvailability,
     ],
     ([algoliaPackageAvailability, npmPackageAvailability]) => {
+      if (!suggestionsEnabled()) return
       if (algoliaPackageAvailability || npmPackageAvailability) {
         packageAvailability.value = algoliaPackageAvailability || npmPackageAvailability
       }

@@ -110,7 +110,7 @@ onPrehydrate(el => {
       <AppLogo id="pypix-index-h1-logo-normal" class="w-42 h-auto sm:w-58 md:w-70" />
       <span
         id="pypix-index-h1-logo-env"
-        class="text-sm sm:text-base md:text-lg transform-origin-br font-mono tracking-widest text-accent absolute -bottom-4 end-4"
+        class="text-sm sm:text-base md:text-lg transform-origin-br font-mono tracking-widest text-accent absolute -bottom-4 -inset-ie-1.5"
       >
         dev
       </span>

@@ -736,7 +736,13 @@
             "npm_description": {
               "type": "string"
             },
+            "pypi_search": {
+              "type": "string"
+            },
             "algolia": {
+              "type": "string"
+            },
+            "algolia_search": {
               "type": "string"
             },
             "algolia_description": {

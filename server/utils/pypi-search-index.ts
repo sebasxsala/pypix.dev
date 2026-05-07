@@ -49,6 +49,10 @@ const popularRank = new Map<string, number>(
   POPULAR_PACKAGES.map((name, index) => [name, index + 1]),
 )
 
+export function getPypiPopularRank(normalizedName: string): number | undefined {
+  return popularRank.get(normalizedName)
+}
+
 let memoryIndex: PypiSearchIndex | null = null
 let memoryProjectsRef: PypiSimpleProject[] | null = null
 
@@ -69,7 +73,7 @@ function buildEntry(project: PypiSimpleProject): PypiSearchIndexEntry {
     name: project.name,
     normalizedName,
     tokens: tokenize(normalizedName),
-    popularRank: popularRank.get(normalizedName),
+    popularRank: getPypiPopularRank(normalizedName),
   }
 }
 

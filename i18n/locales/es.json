@@ -129,10 +129,12 @@
     },
     "data_source": {
       "label": "Fuente de datos",
-      "description": "Elige de dónde obtiene npmx los datos para las búsquedas. Las páginas de paquetes individuales siempre usan el registro de npm directamente.",
-      "npm": "Registro npm",
-      "npm_description": "Obtiene búsquedas, organizaciones y usuarios directamente del registro oficial de npm. Es la fuente autorizada, pero puede ser más lenta.",
+      "description": "Elige de dónde obtiene pypix los datos de búsqueda. Las páginas de paquetes individuales usan PyPI directamente.",
+      "npm": "PyPI",
+      "npm_description": "Usa el índice local construido desde los endpoints oficiales de PyPI.",
+      "pypi_search": "Búsqueda PyPI",
       "algolia": "Algolia",
+      "algolia_search": "Búsqueda Algolia",
       "algolia_description": "Usa Algolia para búsquedas y páginas de organizaciones y usuarios más rápidas."
     },
     "pypi_search_provider": "Búsqueda PyPI",

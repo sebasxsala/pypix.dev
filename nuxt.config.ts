@@ -47,14 +47,12 @@ export default defineNuxtConfig({
       redisRestUrl: process.env.UPSTASH_KV_REST_API_URL || process.env.KV_REST_API_URL || '',
       redisRestToken: process.env.UPSTASH_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN || '',
     },
-    public: {
-      // TODO(pypi): Replace the inherited Algolia npm-search index with a PyPI search/index source.
-      algolia: {
-        appId: 'OFCNCOG2CU',
-        apiKey: 'f54e21fa3a2a0160595bb058179bfb1e',
-        indexName: 'npm-search',
-      },
+    algolia: {
+      appId: process.env.ALGOLIA_APP_ID || '',
+      searchApiKey: process.env.ALGOLIA_SEARCH_API_KEY || '',
+      indexName: process.env.ALGOLIA_INDEX_NAME || 'pypix_packages',
     },
+    public: {},
   },
 
   devtools: { enabled: true },

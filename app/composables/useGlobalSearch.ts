@@ -1,4 +1,5 @@
 import type { LocationQueryRaw } from 'vue-router'
+import type { SearchProvider } from '~/composables/useSettings'
 import { normalizeSearchParam } from '#shared/utils/url'
 import { debounce } from 'perfect-debounce'
 
@@ -14,11 +15,12 @@ function normalizeSubmittedSearchQuery(value: string): string {
 export function buildGlobalSearchQuery(
   routeQuery: LocationQueryRaw,
   value: string,
+  provider: SearchProvider = 'npm',
 ): LocationQueryRaw {
   return {
     ...routeQuery,
     q: normalizeSubmittedSearchQuery(value) || undefined,
-    p: undefined,
+    p: provider === 'algolia' ? 'algolia' : undefined,
   }
 }
 
@@ -27,10 +29,9 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   const router = useRouter()
   const route = useRoute()
   const searchProviderValue = computed(() => {
-    // Backward-compatible read for old /search?p=npm links. PyPI is the only
-    // active provider during this migration, regardless of legacy stored values.
-    void normalizeSearchParam(route.query.p)
-    return 'npm' as const
+    const urlProvider = normalizeSearchParam(route.query.p)
+    if (urlProvider === 'algolia') return 'algolia'
+    return settings.value.searchProvider
   })
   // Internally used searchQuery state
   const searchQuery = useState<string>('search-query', () => {
@@ -68,7 +69,10 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   // Updates URL when search query changes (immediately for instantSearch or after Enter hit otherwise)
   const updateUrlQueryImpl = (value: string) => {
     const submittedValue = normalizeSubmittedSearchQuery(value)
-    const isSameQuery = normalizeSearchParam(route.query.q) === submittedValue && !route.query.p
+    const isSameQuery =
+      normalizeSearchParam(route.query.q) === submittedValue &&
+      normalizeSearchParam(route.query.p) ===
+        (searchProviderValue.value === 'algolia' ? 'algolia' : '')
     if (!submittedValue && route.name !== 'search') {
       return
     }
@@ -79,7 +83,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
 
     if (route.name === 'search') {
       router.replace({
-        query: buildGlobalSearchQuery(route.query, submittedValue),
+        query: buildGlobalSearchQuery(route.query, submittedValue, searchProviderValue.value),
       })
       return
     }
@@ -87,6 +91,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
       name: 'search',
       query: {
         q: submittedValue || undefined,
+        p: searchProviderValue.value === 'algolia' ? 'algolia' : undefined,
       },
     })
   }

@@ -38,6 +38,7 @@ export interface PypiProjectJson {
   }
   releases?: Record<string, PypiProjectFile[]>
   urls?: PypiProjectFile[]
+  vulnerabilities?: Array<{ id?: string }>
 }
 
 export function getPypiProjectCacheKey(name: string): string {

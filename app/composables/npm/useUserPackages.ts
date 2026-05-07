@@ -7,11 +7,7 @@ const MAX_RESULTS = 250
 /**
  * Fetch packages for a given npm user/maintainer.
  *
- * The composable handles all loading strategy internally based on the active
- * search provider. Consumers get a uniform interface regardless of provider:
- *
- * - **Algolia**: Fetches all packages at once via `owner.name` filter (fast).
- * - **npm**: Incrementally paginates through `maintainer:` search results.
+ * The composable incrementally paginates through `maintainer:` search results.
  *
  * @example
  * ```ts
@@ -19,23 +15,10 @@ const MAX_RESULTS = 250
  * ```
  */
 export function useUserPackages(username: MaybeRefOrGetter<string>) {
-  const route = useRoute()
-  const { searchProvider } = useSearchProvider()
-  const searchProviderValue = computed(() => {
-    const p = normalizeSearchParam(route.query.p)
-    if (p === 'npm' || searchProvider.value === 'npm') return 'npm'
-    return 'algolia'
-  })
-  // this is only used in npm path, but we need to extract it when the composable runs
   const { $npmRegistry } = useNuxtApp()
-  const { searchByMaintainer } = useAlgoliaSearch()
 
   // --- Incremental loading state (npm path) ---
   const currentPage = shallowRef(1)
-
-  /** Tracks which provider actually served the current data (may differ from
-   *  searchProvider when Algolia returns empty and we fall through to npm) */
-  const activeProvider = shallowRef<'npm' | 'algolia'>(searchProviderValue.value)
 
   const cache = shallowRef<{
     username: string
@@ -46,44 +29,13 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
   const isLoadingMore = shallowRef(false)
 
   const asyncData = useLazyAsyncData(
-    () => `user-packages:${searchProviderValue.value}:${toValue(username)}`,
+    () => `user-packages:npm:${toValue(username)}`,
     async (_nuxtApp, { signal }) => {
       const user = toValue(username)
       if (!user) {
         return emptySearchResponse()
       }
 
-      const provider = searchProviderValue.value
-
-      // --- Algolia: fetch all at once ---
-      if (provider === 'algolia') {
-        try {
-          const response = await searchByMaintainer(user)
-
-          // Guard against stale response (user/provider changed during await)
-          if (user !== toValue(username) || provider !== searchProviderValue.value) {
-            return emptySearchResponse()
-          }
-
-          // If Algolia returns results, use them. If empty, fall through to npm
-          // registry which uses `maintainer:` search (matches all maintainers,
-          // not just the primary owner that Algolia's owner.name indexes).
-          if (response.objects.length > 0) {
-            activeProvider.value = 'algolia'
-            cache.value = {
-              username: user,
-              objects: response.objects,
-              total: response.total,
-            }
-            return response
-          }
-        } catch {
-          // Fall through to npm registry path on Algolia failure
-        }
-      }
-
-      // --- npm registry: initial page (or Algolia fallback) ---
-      activeProvider.value = 'npm'
       cache.value = null
       currentPage.value = 1
 
@@ -97,8 +49,8 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
         60,
       )
 
-      // Guard against stale response (user/provider changed during await)
-      if (user !== toValue(username) || provider !== searchProviderValue.value) {
+      // Guard against stale response (user changed during await)
+      if (user !== toValue(username)) {
         return emptySearchResponse()
       }
 
@@ -119,8 +71,7 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
    */
   async function fetchMore(manageLoadingState = true): Promise<void> {
     const user = toValue(username)
-    // Use activeProvider: if Algolia fell through to npm, we still need pagination
-    if (!user || activeProvider.value !== 'npm') return
+    if (!user) return
 
     if (cache.value && cache.value.username !== user) {
       cache.value = null
@@ -151,7 +102,7 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
       )
 
       // Guard against stale response
-      if (user !== toValue(username) || activeProvider.value !== 'npm') return
+      if (user !== toValue(username)) return
 
       if (cache.value && cache.value.username === user) {
         const existingNames = new Set(cache.value.objects.map(obj => obj.package.name))
@@ -173,7 +124,7 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
     }
   }
 
-  /** Load the next page of results (no-op if all loaded or using Algolia) */
+  /** Load the next page of results. */
   async function loadMore(): Promise<void> {
     if (isLoadingMore.value || !hasMore.value) return
     currentPage.value++
@@ -194,17 +145,6 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
     }
   }
 
-  // asyncdata will automatically rerun due to key, but we need to reset cache/page
-  // when provider changes
-  watch(
-    () => searchProviderValue.value,
-    newProvider => {
-      cache.value = null
-      currentPage.value = 1
-      activeProvider.value = newProvider
-    },
-  )
-
   // Computed data that uses cache (only if it belongs to the current username)
   const data = computed<NpmSearchResponse | null>(() => {
     const user = toValue(username)
@@ -222,8 +162,6 @@ export function useUserPackages(username: MaybeRefOrGetter<string>) {
   /** Whether there are more results available to load (npm path only) */
   const hasMore = computed(() => {
     if (!toValue(username)) return false
-    // Algolia fetches everything in one request; only npm needs pagination
-    if (activeProvider.value !== 'npm') return false
     if (!cache.value) return true
     // npm path: more available if we haven't hit the server total or our cap
     const fetched = cache.value.objects.length
