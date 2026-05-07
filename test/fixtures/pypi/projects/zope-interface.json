@@ -1,0 +1,45 @@
+{
+  "info": {
+    "name": "zope.interface",
+    "version": "8.1.1",
+    "summary": "Interfaces for Python.",
+    "description": "# zope.interface\n\nInterfaces for Python.",
+    "description_content_type": "text/markdown",
+    "project_urls": {
+      "Homepage": "https://github.com/zopefoundation/zope.interface",
+      "Repository": "https://github.com/zopefoundation/zope.interface"
+    },
+    "license": "ZPL-2.1",
+    "keywords": ["interfaces", "zope"],
+    "requires_python": ">=3.9"
+  },
+  "releases": {
+    "8.1.1": [
+      {
+        "filename": "zope.interface-8.1.1.tar.gz",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "size": 260000,
+        "upload_time_iso_8601": "2025-10-01T10:00:00.000000Z",
+        "url": "https://files.pythonhosted.org/packages/zope.interface-8.1.1.tar.gz",
+        "digests": {
+          "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "zope.interface-8.1.1.tar.gz",
+      "packagetype": "sdist",
+      "python_version": "source",
+      "size": 260000,
+      "upload_time_iso_8601": "2025-10-01T10:00:00.000000Z",
+      "url": "https://files.pythonhosted.org/packages/zope.interface-8.1.1.tar.gz",
+      "digests": {
+        "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      }
+    }
+  ],
+  "vulnerabilities": []
+}

@@ -1,0 +1,45 @@
+{
+  "info": {
+    "name": "charset-normalizer",
+    "version": "3.4.4",
+    "summary": "The Real First Universal Charset Detector.",
+    "description": "# charset-normalizer\n\nThe Real First Universal Charset Detector.",
+    "description_content_type": "text/markdown",
+    "project_urls": {
+      "Homepage": "https://github.com/jawah/charset_normalizer",
+      "Repository": "https://github.com/jawah/charset_normalizer"
+    },
+    "license": "MIT",
+    "keywords": ["charset", "encoding"],
+    "requires_python": ">=3.7"
+  },
+  "releases": {
+    "3.4.4": [
+      {
+        "filename": "charset_normalizer-3.4.4-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "python_version": "py3",
+        "size": 53000,
+        "upload_time_iso_8601": "2025-10-14T10:00:00.000000Z",
+        "url": "https://files.pythonhosted.org/packages/charset_normalizer-3.4.4.whl",
+        "digests": {
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "charset_normalizer-3.4.4-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "python_version": "py3",
+      "size": 53000,
+      "upload_time_iso_8601": "2025-10-14T10:00:00.000000Z",
+      "url": "https://files.pythonhosted.org/packages/charset_normalizer-3.4.4.whl",
+      "digests": {
+        "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    }
+  ],
+  "vulnerabilities": []
+}

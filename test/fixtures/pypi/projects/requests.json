@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "requests",
+    "version": "2.32.5",
+    "summary": "Python HTTP for Humans.",
+    "description": "# requests\n\nPython HTTP for Humans.",
+    "description_content_type": "text/markdown",
+    "home_page": "https://requests.readthedocs.io",
+    "project_urls": {
+      "Homepage": "https://requests.readthedocs.io",
+      "Repository": "https://github.com/psf/requests",
+      "Issues": "https://github.com/psf/requests/issues"
+    },
+    "author": "Kenneth Reitz",
+    "license": "Apache-2.0",
+    "keywords": ["http", "requests"],
+    "requires_python": ">=3.9",
+    "classifiers": ["Programming Language :: Python :: 3"]
+  },
+  "releases": {
+    "2.32.5": [
+      {
+        "filename": "requests-2.32.5-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "python_version": "py3",
+        "size": 64738,
+        "upload_time_iso_8601": "2025-08-18T20:46:00.000000Z",
+        "url": "https://files.pythonhosted.org/packages/requests-2.32.5.whl",
+        "digests": {
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    ],
+    "2.32.4": [
+      {
+        "filename": "requests-2.32.4.tar.gz",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "size": 134517,
+        "upload_time_iso_8601": "2025-06-09T12:00:00.000000Z",
+        "url": "https://files.pythonhosted.org/packages/requests-2.32.4.tar.gz",
+        "digests": {
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "requests-2.32.5-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "python_version": "py3",
+      "size": 64738,
+      "upload_time_iso_8601": "2025-08-18T20:46:00.000000Z",
+      "url": "https://files.pythonhosted.org/packages/requests-2.32.5.whl",
+      "digests": {
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  ],
+  "vulnerabilities": []
+}

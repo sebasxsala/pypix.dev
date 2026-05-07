@@ -41,7 +41,9 @@ async function openConnectorModal(page: Page) {
   await expect(page.getByRole('dialog')).toBeVisible()
 }
 
-test.describe('Connector Connection', () => {
+test.describe.skip('Connector Connection', () => {
+  // The local npm connector flow is legacy migration debt. PyPI admin links are
+  // covered separately without authenticated connector state.
   test('connects via URL params and shows connected state', async ({
     page,
     gotoConnected,
@@ -88,7 +90,8 @@ test.describe('Connector Connection', () => {
   })
 })
 
-test.describe('Organization Management', () => {
+test.describe.skip('Organization Management', () => {
+  // npm org connector management does not map to current PyPI behavior.
   test.beforeEach(async ({ mockConnector }) => {
     await mockConnector.setOrgData('@testorg', {
       users: {
@@ -235,7 +238,8 @@ test.describe('Organization Management', () => {
   })
 })
 
-test.describe('Package Access Controls', () => {
+test.describe.skip('Package Access Controls', () => {
+  // npm package access controls do not map to current PyPI behavior.
   test.beforeEach(async ({ mockConnector }) => {
     await mockConnector.setOrgData('@nuxt', {
       users: { testuser: 'owner' },
@@ -358,7 +362,8 @@ test.describe('Package Access Controls', () => {
   })
 })
 
-test.describe('Operations Queue', () => {
+test.describe.skip('Operations Queue', () => {
+  // Connector mutation queue is part of the skipped legacy connector flow.
   test('shows operations in connector modal', async ({ page, gotoConnected, mockConnector }) => {
     await mockConnector.addOperation({
       type: 'org:add-user',

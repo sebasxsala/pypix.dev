@@ -1,13 +1,11 @@
 import { expect, test } from './test-utils'
 
-test.describe('npmjs.com URL Compatibility', () => {
+test.describe('PyPI URL Compatibility', () => {
   test.describe('Package Pages', () => {
-    test('/package/vue → package page', async ({ page, goto }) => {
-      await goto('/package/vue', { waitUntil: 'domcontentloaded' })
+    test('/package/requests -> package page', async ({ page, goto }) => {
+      await goto('/package/requests', { waitUntil: 'domcontentloaded' })
 
-      // Should show package name
-      await expect(page.locator('h1')).toContainText('vue')
-      // Should have version badge
+      await expect(page.locator('h1')).toContainText('requests')
       await expect(
         page
           .locator('[data-testid="version-selector-button"]')
@@ -15,34 +13,19 @@ test.describe('npmjs.com URL Compatibility', () => {
       ).toBeVisible()
     })
 
-    test('/package/@nuxt/kit → scoped package page', async ({ page, goto }) => {
-      await goto('/package/@nuxt/kit', { waitUntil: 'domcontentloaded' })
+    test('/package/django -> package page', async ({ page, goto }) => {
+      await goto('/package/django', { waitUntil: 'domcontentloaded' })
 
-      // Should show scoped package name
-      await expect(page.locator('h1')).toContainText('@nuxt/kit')
+      await expect(page.locator('h1')).toContainText('django')
     })
 
-    test('/package/vue/v/3.5.27 → specific version', async ({ page, goto }) => {
-      await goto('/package/vue/v/3.5.27', { waitUntil: 'domcontentloaded' })
+    test('/package/requests/v/2.32.5 -> specific version', async ({ page, goto }) => {
+      await goto('/package/requests/v/2.32.5', { waitUntil: 'domcontentloaded' })
 
-      // Should show package name
-      await expect(page.locator('h1')).toContainText('vue')
-      // Should show the specific version
+      await expect(page.locator('h1')).toContainText('requests')
       await expect(
-        page.locator('[data-testid="version-selector-button"]').locator('text=3.5.27'),
+        page.locator('[data-testid="version-selector-button"]').locator('text=2.32.5'),
       ).toBeVisible()
-    })
-
-    test('/package/@nuxt/kit/v/3.20.0 → scoped package specific version', async ({
-      page,
-      goto,
-    }) => {
-      await goto('/package/@nuxt/kit/v/3.20.0', { waitUntil: 'domcontentloaded' })
-
-      // Should show scoped package name
-      await expect(page.locator('h1')).toContainText('@nuxt/kit')
-      // Should show the specific version (or "not latest" indicator)
-      await expect(page.locator('text=3.20.0').first()).toBeVisible()
     })
 
     test('/package/nonexistent-pkg-12345 → 404 handling', async ({ page, goto }) => {
@@ -54,21 +37,17 @@ test.describe('npmjs.com URL Compatibility', () => {
   })
 
   test.describe('Search Pages', () => {
-    test('/search?q=vue → search results', async ({ page, goto }) => {
-      await goto('/search?q=vue', { waitUntil: 'domcontentloaded' })
+    test('/search?q=django -> search results', async ({ page, goto }) => {
+      await goto('/search?q=django', { waitUntil: 'domcontentloaded' })
 
-      // Should show search input with query
-      await expect(page.locator('input[type="search"]')).toHaveValue('vue')
-      // Should show results count
+      await expect(page.locator('input[type="search"]')).toHaveValue('django')
       await expect(page.locator('text=/found \\d+/i')).toBeVisible()
     })
 
-    test('/search?q=keywords:framework → keyword search', async ({ page, goto }) => {
-      await goto('/search?q=keywords:framework', { waitUntil: 'domcontentloaded' })
+    test('/search?q=fastapi -> search results', async ({ page, goto }) => {
+      await goto('/search?q=fastapi', { waitUntil: 'domcontentloaded' })
 
-      // Should show search input with query
-      await expect(page.locator('input[type="search"]')).toHaveValue('keywords:framework')
-      // Should show results
+      await expect(page.locator('input[type="search"]')).toHaveValue('fastapi')
       await expect(page.locator('text=/found \\d+/i')).toBeVisible()
     })
 
@@ -121,22 +100,16 @@ test.describe('npmjs.com URL Compatibility', () => {
   })
 
   test.describe('Edge Cases', () => {
-    test('package name with dots: /package/lodash.merge', async ({ page, goto }) => {
-      await goto('/package/lodash.merge', { waitUntil: 'domcontentloaded' })
+    test('package name with dots: /package/zope.interface', async ({ page, goto }) => {
+      await goto('/package/zope.interface', { waitUntil: 'domcontentloaded' })
 
-      await expect(page.locator('h1')).toContainText('lodash.merge')
+      await expect(page.locator('h1')).toContainText('zope.interface')
     })
 
-    test('package name with hyphens: /package/is-odd', async ({ page, goto }) => {
-      await goto('/package/is-odd', { waitUntil: 'domcontentloaded' })
+    test('package name with hyphens: /package/charset-normalizer', async ({ page, goto }) => {
+      await goto('/package/charset-normalizer', { waitUntil: 'domcontentloaded' })
 
-      await expect(page.locator('h1')).toContainText('is-odd')
-    })
-
-    test('scoped package with hyphens: /package/@types/node', async ({ page, goto }) => {
-      await goto('/package/@types/node', { waitUntil: 'domcontentloaded' })
-
-      await expect(page.locator('h1')).toContainText('@types/node')
+      await expect(page.locator('h1')).toContainText('charset-normalizer')
     })
   })
 })

@@ -1,0 +1,48 @@
+{
+  "info": {
+    "name": "django",
+    "version": "5.2.8",
+    "summary": "A high-level Python web framework.",
+    "description": "# django\n\nA high-level Python web framework.",
+    "description_content_type": "text/markdown",
+    "home_page": "https://www.djangoproject.com/",
+    "project_urls": {
+      "Homepage": "https://www.djangoproject.com/",
+      "Repository": "https://github.com/django/django",
+      "Issues": "https://code.djangoproject.com/"
+    },
+    "license": "BSD-3-Clause",
+    "keywords": ["django", "web", "framework"],
+    "requires_python": ">=3.10",
+    "classifiers": ["Framework :: Django"]
+  },
+  "releases": {
+    "5.2.8": [
+      {
+        "filename": "django-5.2.8-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "python_version": "py3",
+        "size": 8400000,
+        "upload_time_iso_8601": "2025-11-05T10:00:00.000000Z",
+        "url": "https://files.pythonhosted.org/packages/django-5.2.8.whl",
+        "digests": {
+          "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "django-5.2.8-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "python_version": "py3",
+      "size": 8400000,
+      "upload_time_iso_8601": "2025-11-05T10:00:00.000000Z",
+      "url": "https://files.pythonhosted.org/packages/django-5.2.8.whl",
+      "digests": {
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      }
+    }
+  ],
+  "vulnerabilities": []
+}

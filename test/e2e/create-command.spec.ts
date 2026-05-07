@@ -1,6 +1,8 @@
 import { expect, test } from './test-utils'
 
-test.describe('Create Command', () => {
+test.describe.skip('Create Command', () => {
+  // npm create command detection is npm-specific migration debt. Re-enable with
+  // a PyPI-specific equivalent only if this product adds one.
   test.describe('Visibility', () => {
     test('/vite - should show create command (same maintainers)', async ({ page, goto }) => {
       await goto('/package/vite', { waitUntil: 'domcontentloaded' })

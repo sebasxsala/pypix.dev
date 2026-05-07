@@ -1,0 +1,45 @@
+{
+  "info": {
+    "name": "fastapi",
+    "version": "0.125.0",
+    "summary": "FastAPI framework, high performance, easy to learn, fast to code.",
+    "description": "# fastapi\n\nFastAPI framework.",
+    "description_content_type": "text/markdown",
+    "project_urls": {
+      "Homepage": "https://fastapi.tiangolo.com/",
+      "Repository": "https://github.com/fastapi/fastapi"
+    },
+    "license": "MIT",
+    "keywords": ["fastapi", "api", "framework"],
+    "requires_python": ">=3.8"
+  },
+  "releases": {
+    "0.125.0": [
+      {
+        "filename": "fastapi-0.125.0-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "python_version": "py3",
+        "size": 110000,
+        "upload_time_iso_8601": "2025-12-01T10:00:00.000000Z",
+        "url": "https://files.pythonhosted.org/packages/fastapi-0.125.0.whl",
+        "digests": {
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "fastapi-0.125.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "python_version": "py3",
+      "size": 110000,
+      "upload_time_iso_8601": "2025-12-01T10:00:00.000000Z",
+      "url": "https://files.pythonhosted.org/packages/fastapi-0.125.0.whl",
+      "digests": {
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    }
+  ],
+  "vulnerabilities": []
+}

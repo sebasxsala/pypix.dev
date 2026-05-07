@@ -23,6 +23,8 @@ const FIXTURE_PATHS = {
   search: 'npm-registry:search',
   org: 'npm-registry:orgs',
   downloads: 'npm-api:downloads',
+  pypiProject: 'pypi:projects',
+  pypiSimple: 'pypi',
   user: 'users',
   esmHeaders: 'esm-sh:headers',
   esmTypes: 'esm-sh:types',
@@ -55,8 +57,12 @@ function getFixturePath(type: FixtureType, name: string): string {
       filename = `${name.replace(/:/g, '-')}.json`
       break
     case 'org':
+    case 'pypiProject':
     case 'user':
       filename = `${name}.json`
+      break
+    case 'pypiSimple':
+      filename = 'simple.json'
       break
     default:
       filename = `${name}.json`
@@ -475,6 +481,17 @@ function matchUrlToFixture(url: string): FixtureMatchWithVersion | null {
 
   const { host, pathname, searchParams } = urlObj
 
+  if (host === 'pypi.org') {
+    if (pathname === '/simple/' || pathname === '/simple') {
+      return { type: 'pypiSimple', name: 'simple' }
+    }
+
+    const projectMatch = pathname.match(/^\/pypi\/([^/]+)\/json$/)
+    if (projectMatch?.[1]) {
+      return { type: 'pypiProject', name: decodeURIComponent(projectMatch[1]) }
+    }
+  }
+
   // npm registry (registry.npmjs.org)
   if (host === 'registry.npmjs.org') {
     // Search endpoint
@@ -653,6 +670,14 @@ async function fetchFromFixtures<T>(
         statusCode: 404,
         statusMessage: 'Org not found',
         message: `No fixture for org: ${match.name}`,
+      })
+    }
+
+    if (match.type === 'pypiProject') {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'PyPI project not found',
+        message: `No fixture for PyPI project: ${match.name}`,
       })
     }
 

@@ -92,6 +92,14 @@ function packageToFixturePath(packageName) {
 }
 
 /**
+ * @param {string} projectName
+ * @returns {string}
+ */
+function pypiProjectToFixturePath(projectName) {
+  return `pypi/projects/${projectName}.json`
+}
+
+/**
  * @typedef {Object} MockResponse
  * @property {number} status
  * @property {string} contentType
@@ -159,6 +167,31 @@ function matchNpmRegistry(urlString) {
     if (fixture) {
       return json(fixture)
     }
+    return json({ error: 'Not found' }, 404)
+  }
+
+  return null
+}
+
+/**
+ * Determine the mock response for PyPI requests.
+ *
+ * @param {string} urlString
+ * @returns {MockResponse | null}
+ */
+function matchPypi(urlString) {
+  const url = new URL(urlString)
+  const pathname = decodeURIComponent(url.pathname)
+
+  if (pathname === '/simple/' || pathname === '/simple') {
+    const fixture = readFixture('pypi/simple.json')
+    return fixture ? json(fixture) : json({ projects: [] })
+  }
+
+  const projectMatch = pathname.match(/^\/pypi\/([^/]+)\/json$/)
+  if (projectMatch && projectMatch[1]) {
+    const fixture = readFixture(pypiProjectToFixturePath(projectMatch[1]))
+    if (fixture) return json(fixture)
     return json({ error: 'Not found' }, 404)
   }
 
@@ -655,6 +688,7 @@ function matchMicrolinkApi(urlString) {
  * @type {Array<{ name: string; pattern: string; match: (url: string) => MockResponse | null }>}
  */
 const routes = [
+  { name: 'PyPI', pattern: 'https://pypi.org/**', match: matchPypi },
   { name: 'npm registry', pattern: 'https://registry.npmjs.org/**', match: matchNpmRegistry },
   { name: 'npm API', pattern: 'https://api.npmjs.org/**', match: matchNpmApi },
   { name: 'OSV API', pattern: 'https://api.osv.dev/**', match: matchOsvApi },

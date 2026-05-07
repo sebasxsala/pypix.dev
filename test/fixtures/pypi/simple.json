@@ -1,0 +1,12 @@
+{
+  "projects": [
+    { "name": "requests" },
+    { "name": "django" },
+    { "name": "django-rest-framework" },
+    { "name": "fastapi" },
+    { "name": "zope.interface" },
+    { "name": "charset-normalizer" },
+    { "name": "numpy" },
+    { "name": "pydantic" }
+  ]
+}

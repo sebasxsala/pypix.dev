@@ -17,27 +17,13 @@ const TEST_CASES = [
   // Page OG image template
   { path: '/accessibility', label: 'page' },
 
-  // Package OG image template — covers key visual edge cases
-  { path: '/package/vue', label: 'unscoped package' },
-  { path: '/package/nuxt/v/4.3.1', label: 'unscoped with explicit version' },
-  { path: '/package/@nuxt/kit', label: 'scoped package' },
-  { path: '/package/@tanstack/react-query', label: 'scoped with long name' },
-  {
-    path: '/package/@babel/plugin-transform-exponentiation-operator',
-    label: 'extremely long name',
-  },
-
   // Blog post OG image template
   { path: '/blog/alpha-release', label: 'blog post' },
 
   // Compare OG image template
   { path: '/compare?packages=vue,react,svelte', label: 'compare' },
 
-  // Package code-tree variant (file tree decoration)
-  { path: '/package-code/vue/v/3.5.27', label: 'code-tree variant' },
-
-  // Package function-tree variant (API symbols decoration)
-  { path: '/package-docs/ufo/v/1.6.3', label: 'function-tree variant' },
+  // Package OG variants are skipped until PyPI package snapshots are designed.
 ] as const
 
 for (const { path, label } of TEST_CASES) {

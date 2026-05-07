@@ -1,6 +1,7 @@
 import { expect, test } from './test-utils'
 
-test.describe('Package Replacement Suggestions', () => {
+test.describe.skip('Package Replacement Suggestions', () => {
+  // e18e replacement suggestions are JavaScript-package specific.
   test('/package/strip-ansi shows a replacement suggestion with a link to e18e docs', async ({
     page,
     goto,
