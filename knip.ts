@@ -1,6 +1,9 @@
 import type { KnipConfig } from 'knip'
 
 const config: KnipConfig = {
+  ignoreIssues: {
+    'app/utils/atproto/helpers.ts': ['exports'],
+  },
   workspaces: {
     '.': {
       entry: [
@@ -31,9 +34,6 @@ const config: KnipConfig = {
         'vite-plugin-pwa',
         '@vueuse/shared',
 
-        /** Some components import types from here, but installing it directly could lead to a version mismatch */
-        'vue-router',
-
         /** Oxlint plugins don't get picked up yet */
         '@e18e/eslint-plugin',
         'eslint-plugin-regexp',
@@ -43,8 +43,23 @@ const config: KnipConfig = {
       ],
       ignoreUnresolved: ['#oauth/config'],
       ignoreFiles: [
+        'app/assets/logos/oss-partners/index.ts',
+        'app/assets/logos/sponsors/index.ts',
+        'app/components/About/LogoImg.vue',
+        'app/components/About/LogoList.vue',
+        'app/components/Alert.vue',
+        'app/components/BlogPostListCard.vue',
+        'app/components/Header/AuthModal.client.vue',
+        'app/components/Header/ConnectorModal.vue',
+        'app/components/Header/OrgsDropdown.vue',
+        'app/components/Header/PackagesDropdown.vue',
+        'app/components/Org/OperationsQueue.vue',
+        'app/components/Package/AccessControls.vue',
+        'app/components/Package/ClaimPackageModal.vue',
+        'app/components/Terminal/Install.vue',
         'app/components/Tooltip/Announce.vue',
         'app/components/UserCombobox.vue',
+        'app/composables/useModuleReplacement.ts',
         '**/*.unused.*',
       ],
     },
