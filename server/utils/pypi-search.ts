@@ -1,7 +1,11 @@
 import type { NpmPerson, NpmSearchResponse, NpmSearchResult } from '#shared/types/npm-registry'
 import { CACHE_MAX_AGE_ONE_DAY, PYPI_SIMPLE_API } from '#shared/utils/constants'
 import { getPypiAlgoliaSearchConfig, searchPypiAlgolia } from './pypi-algolia'
-import { fetchPypiProject, type PypiProjectJson } from './pypi-package'
+import {
+  fetchPypiProject,
+  type FetchPypiProjectOptions,
+  type PypiProjectJson,
+} from './pypi-package'
 import {
   getPypiSearchIndex,
   normalizePypiSearchTerm,
@@ -11,7 +15,12 @@ import {
 } from './pypi-search-index'
 
 const SEARCH_METADATA_HYDRATION_LIMIT = 10
+const SEARCH_METADATA_MIN_QUERY_LENGTH = 3
 const SEARCH_RESULT_CACHE_TTL = 60 * 10
+
+interface SearchPypiProjectsOptions {
+  signal?: AbortSignal
+}
 
 type PypiSearchProjectJson = PypiProjectJson & {
   ownership?: {
@@ -117,12 +126,18 @@ export async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
   return await fetchCachedPypiSimpleProjects()
 }
 
-async function fetchPypiProjectJson(name: string): Promise<PypiSearchProjectJson> {
-  return await fetchPypiProject(name)
+async function fetchPypiProjectJson(
+  name: string,
+  options: FetchPypiProjectOptions = {},
+): Promise<PypiSearchProjectJson> {
+  return await fetchPypiProject(name, options)
 }
 
-async function fetchPypiProjectResult(name: string): Promise<NpmSearchResult> {
-  const data = await fetchPypiProjectJson(name)
+async function fetchPypiProjectResult(
+  name: string,
+  options: FetchPypiProjectOptions = {},
+): Promise<NpmSearchResult> {
+  const data = await fetchPypiProjectJson(name, options)
   const keywords = normalizeKeywords(data.info.keywords)
   const maintainers = getPypiMaintainers(data)
   const info = data.info
@@ -177,20 +192,30 @@ function createMinimalSearchResult(name: string): NpmSearchResult {
   }
 }
 
-async function hydrateSearchResult(name: string): Promise<NpmSearchResult> {
-  return await fetchPypiProjectResult(name).catch(() => createMinimalSearchResult(name))
+async function hydrateSearchResult(
+  name: string,
+  options: FetchPypiProjectOptions = {},
+): Promise<NpmSearchResult> {
+  return await fetchPypiProjectResult(name, options).catch(() => createMinimalSearchResult(name))
 }
 
 async function searchPypiProjectsUncached(
   query: string,
   size: number,
   from = 0,
+  options: SearchPypiProjectsOptions = {},
 ): Promise<NpmSearchResponse> {
   const projects = await fetchPypiSimpleProjects()
   const index = await getPypiSearchIndex(projects)
   const { names, total } = searchPypiIndex(index, query, { size, from })
-  const hydrateCount = Math.min(SEARCH_METADATA_HYDRATION_LIMIT, names.length)
-  const hydrated = await Promise.all(names.slice(0, hydrateCount).map(hydrateSearchResult))
+  const normalizedQuery = normalizePypiSearchTerm(query)
+  const hydrateCount =
+    normalizedQuery.length >= SEARCH_METADATA_MIN_QUERY_LENGTH
+      ? Math.min(SEARCH_METADATA_HYDRATION_LIMIT, names.length)
+      : 0
+  const hydrated = await Promise.all(
+    names.slice(0, hydrateCount).map(name => hydrateSearchResult(name, options)),
+  )
   const objects = [...hydrated, ...names.slice(hydrateCount).map(createMinimalSearchResult)]
 
   return {
@@ -214,6 +239,7 @@ export async function searchPypiProjects(
   size: number,
   from = 0,
   provider: 'local' | 'algolia' = 'local',
+  options: SearchPypiProjectsOptions = {},
 ): Promise<NpmSearchResponse> {
   if (provider === 'algolia') {
     const algoliaResult = await searchPypiAlgolia(
@@ -225,5 +251,11 @@ export async function searchPypiProjects(
     if (algoliaResult && algoliaResult.objects.length > 0) return algoliaResult
   }
 
-  return await searchCachedPypiProjects(query, size, from)
+  const searchProjects = searchCachedPypiProjects as (
+    query: string,
+    size: number,
+    from?: number,
+    options?: SearchPypiProjectsOptions,
+  ) => Promise<NpmSearchResponse>
+  return await searchProjects(query, size, from, options)
 }

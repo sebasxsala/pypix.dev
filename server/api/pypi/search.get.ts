@@ -1,4 +1,5 @@
 import { emptyPypiSearchResponse, searchPypiProjects } from '#server/utils/pypi-search'
+import { getRequestAbortSignal } from '#server/utils/request-abort'
 
 export default defineEventHandler(async event => {
   const query = getQuery(event)
@@ -16,5 +17,6 @@ export default defineEventHandler(async event => {
     Number.isFinite(size) ? size : 25,
     Number.isFinite(from) ? from : 0,
     provider,
+    { signal: getRequestAbortSignal(event) },
   )
 })

@@ -26,11 +26,47 @@ export interface SearchOptions {
 
 export interface UseSearchConfig {
   /**
-   * Enable org/user suggestion and package-availability checks alongside search.
-   * Algolia bundles these into the same multi-search request.
-   * npm runs them as separate API calls in parallel.
+   * Enable org/user suggestion checks alongside search.
    */
   suggestions?: boolean
+}
+
+function isAbortError(error: unknown) {
+  return (
+    (typeof DOMException !== 'undefined' &&
+      error instanceof DOMException &&
+      error.name === 'AbortError') ||
+    (error as { name?: string })?.name === 'AbortError'
+  )
+}
+
+function mergeAbortSignals(signals: AbortSignal[]) {
+  if (AbortSignal.any) {
+    return AbortSignal.any(signals)
+  }
+
+  const controller = new AbortController()
+
+  function abortFromSignal(signal: AbortSignal) {
+    try {
+      controller.abort(signal.reason)
+    } catch {
+      controller.abort()
+    }
+  }
+
+  for (const signal of signals) {
+    if (signal.aborted) {
+      abortFromSignal(signal)
+      break
+    }
+    signal.addEventListener('abort', () => abortFromSignal(signal), {
+      once: true,
+      signal: controller.signal,
+    })
+  }
+
+  return controller.signal
 }
 
 export function useSearch(
@@ -60,6 +96,7 @@ export function useSearch(
   const packageAvailability = shallowRef<{ name: string; available: boolean } | null>(null)
   const existenceCache = shallowRef<Record<string, boolean>>({})
   const suggestionRequestId = shallowRef(0)
+  const activeSearchController = shallowRef<AbortController | null>(null)
 
   function effectiveSearchProvider() {
     return toValue(searchProvider)
@@ -83,8 +120,16 @@ export function useSearch(
       const opts = toValue(options)
       cache.value = null
 
+      activeSearchController.value?.abort(new DOMException('Search superseded', 'AbortError'))
+      const searchController = new AbortController()
+      activeSearchController.value = searchController
+
       try {
-        const response = await searchNpm(q, { size: opts.size ?? 25, provider }, signal)
+        const response = await searchNpm(
+          q,
+          { size: opts.size ?? 25, provider },
+          mergeAbortSignals([signal, searchController.signal]),
+        )
 
         if (q !== toValue(query)) {
           return emptySearchPayload()
@@ -104,6 +149,10 @@ export function useSearch(
           packageAvailability: null,
         })
       } catch (error: unknown) {
+        if (isAbortError(error)) {
+          return emptySearchPayload()
+        }
+
         const errorMessage = (error as { message?: string })?.message || String(error)
         const isRateLimitError =
           errorMessage.includes('Failed to fetch') || errorMessage.includes('429')
@@ -113,6 +162,10 @@ export function useSearch(
           return emptySearchPayload()
         }
         throw error
+      } finally {
+        if (activeSearchController.value === searchController) {
+          activeSearchController.value = null
+        }
       }
     },
     { default: emptySearchPayload },
@@ -257,32 +310,13 @@ export function useSearch(
   async function validateSuggestionsNpm(q: string) {
     const requestId = ++suggestionRequestId.value
     const { intent, name } = parseSuggestionIntent(q)
-    let availability: { name: string; available: boolean } | null = null
 
     const promises: Promise<void>[] = []
-
-    const trimmed = q.trim()
-    if (isValidNewPackageName(trimmed)) {
-      promises.push(
-        checkPackageExists(trimmed)
-          .then(exists => {
-            if (trimmed === toValue(query).trim()) {
-              availability = { name: trimmed, available: !exists }
-              packageAvailability.value = availability
-            }
-          })
-          .catch(() => {
-            availability = null
-          }),
-      )
-    } else {
-      availability = null
-    }
 
     if (!intent || !name) {
       suggestionsLoading.value = false
       await Promise.all(promises)
-      return { suggestions: [], packageAvailability: availability }
+      return { suggestions: [], packageAvailability: null }
     }
 
     suggestionsLoading.value = true
@@ -322,7 +356,7 @@ export function useSearch(
       }
 
       if (requestId !== suggestionRequestId.value)
-        return { suggestions: [], packageAvailability: availability }
+        return { suggestions: [], packageAvailability: null }
 
       const isOrg = wantOrg && existenceCache.value[`org:${lowerName}`]
       const isUser = wantUser && existenceCache.value[`user:${lowerName}`]
@@ -341,10 +375,10 @@ export function useSearch(
 
     if (requestId === suggestionRequestId.value) {
       suggestions.value = result
-      return { suggestions: result, packageAvailability: availability }
+      return { suggestions: result, packageAvailability: null }
     }
 
-    return { suggestions: [], packageAvailability: availability }
+    return { suggestions: [], packageAvailability: null }
   }
 
   const npmSuggestions = useLazyAsyncData(
@@ -390,6 +424,11 @@ export function useSearch(
       asyncData.refresh()
     })
   }
+
+  onScopeDispose(() => {
+    activeSearchController.value?.abort(new DOMException('Search disposed', 'AbortError'))
+    activeSearchController.value = null
+  })
 
   return {
     ...asyncData,

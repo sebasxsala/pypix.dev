@@ -252,6 +252,62 @@ describe('searchPypiProjects', () => {
     expect(result.objects[10]?.package.description).toBeUndefined()
   })
 
+  it('skips package metadata hydration for short prefix searches', async () => {
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url === 'https://pypi.org/simple/') {
+        return {
+          projects: [
+            { name: 'django' },
+            { name: 'django-rest-framework' },
+            { name: 'dj-database-url' },
+          ],
+        }
+      }
+
+      throw new Error(`Unexpected URL: ${url}`)
+    })
+
+    const result = await searchPypiProjects('dj', 25)
+
+    expect(result.objects.map(item => item.package.name)).toEqual([
+      'django',
+      'dj-database-url',
+      'django-rest-framework',
+    ])
+    expect(result.objects[0]?.package.version).toBe('')
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/pypi/'))).toBe(false)
+  })
+
+  it('passes abort signals to PyPI metadata hydration requests', async () => {
+    const controller = new AbortController()
+
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url === 'https://pypi.org/simple/') {
+        return { projects: [{ name: 'django' }] }
+      }
+
+      if (url === 'https://pypi.org/pypi/django/json') {
+        return {
+          info: {
+            name: 'django',
+            version: '5.2.0',
+            summary: 'A web framework.',
+          },
+          urls: [{ upload_time_iso_8601: '2026-02-01T00:00:00.000Z' }],
+        }
+      }
+
+      throw new Error(`Unexpected URL: ${url}`)
+    })
+
+    await searchPypiProjects('django', 25, 0, 'local', { signal: controller.signal })
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://pypi.org/pypi/django/json',
+      expect.objectContaining({ signal: controller.signal }),
+    )
+  })
+
   it('returns minimal name-only results when package metadata hydration fails', async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === 'https://pypi.org/simple/') {

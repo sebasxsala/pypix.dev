@@ -41,6 +41,10 @@ export interface PypiProjectJson {
   vulnerabilities?: Array<{ id?: string }>
 }
 
+export interface FetchPypiProjectOptions {
+  signal?: AbortSignal
+}
+
 export function getPypiProjectCacheKey(name: string): string {
   return name
     .trim()
@@ -216,8 +220,8 @@ export function transformPypiProject(
   }
 }
 
-export const fetchPypiProject = defineCachedFunction(
-  async (name: string): Promise<PypiProjectJson> => {
+const fetchCachedPypiProject = defineCachedFunction(
+  async (name: string, options: FetchPypiProjectOptions = {}): Promise<PypiProjectJson> => {
     const normalizedName = getPypiProjectCacheKey(name)
     return await $fetch<PypiProjectJson>(
       `${PYPI_JSON_API}/${encodeURIComponent(normalizedName)}/json`,
@@ -226,6 +230,7 @@ export const fetchPypiProject = defineCachedFunction(
           'Accept': 'application/json',
           'User-Agent': 'pypix.dev package page',
         },
+        signal: options.signal,
       },
     )
   },
@@ -236,3 +241,14 @@ export const fetchPypiProject = defineCachedFunction(
     getKey: getPypiProjectCacheKey,
   },
 )
+
+export async function fetchPypiProject(
+  name: string,
+  options: FetchPypiProjectOptions = {},
+): Promise<PypiProjectJson> {
+  const fetchProject = fetchCachedPypiProject as (
+    name: string,
+    options?: FetchPypiProjectOptions,
+  ) => Promise<PypiProjectJson>
+  return await fetchProject(name, options)
+}
