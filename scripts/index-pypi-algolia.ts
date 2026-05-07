@@ -87,11 +87,12 @@ const popularRank = new Map<string, number>(
 const MAX_SUMMARY_LENGTH = 500
 const MAX_STRING_FIELD_LENGTH = 300
 const MAX_PROJECT_URLS = 16
-const MAX_PROJECT_URL_LENGTH = 500
+const MAX_PROJECT_URL_KEY_LENGTH = 80
+const MAX_PROJECT_URL_LENGTH = 180
 const MAX_KEYWORDS = 24
 const MAX_KEYWORD_LENGTH = 80
 const MAX_CLASSIFIERS = 40
-const MAX_CLASSIFIER_LENGTH = 160
+const MAX_CLASSIFIER_LENGTH = 80
 
 function loadDotEnv(path = '.env') {
   if (!existsSync(path)) return
@@ -185,7 +186,7 @@ function normalizeProjectUrls(urls: Record<string, string> | undefined): Record<
   return Object.fromEntries(
     Object.entries(urls ?? {})
       .map(([key, value]) => [
-        truncateString(key.trim(), MAX_STRING_FIELD_LENGTH),
+        truncateString(key.trim(), MAX_PROJECT_URL_KEY_LENGTH),
         truncateString(value.trim(), MAX_PROJECT_URL_LENGTH),
       ])
       .filter((entry): entry is [string, string] => Boolean(entry[0] && entry[1]))

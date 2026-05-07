@@ -84,14 +84,13 @@ export async function searchPypiAlgolia(
 
   try {
     const client = config.client ?? createSearchClient(config)
-    const hitsPerPage = Math.max(1, size)
     const response = await client.search({
       requests: [
         {
           indexName: config.indexName,
           query,
-          page: Math.floor(Math.max(0, from) / hitsPerPage),
-          hitsPerPage,
+          offset: Math.max(0, from),
+          length: Math.max(1, size),
           analyticsTags: ['pypix.dev'],
           attributesToRetrieve: PYPI_ALGOLIA_ATTRIBUTES_TO_RETRIEVE,
           attributesToHighlight: [],

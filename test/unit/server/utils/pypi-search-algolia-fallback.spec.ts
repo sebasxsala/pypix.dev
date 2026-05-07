@@ -58,8 +58,8 @@ describe('searchPypiProjects Algolia provider fallback', () => {
         expect.objectContaining({
           indexName: 'pypix_packages',
           query: 'requests',
-          page: 0,
-          hitsPerPage: 25,
+          offset: 0,
+          length: 25,
         }),
       ],
     })
