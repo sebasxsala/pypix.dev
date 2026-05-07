@@ -108,6 +108,12 @@ onPrehydrate(el => {
       aria-hidden="true"
     >
       <AppLogo id="pypix-index-h1-logo-normal" class="w-42 h-auto sm:w-58 md:w-70" />
+      <span
+        id="pypix-index-h1-logo-env"
+        class="text-sm sm:text-base md:text-lg transform-origin-br font-mono tracking-widest text-accent absolute -bottom-4 end-4"
+      >
+        dev
+      </span>
     </div>
     <component
       v-for="noodle in PERMANENT_NOODLES"

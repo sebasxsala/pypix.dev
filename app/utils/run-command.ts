@@ -1,4 +1,3 @@
-import type { JsrPackageInfo } from '#shared/types/jsr'
 import { getPackageSpecifier, packageManagers } from './install-command'
 import type { PackageManagerId } from './install-command'
 
@@ -64,7 +63,6 @@ export interface RunCommandOptions {
   packageName: string
   packageManager: PackageManagerId
   version?: string | null
-  jsrInfo?: JsrPackageInfo | null
   /** Specific command to run (for packages with multiple bin entries) */
   command?: string
   /** Whether this is a binary-only package (affects which execute command to use) */
@@ -85,11 +83,6 @@ export function getRunCommandParts(options: RunCommandOptions): string[] {
   // Choose execute command based on package type
   const executeCmd = options.isBinaryOnly ? pm.executeRemote : pm.executeLocal
   const executeParts = executeCmd.split(' ')
-
-  // For deno, always use the package specifier
-  if (options.packageManager === 'deno') {
-    return [...executeParts, spec]
-  }
 
   // For local execute with specific command name different from package name
   // e.g., `pnpm exec tsc` for typescript package

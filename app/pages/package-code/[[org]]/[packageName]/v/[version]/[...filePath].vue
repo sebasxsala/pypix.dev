@@ -20,6 +20,7 @@ const route = useRoute('code')
 const mobileFileTreeRef = useTemplateRef('mobileFileTreeRef')
 
 const { codeContainerFull } = useCodeContainer()
+const { settings } = useSettings()
 
 // Parse package name, version, and file path from URL
 // Patterns:
@@ -40,6 +41,11 @@ const packageName = computed(() => parsedRoute.value.packageName)
 const version = computed(() => parsedRoute.value.version)
 const filePathOrig = computed(() => parsedRoute.value.filePath)
 const filePath = computed(() => parsedRoute.value.filePath?.replace(/\/$/, ''))
+const filePreferenceQuery = computed(() =>
+  settings.value.pypiFilePreference === 'all'
+    ? ''
+    : `?filePreference=${settings.value.pypiFilePreference}`,
+)
 
 // Navigation helper - build URL for a path
 function getCodeUrl(args: {
@@ -90,7 +96,7 @@ useCommandPaletteVersionCommands(commandPalettePackageContext, versionUrlPattern
 
 // Fetch file tree
 const { data: fileTree, status: treeStatus } = useFetch<PackageFileTreeResponse>(
-  () => `/api/pypi/files/${packageName.value}/v/${version.value}`,
+  () => `/api/pypi/files/${packageName.value}/v/${version.value}${filePreferenceQuery.value}`,
   {
     immediate: !!version.value,
   },
@@ -149,7 +155,7 @@ const fileContentUrl = computed<string | null>(() => {
   if (!filePath.value || !fileTree.value || isFileTooLarge.value || !isViewingFile.value) {
     return null
   }
-  return `/api/pypi/file/${packageName.value}/v/${version.value}/${filePath.value}`
+  return `/api/pypi/file/${packageName.value}/v/${version.value}/${filePath.value}${filePreferenceQuery.value}`
 })
 
 const {

@@ -71,6 +71,10 @@ const totalPages = computed(() =>
   Math.max(1, Math.ceil(props.results.length / numericPageSize.value)),
 )
 const effectiveCurrentPage = computed(() => Math.min(currentPage.value, totalPages.value))
+const isLoadingUnfetchedPage = computed(
+  () =>
+    paginationMode.value === 'paginated' && isLoading.value && currentPage.value > totalPages.value,
+)
 
 // Compute paginated results for paginated mode
 const displayedResults = computed(() => {
@@ -78,10 +82,16 @@ const displayedResults = computed(() => {
     return props.results
   }
 
+  if (isLoadingUnfetchedPage.value) {
+    return []
+  }
+
   const start = (effectiveCurrentPage.value - 1) * numericPageSize.value
   const end = start + numericPageSize.value
   return props.results.slice(start, end)
 })
+
+const cardSkeletonWidths = ['w-34', 'w-42', 'w-30', 'w-48', 'w-38', 'w-44']
 
 watch(
   [paginationMode, currentPage, totalPages],
@@ -233,17 +243,23 @@ defineExpose({
     <!-- Card View with Pagination -->
     <template v-else>
       <!-- Loading state when fetching page data -->
-      <div
-        v-if="isLoading && displayedResults.length === 0"
-        class="py-12 flex items-center justify-center"
-      >
-        <div class="flex items-center gap-3 text-fg-muted font-mono text-sm">
-          <span
-            class="w-5 h-5 border-2 border-fg-subtle border-t-fg rounded-full motion-safe:animate-spin"
-          />
-          {{ $t('common.loading') }}
-        </div>
-      </div>
+      <ol v-if="isLoading && displayedResults.length === 0" class="list-none m-0 p-0">
+        <li
+          v-for="(width, index) in cardSkeletonWidths"
+          :key="`page-skeleton-${index}`"
+          data-testid="package-page-skeleton-row"
+          class="pb-4"
+        >
+          <div class="rounded-lg border border-border bg-bg-subtle p-4" aria-hidden="true">
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <SkeletonBlock class="h-5 rounded" :class="width" />
+              <SkeletonBlock class="h-5 w-5 rounded-sm" />
+            </div>
+            <SkeletonBlock class="h-4 w-full max-w-xl rounded mb-3" />
+            <SkeletonBlock class="h-4 w-3/5 rounded" />
+          </div>
+        </li>
+      </ol>
       <ol v-else class="list-none m-0 p-0">
         <li v-for="(item, index) in displayedResults" :key="item.package.name" class="pb-4">
           <PackageCard

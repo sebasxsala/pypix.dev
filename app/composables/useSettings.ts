@@ -8,6 +8,9 @@ type BackgroundThemeId = keyof typeof BACKGROUND_THEMES
 
 /** Available search providers */
 export type SearchProvider = 'npm' | 'algolia'
+export type PythonInstaller = 'pip' | 'uv' | 'poetry' | 'pipenv' | 'conda'
+export type PythonVersionStyle = 'unpinned' | 'exact'
+export type PypiFilePreference = 'all' | 'wheels' | 'sdist'
 
 /**
  * Application settings stored in localStorage
@@ -29,6 +32,12 @@ export interface AppSettings {
   selectedLocale: LocaleObject['code'] | null
   /** Search provider for package search */
   searchProvider: SearchProvider
+  /** Preferred Python installer for package install commands */
+  pythonInstaller: PythonInstaller
+  /** Whether install commands should pin the viewed version */
+  pythonVersionStyle: PythonVersionStyle
+  /** Preferred PyPI distribution files to emphasize */
+  pypiFilePreference: PypiFilePreference
   /** Show search results as you type */
   instantSearch: boolean
   /** Enable/disable keyboard shortcuts */
@@ -61,6 +70,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   selectedLocale: null,
   preferredBackgroundTheme: null,
   searchProvider: 'npm',
+  pythonInstaller: 'uv',
+  pythonVersionStyle: 'unpinned',
+  pypiFilePreference: 'all',
   instantSearch: true,
   keyboardShortcuts: true,
   connector: {

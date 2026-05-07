@@ -3,6 +3,7 @@ import type { LocaleObject } from '@nuxtjs/i18n'
 
 const router = useRouter()
 const { settings } = useSettings()
+const selectedPythonInstaller = useSelectedPackageManager()
 const { locale, locales, setLocale: setNuxti18nLocale } = useI18n()
 const colorMode = useColorMode()
 const { currentLocaleStatus, isSourceLocale } = useI18nStatus()
@@ -43,9 +44,9 @@ onKeyStroke(
 )
 
 useSeoMeta({
-  title: () => `${$t('settings.title')} - npmx`,
-  ogTitle: () => `${$t('settings.title')} - npmx`,
-  twitterTitle: () => `${$t('settings.title')} - npmx`,
+  title: () => `${$t('settings.title')} - pypix`,
+  ogTitle: () => `${$t('settings.title')} - pypix`,
+  twitterTitle: () => `${$t('settings.title')} - pypix`,
   description: () => $t('settings.meta_description'),
   ogDescription: () => $t('settings.meta_description'),
   twitterDescription: () => $t('settings.meta_description'),
@@ -128,26 +129,6 @@ useSeoMeta({
             <!-- Divider -->
             <div class="border-t border-border my-4" />
 
-            <!-- Include @types in install toggle -->
-            <SettingsToggle
-              :label="$t('settings.include_types')"
-              :description="$t('settings.include_types_description')"
-              v-model="settings.includeTypesInInstall"
-            />
-
-            <!-- Divider -->
-            <div class="border-t border-border my-4" />
-
-            <!-- Hide platform-specific packages toggle -->
-            <SettingsToggle
-              :label="$t('settings.hide_platform_packages')"
-              :description="$t('settings.hide_platform_packages_description')"
-              v-model="settings.hidePlatformPackages"
-            />
-
-            <!-- Divider -->
-            <div class="border-t border-border my-4" />
-
             <!-- Enable weekly download graph pulse looping animation -->
             <SettingsToggle
               :label="$t('settings.enable_graph_pulse_loop')"
@@ -167,68 +148,90 @@ useSeoMeta({
           </div>
         </section>
 
+        <!-- INSTALL COMMANDS Section -->
+        <section>
+          <h2 class="text-xs text-fg-muted uppercase tracking-wider mb-4">
+            {{ $t('settings.sections.install_commands') }}
+          </h2>
+          <div class="bg-bg-subtle border border-border rounded-lg p-4 sm:p-6 space-y-6">
+            <div class="space-y-2">
+              <label for="python-installer-select" class="block text-sm text-fg font-medium">
+                {{ $t('settings.python_installer') }}
+              </label>
+              <p class="text-xs text-fg-muted mb-3">
+                {{ $t('settings.python_installer_description') }}
+              </p>
+              <SelectField
+                id="python-installer-select"
+                v-model="selectedPythonInstaller"
+                block
+                size="sm"
+                class="max-w-48"
+                :items="[
+                  { label: 'uv', value: 'uv' },
+                  { label: 'pip', value: 'pip' },
+                  { label: 'Poetry', value: 'poetry' },
+                  { label: 'Pipenv', value: 'pipenv' },
+                  { label: 'Conda', value: 'conda' },
+                ]"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="python-version-style-select" class="block text-sm text-fg font-medium">
+                {{ $t('settings.python_version_style') }}
+              </label>
+              <p class="text-xs text-fg-muted mb-3">
+                {{ $t('settings.python_version_style_description') }}
+              </p>
+              <SelectField
+                id="python-version-style-select"
+                v-model="settings.pythonVersionStyle"
+                block
+                size="sm"
+                class="max-w-48"
+                :items="[
+                  { label: $t('settings.python_version_unpinned'), value: 'unpinned' },
+                  { label: $t('settings.python_version_exact'), value: 'exact' },
+                ]"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- PYPI FILES Section -->
+        <section>
+          <h2 class="text-xs text-fg-muted uppercase tracking-wider mb-4">
+            {{ $t('settings.sections.pypi_files') }}
+          </h2>
+          <div class="bg-bg-subtle border border-border rounded-lg p-4 sm:p-6 space-y-2">
+            <label for="pypi-file-preference-select" class="block text-sm text-fg font-medium">
+              {{ $t('settings.pypi_file_preference') }}
+            </label>
+            <p class="text-xs text-fg-muted mb-3">
+              {{ $t('settings.pypi_file_preference_description') }}
+            </p>
+            <SelectField
+              id="pypi-file-preference-select"
+              v-model="settings.pypiFilePreference"
+              block
+              size="sm"
+              class="max-w-48"
+              :items="[
+                { label: $t('settings.pypi_files_all'), value: 'all' },
+                { label: $t('settings.pypi_files_wheels'), value: 'wheels' },
+                { label: $t('settings.pypi_files_sdist'), value: 'sdist' },
+              ]"
+            />
+          </div>
+        </section>
+
         <!-- SEARCH FEATURES Section -->
         <section>
           <h2 class="text-xs text-fg-muted uppercase tracking-wider mb-4">
             {{ $t('settings.sections.search') }}
           </h2>
           <div class="bg-bg-subtle border border-border rounded-lg p-4 sm:p-6">
-            <div class="space-y-2">
-              <label for="search-provider-select" class="block text-sm text-fg font-medium">
-                {{ $t('settings.data_source.label') }}
-              </label>
-              <p class="text-xs text-fg-muted mb-3">
-                {{ $t('settings.data_source.description') }}
-              </p>
-
-              <ClientOnly>
-                <SelectField
-                  id="search-provider-select"
-                  :items="[
-                    { label: $t('settings.data_source.npm'), value: 'npm' },
-                    { label: $t('settings.data_source.algolia'), value: 'algolia' },
-                  ]"
-                  v-model="settings.searchProvider"
-                  block
-                  size="sm"
-                  class="max-w-48"
-                />
-                <template #fallback>
-                  <SelectField
-                    id="search-provider-select"
-                    disabled
-                    :items="[{ label: $t('common.loading'), value: 'loading' }]"
-                    block
-                    size="sm"
-                    class="max-w-48"
-                  />
-                </template>
-              </ClientOnly>
-
-              <!-- Provider description -->
-              <p class="text-xs text-fg-subtle mt-2">
-                {{
-                  settings.searchProvider === 'algolia'
-                    ? $t('settings.data_source.algolia_description')
-                    : $t('settings.data_source.npm_description')
-                }}
-              </p>
-
-              <!-- Algolia attribution -->
-              <a
-                v-if="settings.searchProvider === 'algolia'"
-                href="https://www.algolia.com/developers"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-1 text-xs text-fg-subtle hover:text-fg-muted transition-colors mt-2"
-              >
-                {{ $t('search.algolia_disclaimer') }}
-                <span class="i-lucide:external-link w-3 h-3" aria-hidden="true" />
-              </a>
-            </div>
-
-            <div class="border-t border-border my-4" />
-
             <!-- Instant Search toggle -->
             <SettingsToggle
               :label="$t('settings.instant_search')"

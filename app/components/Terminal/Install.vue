@@ -22,14 +22,22 @@ const { selectedPM, showTypesInInstall, copied, copyInstallCommand } = useInstal
   () => props.typesPackageName ?? null,
   () => props.installVersionOverride ?? null,
 )
+const { settings } = useSettings()
+
+const installVersion = computed(() => {
+  if (props.installVersionOverride) return props.installVersionOverride
+  return settings.value.pythonVersionStyle === 'exact' ? (props.requestedVersion ?? null) : null
+})
+
+const installVersionStyle = computed(() => (installVersion.value ? 'exact' : 'unpinned'))
 
 // Generate install command parts for a specific package manager
 function getInstallPartsForPM(pmId: PackageManagerId) {
   return getInstallCommandParts({
     packageName: props.packageName,
     packageManager: pmId,
-    version: props.installVersionOverride ?? props.requestedVersion,
-    jsrInfo: props.jsrInfo,
+    version: installVersion.value,
+    versionStyle: installVersionStyle.value,
   })
 }
 
@@ -41,8 +49,8 @@ function getDevInstallPartsForPM(pmId: PackageManagerId) {
   return getInstallCommandParts({
     packageName: props.packageName,
     packageManager: pmId,
-    version: props.installVersionOverride ?? props.requestedVersion,
-    jsrInfo: props.jsrInfo,
+    version: installVersion.value,
+    versionStyle: installVersionStyle.value,
     dev: true,
   })
 }
@@ -52,7 +60,6 @@ function getRunPartsForPM(pmId: PackageManagerId, command?: string) {
   return getRunCommandParts({
     packageName: props.packageName,
     packageManager: pmId,
-    jsrInfo: props.jsrInfo,
     command,
     isBinaryOnly: false,
   })
@@ -64,7 +71,6 @@ function getCreatePartsForPM(pmId: PackageManagerId) {
   return getExecuteCommandParts({
     packageName: props.createPackageInfo.packageName,
     packageManager: pmId,
-    jsrInfo: null,
     isCreatePackage: true,
   })
 }
@@ -76,7 +82,8 @@ function getTypesInstallPartsForPM(pmId: PackageManagerId) {
   if (!pm) return []
 
   const devFlag = getDevDependencyFlag(pmId)
-  const pkgSpec = pmId === 'deno' ? `npm:${props.typesPackageName}` : props.typesPackageName
+  if (!devFlag) return []
+  const pkgSpec = props.typesPackageName
 
   return [pm.label, pm.action, devFlag, pkgSpec]
 }
@@ -86,7 +93,6 @@ function getFullRunCommand(command?: string) {
   return getRunCommand({
     packageName: props.packageName,
     packageManager: selectedPM.value,
-    jsrInfo: props.jsrInfo,
     command,
   })
 }
@@ -98,7 +104,6 @@ function getFullCreateCommand() {
   return getExecuteCommand({
     packageName: props.createPackageInfo.packageName,
     packageManager: selectedPM.value,
-    jsrInfo: null,
     isCreatePackage: true,
   })
 }
@@ -116,8 +121,8 @@ const copyDevInstallCommand = () =>
     getInstallCommand({
       packageName: props.packageName,
       packageManager: selectedPM.value,
-      version: props.installVersionOverride ?? props.requestedVersion,
-      jsrInfo: props.jsrInfo,
+      version: installVersion.value,
+      versionStyle: installVersionStyle.value,
       dev: true,
     }),
   )
@@ -407,18 +412,16 @@ useCommandPaletteContextCommands(
 }
 
 /* Show only the matching package manager command */
-:root[data-pm='npm'] [data-pm-cmd='npm'],
-:root[data-pm='pnpm'] [data-pm-cmd='pnpm'],
-:root[data-pm='yarn'] [data-pm-cmd='yarn'],
-:root[data-pm='bun'] [data-pm-cmd='bun'],
-:root[data-pm='deno'] [data-pm-cmd='deno'],
-:root[data-pm='vlt'] [data-pm-cmd='vlt'],
-:root[data-pm='vp'] [data-pm-cmd='vp'] {
+:root[data-pm='uv'] [data-pm-cmd='uv'],
+:root[data-pm='pip'] [data-pm-cmd='pip'],
+:root[data-pm='poetry'] [data-pm-cmd='poetry'],
+:root[data-pm='pipenv'] [data-pm-cmd='pipenv'],
+:root[data-pm='conda'] [data-pm-cmd='conda'] {
   display: flex;
 }
 
-/* Fallback: when no data-pm is set (SSR initial), show npm as default */
-:root:not([data-pm]) [data-pm-cmd]:not([data-pm-cmd='npm']) {
+/* Fallback: when no data-pm is set (SSR initial), show uv as default */
+:root:not([data-pm]) [data-pm-cmd]:not([data-pm-cmd='uv']) {
   display: none;
 }
 </style>

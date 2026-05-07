@@ -120,6 +120,9 @@ const mockSettings = ref({
   selectedLocale: null,
   preferredBackgroundTheme: null,
   searchProvider: 'npm',
+  pythonInstaller: 'uv',
+  pythonVersionStyle: 'unpinned',
+  pypiFilePreference: 'all',
   connector: {
     autoOpenURL: false,
   },

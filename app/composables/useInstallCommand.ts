@@ -1,81 +1,60 @@
-import type { JsrPackageInfo } from '#shared/types/jsr'
-
 /**
- * Composable for generating install commands with support for
- * multiple package managers, @types packages, and JSR.
+ * Composable for generating PyPI install commands with support for
+ * multiple Python installers and optional exact version pins.
  */
 export function useInstallCommand(
   packageName: MaybeRefOrGetter<string | null>,
   requestedVersion: MaybeRefOrGetter<string | null>,
-  jsrInfo: MaybeRefOrGetter<JsrPackageInfo | null>,
+  _jsrInfo: MaybeRefOrGetter<unknown | null>,
   typesPackageName: MaybeRefOrGetter<string | null>,
   installVersionOverride?: MaybeRefOrGetter<string | null>,
 ) {
   const selectedPM = useSelectedPackageManager()
   const { settings } = useSettings()
 
-  // Check if we should show @types in install command
+  // @types packages are npm-only. Keep the return shape for callers during migration.
   const showTypesInInstall = computed(() => {
-    return settings.value.includeTypesInInstall && !!toValue(typesPackageName)
+    void toValue(typesPackageName)
+    return false
+  })
+
+  const installVersion = computed(() => {
+    const override = toValue(installVersionOverride)
+    if (override) return override
+    if (settings.value.pythonVersionStyle === 'exact') return toValue(requestedVersion)
+    return null
   })
 
   const installCommandParts = computed(() => {
     const name = toValue(packageName)
     if (!name) return []
-    const version = toValue(installVersionOverride) ?? toValue(requestedVersion)
     return getInstallCommandParts({
       packageName: name,
       packageManager: selectedPM.value,
-      version,
-      jsrInfo: toValue(jsrInfo),
+      version: installVersion.value,
+      versionStyle: installVersion.value ? 'exact' : 'unpinned',
     })
   })
 
   const installCommand = computed(() => {
     const name = toValue(packageName)
     if (!name) return ''
-    const version = toValue(installVersionOverride) ?? toValue(requestedVersion)
     return getInstallCommand({
       packageName: name,
       packageManager: selectedPM.value,
-      version,
-      jsrInfo: toValue(jsrInfo),
+      version: installVersion.value,
+      versionStyle: installVersion.value ? 'exact' : 'unpinned',
     })
   })
 
-  // Get the dev dependency flag for the selected package manager
-  const devFlag = computed(() => {
-    // bun uses lowercase -d, all others use -D
-    return selectedPM.value === 'bun' ? '-d' : '-D'
-  })
-
-  // @types install command parts (for display)
   const typesInstallCommandParts = computed(() => {
-    const types = toValue(typesPackageName)
-    if (!types) return []
-    const pm = packageManagers.find(p => p.id === selectedPM.value)
-    if (!pm) return []
-
-    const pkgSpec = selectedPM.value === 'deno' ? `npm:${types}` : types
-
-    return [pm.label, pm.action, devFlag.value, pkgSpec]
+    void selectedPM.value
+    void toValue(typesPackageName)
+    return []
   })
 
-  // Full install command including @types (for copying)
   const fullInstallCommand = computed(() => {
-    if (!installCommand.value) return ''
-    const types = toValue(typesPackageName)
-    if (!showTypesInInstall.value || !types) {
-      return installCommand.value
-    }
-
-    const pm = packageManagers.find(p => p.id === selectedPM.value)
-    if (!pm) return installCommand.value
-
-    const pkgSpec = selectedPM.value === 'deno' ? `npm:${types}` : types
-
-    // Use semicolon to separate commands
-    return `${installCommand.value}; ${pm.label} ${pm.action} ${devFlag.value} ${pkgSpec}`
+    return installCommand.value
   })
 
   // Copy state

@@ -72,12 +72,12 @@ test.describe('Hydration', () => {
     }
   })
 
-  // Default: "npm" → test "pnpm"
-  test.describe('package manager: pnpm', () => {
+  // Default: "uv" → test "pip"
+  test.describe('package manager: pip', () => {
     for (const page of PAGES) {
       test(`${page}`, async ({ page: pw, goto, hydrationErrors }) => {
         await injectLocalStorage(pw, {
-          'npmx-pm': JSON.stringify('pnpm'),
+          'npmx-pm': JSON.stringify('pip'),
         })
         await goto(page, { waitUntil: 'hydration' })
 

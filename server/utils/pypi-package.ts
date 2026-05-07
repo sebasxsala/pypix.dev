@@ -1,5 +1,5 @@
 import type { SlimPackument, SlimPackumentVersion } from '#shared/types/npm-registry'
-import { CACHE_MAX_AGE_FIVE_MINUTES, PYPI_JSON_API } from '#shared/utils/constants'
+import { CACHE_MAX_AGE_ONE_HOUR, PYPI_JSON_API } from '#shared/utils/constants'
 
 export interface PypiProjectFile {
   filename?: string
@@ -38,6 +38,13 @@ export interface PypiProjectJson {
   }
   releases?: Record<string, PypiProjectFile[]>
   urls?: PypiProjectFile[]
+}
+
+export function getPypiProjectCacheKey(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[-_.]+/g, '-')
 }
 
 function getUploadTime(file: PypiProjectFile | undefined): string | undefined {
@@ -210,17 +217,21 @@ export function transformPypiProject(
 
 export const fetchPypiProject = defineCachedFunction(
   async (name: string): Promise<PypiProjectJson> => {
-    return await $fetch<PypiProjectJson>(`${PYPI_JSON_API}/${encodeURIComponent(name)}/json`, {
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'pypix.dev package page',
+    const normalizedName = getPypiProjectCacheKey(name)
+    return await $fetch<PypiProjectJson>(
+      `${PYPI_JSON_API}/${encodeURIComponent(normalizedName)}/json`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'pypix.dev package page',
+        },
       },
-    })
+    )
   },
   {
-    maxAge: CACHE_MAX_AGE_FIVE_MINUTES,
+    maxAge: CACHE_MAX_AGE_ONE_HOUR,
     swr: true,
     name: 'pypi-package',
-    getKey: (name: string) => name,
+    getKey: getPypiProjectCacheKey,
   },
 )

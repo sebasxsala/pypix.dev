@@ -1,25 +1,18 @@
 import type { NpmPerson, NpmSearchResponse, NpmSearchResult } from '#shared/types/npm-registry'
-import { CACHE_MAX_AGE_ONE_DAY, PYPI_JSON_API, PYPI_SIMPLE_API } from '#shared/utils/constants'
+import { CACHE_MAX_AGE_ONE_DAY, PYPI_SIMPLE_API } from '#shared/utils/constants'
+import { fetchPypiProject, type PypiProjectJson } from './pypi-package'
+import {
+  getPypiSearchIndex,
+  normalizePypiSearchTerm,
+  PYPI_SEARCH_INDEX_VERSION,
+  searchPypiIndex,
+  type PypiSimpleProject,
+} from './pypi-search-index'
 
-interface PypiSimpleProject {
-  name: string
-}
+const SEARCH_METADATA_HYDRATION_LIMIT = 10
+const SEARCH_RESULT_CACHE_TTL = 60 * 10
 
-interface PypiProjectJson {
-  info: {
-    name: string
-    version: string
-    summary?: string
-    home_page?: string
-    project_urls?: Record<string, string>
-    author?: string
-    author_email?: string
-    maintainer?: string
-    maintainer_email?: string
-    license?: string
-    keywords?: string | string[]
-  }
-  urls?: Array<{ upload_time_iso_8601?: string; upload_time?: string }>
+type PypiSearchProjectJson = PypiProjectJson & {
   ownership?: {
     roles?: Array<{ role: string; user: string }>
     organization?: string | null
@@ -33,13 +26,6 @@ export function emptyPypiSearchResponse(): NpmSearchResponse {
     total: 0,
     time: new Date().toISOString(),
   }
-}
-
-export function normalizePypiSearchTerm(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[\s._-]+/g, '-')
 }
 
 function normalizeKeywords(keywords: string | string[] | undefined): string[] | undefined {
@@ -58,7 +44,7 @@ function createPerson(name?: string, email?: string): NpmPerson | undefined {
   }
 }
 
-function getPypiMaintainers(project: PypiProjectJson) {
+function getPypiMaintainers(project: PypiSearchProjectJson) {
   const roleMaintainers: NpmPerson[] =
     project.ownership?.roles
       ?.filter(role => role.user)
@@ -130,13 +116,8 @@ export async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
   return await fetchCachedPypiSimpleProjects()
 }
 
-async function fetchPypiProjectJson(name: string): Promise<PypiProjectJson> {
-  return await $fetch<PypiProjectJson>(`${PYPI_JSON_API}/${encodeURIComponent(name)}/json`, {
-    headers: {
-      'Accept': 'application/json',
-      'User-Agent': 'pypix.dev search migration MVP',
-    },
-  })
+async function fetchPypiProjectJson(name: string): Promise<PypiSearchProjectJson> {
+  return await fetchPypiProject(name)
 }
 
 async function fetchPypiProjectResult(name: string): Promise<NpmSearchResult> {
@@ -180,43 +161,57 @@ async function fetchPypiProjectResult(name: string): Promise<NpmSearchResult> {
   }
 }
 
-function shouldUseExactPackageFastPath(query: string, from: number): boolean {
-  const trimmed = query.trim()
-  if (from > 0 || !trimmed || /\s/.test(trimmed)) return false
-  return normalizePypiSearchTerm(trimmed).length > 0
+function createMinimalSearchResult(name: string): NpmSearchResult {
+  const date = new Date(0).toISOString()
+  return {
+    package: {
+      name,
+      version: '',
+      date,
+      links: {
+        npm: `https://pypi.org/project/${encodeURIComponent(name)}/`,
+      },
+    },
+    updated: date,
+  }
 }
+
+async function hydrateSearchResult(name: string): Promise<NpmSearchResult> {
+  return await fetchPypiProjectResult(name).catch(() => createMinimalSearchResult(name))
+}
+
+async function searchPypiProjectsUncached(
+  query: string,
+  size: number,
+  from = 0,
+): Promise<NpmSearchResponse> {
+  const projects = await fetchPypiSimpleProjects()
+  const index = await getPypiSearchIndex(projects)
+  const { names, total } = searchPypiIndex(index, query, { size, from })
+  const hydrateCount = Math.min(SEARCH_METADATA_HYDRATION_LIMIT, names.length)
+  const hydrated = await Promise.all(names.slice(0, hydrateCount).map(hydrateSearchResult))
+  const objects = [...hydrated, ...names.slice(hydrateCount).map(createMinimalSearchResult)]
+
+  return {
+    isStale: false,
+    objects,
+    total,
+    time: new Date().toISOString(),
+  }
+}
+
+const searchCachedPypiProjects = defineCachedFunction(searchPypiProjectsUncached, {
+  maxAge: SEARCH_RESULT_CACHE_TTL,
+  swr: true,
+  name: 'pypi-search-results',
+  getKey: (query: string, size: number, from = 0) =>
+    `${PYPI_SEARCH_INDEX_VERSION}:${normalizePypiSearchTerm(query)}:${Math.max(0, size)}:${Math.max(0, from)}`,
+})
 
 export async function searchPypiProjects(
   query: string,
   size: number,
   from = 0,
 ): Promise<NpmSearchResponse> {
-  let exactResult: NpmSearchResult | null = null
-  if (shouldUseExactPackageFastPath(query, from)) {
-    const normalizedQuery = normalizePypiSearchTerm(query)
-    exactResult = await fetchPypiProjectResult(normalizedQuery).catch(() => null)
-  }
-
-  const projects = await fetchPypiSimpleProjects()
-  const exactName = normalizePypiSearchTerm(exactResult?.package.name ?? '')
-  const names = filterPypiProjectNames(projects, query, size, from).filter(
-    name => normalizePypiSearchTerm(name) !== exactName,
-  )
-  const settled = await Promise.allSettled(names.map(name => fetchPypiProjectResult(name)))
-  const objects = [
-    ...(exactResult && size > 0 ? [exactResult] : []),
-    ...settled
-      .filter(
-        (result): result is PromiseFulfilledResult<NpmSearchResult> =>
-          result.status === 'fulfilled',
-      )
-      .map(result => result.value),
-  ].slice(0, size)
-
-  return {
-    isStale: false,
-    objects,
-    total: names.length + (exactResult ? 1 : 0),
-    time: new Date().toISOString(),
-  }
+  return await searchCachedPypiProjects(query, size, from)
 }

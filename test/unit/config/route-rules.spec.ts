@@ -10,4 +10,16 @@ describe('routeRules', () => {
 
     expect(config).toContain("'/api/pypi/search': { isr: false, cache: false }")
   })
+
+  it('defines explicit cache rules for PyPI package-page APIs', () => {
+    const config = readFileSync(`${rootDir}nuxt.config.ts`, 'utf8')
+
+    expect(config).toContain("'/api/pypi/package/**': { isr: 300 }")
+    expect(config).toContain("'/api/pypi/version/**': { isr: 300 }")
+    expect(config).toContain("'/api/pypi/timeline/**':")
+    expect(config).toContain("'/api/pypi/readme/**':")
+    expect(config).toContain("'/api/pypi/readme/markdown/**':")
+    expect(config).toContain("'/api/pypi/files/**':")
+    expect(config).toContain("'/api/pypi/file/**':")
+  })
 })

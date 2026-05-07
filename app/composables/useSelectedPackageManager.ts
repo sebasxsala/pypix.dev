@@ -8,7 +8,8 @@
  */
 export const useSelectedPackageManager = createSharedComposable(
   function useSelectedPackageManager() {
-    const pm = useLocalStorage<PackageManagerId>('npmx-pm', 'npm')
+    const { settings } = useSettings()
+    const pm = useLocalStorage<PackageManagerId>('npmx-pm', settings.value.pythonInstaller)
 
     // Sync to data-pm attribute on the client
     if (import.meta.client) {
@@ -21,8 +22,18 @@ export const useSelectedPackageManager = createSharedComposable(
         pm,
         newPM => {
           document.documentElement.dataset.pm = newPM
+          settings.value.pythonInstaller = newPM
         },
         { immediate: true },
+      )
+
+      watch(
+        () => settings.value.pythonInstaller,
+        newPM => {
+          if (newPM !== pm.value && packageManagers.some(({ id }) => id === newPM)) {
+            pm.value = newPM
+          }
+        },
       )
     }
 

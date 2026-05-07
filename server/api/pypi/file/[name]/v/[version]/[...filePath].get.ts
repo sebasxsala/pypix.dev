@@ -18,7 +18,13 @@ export default defineCachedEventHandler(
     }
 
     try {
-      const entry = await getPypiPackageFileContent(packageName, version, filePath)
+      const filePreference = getQuery(event).filePreference
+      const entry = await getPypiPackageFileContent(
+        packageName,
+        version,
+        filePath,
+        filePreference === 'wheels' || filePreference === 'sdist' ? filePreference : 'all',
+      )
 
       if ((entry.content?.length ?? 0) > MAX_FILE_SIZE) {
         throw createError({
@@ -64,7 +70,11 @@ export default defineCachedEventHandler(
   },
   {
     maxAge: CACHE_MAX_AGE_ONE_YEAR,
-    getKey: event =>
-      `pypi-file:v1:${getRouterParam(event, 'name')}/v/${getRouterParam(event, 'version')}/${getRouterParam(event, 'filePath')}`,
+    getKey: event => {
+      const filePreference = getQuery(event).filePreference
+      const preference =
+        filePreference === 'wheels' || filePreference === 'sdist' ? filePreference : 'all'
+      return `pypi-file:v1:${getRouterParam(event, 'name')}/v/${getRouterParam(event, 'version')}/${getRouterParam(event, 'filePath')}:${preference}`
+    },
   },
 )

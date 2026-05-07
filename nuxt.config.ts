@@ -102,6 +102,19 @@ export default defineNuxtConfig({
     // API routes
     '/api/**': { isr: 300 },
     '/api/pypi/search': { isr: false, cache: false },
+    '/api/pypi/package/**': { isr: 300 },
+    '/api/pypi/version/**': { isr: 300 },
+    '/api/pypi/timeline/**': {
+      isr: {
+        expiration: 300,
+        passQuery: true,
+        allowQuery: ['offset', 'limit'],
+      },
+    },
+    '/api/pypi/readme/markdown/**': { isr: 300 },
+    '/api/pypi/readme/**': { isr: 300 },
+    '/api/pypi/files/**': { isr: true, cache: { maxAge: 365 * 24 * 60 * 60 } },
+    '/api/pypi/file/**': { isr: true, cache: { maxAge: 365 * 24 * 60 * 60 } },
     '/api/registry/badge/**': {
       isr: {
         expiration: 60 * 60 /* one hour */,

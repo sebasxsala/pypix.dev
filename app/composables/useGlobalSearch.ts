@@ -24,17 +24,14 @@ export function buildGlobalSearchQuery(
 
 export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   const { settings } = useSettings()
-  const { searchProvider } = useSearchProvider()
-  const searchProviderValue = computed(() => {
-    const p = normalizeSearchParam(route.query.p)
-    // Backward-compatible read for old /search?p=npm links. New PyPI-first URLs
-    // should not persist the inherited npm provider marker.
-    if (p === 'npm' || searchProvider.value === 'npm') return 'npm'
-    return 'algolia'
-  })
-
   const router = useRouter()
   const route = useRoute()
+  const searchProviderValue = computed(() => {
+    // Backward-compatible read for old /search?p=npm links. PyPI is the only
+    // active provider during this migration, regardless of legacy stored values.
+    void normalizeSearchParam(route.query.p)
+    return 'npm' as const
+  })
   // Internally used searchQuery state
   const searchQuery = useState<string>('search-query', () => {
     if (pagesWithLocalFilter.has(route.name as string)) {
@@ -69,8 +66,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
   )
 
   // Updates URL when search query changes (immediately for instantSearch or after Enter hit otherwise)
-  const updateUrlQueryImpl = (value: string, provider: 'npm' | 'algolia') => {
-    void provider
+  const updateUrlQueryImpl = (value: string) => {
     const submittedValue = normalizeSubmittedSearchQuery(value)
     const isSameQuery = normalizeSearchParam(route.query.q) === submittedValue && !route.query.p
     if (!submittedValue && route.name !== 'search') {
@@ -103,7 +99,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
     committedSearchQuery.value = normalizeSubmittedSearchQuery(searchQuery.value)
     // When instant search is off the debounce queue is empty, so call directly
     if (!settings.value.instantSearch) {
-      updateUrlQueryImpl(searchQuery.value, searchProvider.value)
+      updateUrlQueryImpl(searchQuery.value)
     } else {
       updateUrlQuery.flush()
     }
@@ -114,7 +110,7 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
     set: async (value: string) => {
       searchQuery.value = value
 
-      // When instant search is off, skip debounced URL updates
+      // When instant search is off, only explicitly submitted searches navigate
       // Only explicitly called flushUpdateUrlQuery commits and navigates
       if (!settings.value.instantSearch) return
 
@@ -124,10 +120,10 @@ export function useGlobalSearch(place: 'header' | 'content' = 'content') {
       }
 
       // Leading debounce implementation as it doesn't work properly out of the box (https://github.com/unjs/perfect-debounce/issues/43)
-      if (route.name === 'search' && !updateUrlQuery.isPending()) {
-        updateUrlQueryImpl(value, searchProvider.value)
+      if (!updateUrlQuery.isPending()) {
+        updateUrlQueryImpl(value)
       }
-      updateUrlQuery(value, searchProvider.value)
+      updateUrlQuery(value)
     },
   })
 

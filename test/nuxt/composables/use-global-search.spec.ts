@@ -7,6 +7,11 @@ describe('useGlobalSearch', () => {
   beforeEach(() => {
     localStorage.clear()
     clearNuxtData()
+    useState<string>('search-query').value = ''
+    useState<string>('committed-search-query').value = ''
+    const { settings } = useSettings()
+    settings.value.instantSearch = true
+    settings.value.searchProvider = 'npm'
     vi.useRealTimers()
   })
 
@@ -64,5 +69,74 @@ describe('useGlobalSearch', () => {
 
     expect(useRoute().name).toBe('index')
     expect(useRoute().query.q).toBeUndefined()
+  })
+
+  it('navigates immediately when instant search changes outside the search page', async () => {
+    await navigateTo('/package/django')
+
+    let search: ReturnType<typeof useGlobalSearch> | null = null
+
+    await mountSuspended(
+      defineComponent({
+        setup() {
+          search = useGlobalSearch('header')
+          return () => h('div')
+        },
+      }),
+      { route: '/package/django' },
+    )
+
+    search!.model.value = 'requests'
+    await nextTick()
+
+    await vi.waitFor(() => expect(useRoute().path).toBe('/search'))
+    expect(useRoute().query.q).toBe('requests')
+  })
+
+  it('debounces the committed query while instant search is typing', async () => {
+    await navigateTo('/')
+
+    let search: ReturnType<typeof useGlobalSearch> | null = null
+
+    await mountSuspended(
+      defineComponent({
+        setup() {
+          search = useGlobalSearch()
+          return () => h('div')
+        },
+      }),
+      { route: '/' },
+    )
+
+    vi.useFakeTimers()
+    search!.model.value = 'requests'
+    await nextTick()
+
+    expect(search!.committedModel.value).toBe('')
+
+    await vi.advanceTimersByTimeAsync(100)
+
+    expect(search!.committedModel.value).toBe('requests')
+  })
+
+  it('always exposes PyPI search even when the legacy provider setting is Algolia', async () => {
+    const { settings } = useSettings()
+    settings.value.searchProvider = 'algolia'
+
+    await navigateTo('/search?p=npm&q=requests')
+
+    let search: ReturnType<typeof useGlobalSearch> | null = null
+
+    await mountSuspended(
+      defineComponent({
+        setup() {
+          search = useGlobalSearch()
+          return () => h('div')
+        },
+      }),
+      { route: '/search?p=npm&q=requests' },
+    )
+
+    expect(search!.provider.value).toBe('npm')
   })
 })

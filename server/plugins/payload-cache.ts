@@ -18,7 +18,7 @@ const PAYLOAD_URL_RE = /^[^?]*\/_payload\.json(?:\?.*)?$/
 const PAYLOAD_CACHE_STORAGE_KEY = 'payload-cache'
 
 /** Default TTL for cached payloads (seconds). Matches ISR expiration for package routes. */
-const PAYLOAD_CACHE_TTL = 60
+const PAYLOAD_CACHE_TTL = 300
 
 /**
  * Grace period beyond TTL where stale payloads are still served (seconds).
@@ -53,6 +53,8 @@ function isISRRoute(event: H3Event): boolean {
 }
 
 export default defineNitroPlugin(nitroApp => {
+  if (import.meta.dev) return
+
   const storage = useStorage(PAYLOAD_CACHE_STORAGE_KEY)
   const buildId = useRuntimeConfig().app.buildId as string
 

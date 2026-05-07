@@ -29,9 +29,11 @@ Important PyPI API notes:
 Current search MVP:
 
 - `/api/pypi/search` intentionally does not call PyPI Stats. Download counts are useful package metadata, but they add one extra external request per result and should not block search latency.
-- Exact package-name queries such as `requests`, `fastapi`, and `django` use `GET https://pypi.org/pypi/<project>/json` directly to prioritize the canonical package first, then fill the rest of the result set from the cached `/simple/` project index.
-- Non-exact searches still use the Simple/Index project list, cached through Nitro storage for one day with SWR. This is acceptable for the migration MVP, but it is still a name-only search and cannot rank by description, classifiers, popularity, recency, or download counts.
-- Keep `/api/pypi/search` uncached at the route level unless query-aware ISR is restored with `passQuery` and `allowQuery`. The internal `/simple/` cache is the controlled cache layer for now.
+- Search uses a local name-first index built from the cached Simple/Index project list. The index normalizes PyPI project names, deduplicates canonical names, ranks exact/prefix/token/contains matches, and is kept in memory per worker.
+- Search results are cached per normalized query, page size, and offset for a short TTL. Keep `/api/pypi/search` uncached at the route level unless query-aware ISR is restored with `passQuery` and `allowQuery`; the internal cached functions are the controlled cache layer for now.
+- The first visible results are hydrated from cached PyPI project JSON. Remaining results can be name-only so broad searches do not fan out to one JSON request per match.
+- A small local popular-package seed boosts obvious packages such as `requests`, `fastapi`, `django`, `numpy`, and `pydantic` without introducing an external ranking provider.
+- Current ranking is still name-first and cannot rank by description, classifiers, popularity, recency, or download counts. Full-text search requires a maintained external or scheduled index.
 
 Future search direction:
 

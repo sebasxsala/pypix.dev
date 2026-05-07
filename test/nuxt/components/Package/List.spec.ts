@@ -40,6 +40,22 @@ describe('PackageList', () => {
     expect(wrapper.emitted('pageChange')).toEqual([[1]])
   })
 
+  it('shows card skeletons while an unfetched paginated page is loading', async () => {
+    const wrapper = await mountSuspended(PackageList, {
+      props: {
+        results: [result('better-auth'), result('better-auth-cli')],
+        viewMode: 'cards',
+        paginationMode: 'paginated',
+        currentPage: 2,
+        pageSize: 25,
+        isLoading: true,
+      },
+    })
+
+    expect(wrapper.findAll('[data-testid="package-page-skeleton-row"]').length).toBeGreaterThan(0)
+    expect(wrapper.text()).not.toContain('better-auth package')
+  })
+
   it('renders PyPI maintainer text without a profile link when no username is available', async () => {
     const wrapper = await mountSuspended(PackageList, {
       props: {

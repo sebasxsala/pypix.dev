@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { assertValidPackageName } from '#shared/utils/npm'
 import { getDependencyCount } from '~/utils/npm/dependency-count'
+import {
+  buildPackagePageInstallCommand,
+  resolvePackagePageVersion,
+} from '~/utils/pypi-package-page'
 
 const readmeHeader = useTemplateRef('readmeHeader')
 const isReadmeHeaderPinned = shallowRef(false)
@@ -31,11 +35,6 @@ onMounted(() => {
 
 const { packageName, requestedVersion } = usePackageRoute()
 
-const { data: resolvedVersion, status: resolvedStatus } = await useResolvedVersion(
-  packageName,
-  requestedVersion,
-)
-
 defineOgImage(
   'Package.takumi',
   {
@@ -57,6 +56,15 @@ defineOgImage(
 if (import.meta.server) {
   assertValidPackageName(packageName.value)
 }
+
+const {
+  data: pkg,
+  status: packageStatus,
+  error,
+} = usePackage(packageName, () => requestedVersion.value)
+
+const resolvedVersion = computed(() => resolvePackagePageVersion(pkg.value, requestedVersion.value))
+const resolvedStatus = computed(() => packageStatus.value)
 
 // Fetch README for specific version if requested; otherwise, latest
 const { data: readmeData, status: readmeStatus } = useLazyFetch<ReadmeResponse>(
@@ -204,12 +212,6 @@ watch(
   },
   { immediate: true },
 )
-
-const {
-  data: pkg,
-  status,
-  error,
-} = usePackage(packageName, () => resolvedVersion.value ?? requestedVersion.value)
 
 const { diff: sizeDiff } = useInstallSizeDiff(packageName, resolvedVersion, pkg, installSize)
 const { versions: commandPaletteVersions, ensureLoaded: ensureCommandPaletteVersionsLoaded } =
@@ -467,12 +469,15 @@ const versionUrlPattern = computed(
 useCommandPaletteVersionCommands(commandPalettePackageContext, versionUrlPattern)
 
 const dependencyCount = computed(() => getDependencyCount(displayVersion.value))
+const selectedPythonInstaller = useSelectedPackageManager()
 const pythonInstallCommand = computed(() => {
   const version =
     requestedVersion.value && requestedVersion.value !== 'latest' ? resolvedVersion.value : null
-  return version
-    ? `pip install ${packageName.value}==${version}`
-    : `pip install ${packageName.value}`
+  return buildPackagePageInstallCommand({
+    packageName: packageName.value,
+    packageManager: selectedPythonInstaller.value,
+    version,
+  })
 })
 const { copied: copiedInstallCommand, copy: copyInstallCommand } = useClipboard({
   copiedDuring: 2000,
@@ -515,7 +520,9 @@ const showSkeleton = shallowRef(false)
     <!-- Scenario 1: SPA fallback — show skeleton (no real content to preserve) -->
     <!-- Scenario 2: SSR missing payload — preserve server DOM, skip skeleton -->
     <PackageSkeleton
-      v-if="isSpaFallback || (!hasServerContentOnly && (showSkeleton || status === 'pending'))"
+      v-if="
+        isSpaFallback || (!hasServerContentOnly && (showSkeleton || packageStatus === 'pending'))
+      "
     />
 
     <!-- During hydration without payload, show captured server HTML as a static snapshot.
@@ -900,13 +907,7 @@ const showSkeleton = shallowRef(false)
                 <div class="flex items-center gap-2 min-w-0">
                   <span class="self-start text-fg-subtle font-mono text-sm select-none">$</span>
                   <code class="font-mono text-sm min-w-0">
-                    <span class="text-fg">pip</span>
-                    <span class="text-fg-muted"> install {{ pkg.name }}</span>
-                    <span
-                      v-if="requestedVersion && requestedVersion !== 'latest' && resolvedVersion"
-                      class="text-fg-muted"
-                      >=={{ resolvedVersion }}</span
-                    >
+                    <span class="text-fg-muted">{{ pythonInstallCommand }}</span>
                   </code>
                   <button
                     type="button"
@@ -1121,7 +1122,7 @@ const showSkeleton = shallowRef(false)
 
     <!-- Error state -->
     <div
-      v-else-if="status === 'error'"
+      v-else-if="packageStatus === 'error'"
       role="alert"
       class="flex flex-col items-center py-20 text-center container w-full"
     >

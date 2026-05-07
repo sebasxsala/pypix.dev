@@ -186,18 +186,16 @@ function handleKeydown(event: KeyboardEvent) {
   display: none;
 }
 
-:root[data-pm='npm'] [data-pm-select='npm'],
-:root[data-pm='pnpm'] [data-pm-select='pnpm'],
-:root[data-pm='yarn'] [data-pm-select='yarn'],
-:root[data-pm='bun'] [data-pm-select='bun'],
-:root[data-pm='deno'] [data-pm-select='deno'],
-:root[data-pm='vlt'] [data-pm-select='vlt'],
-:root[data-pm='vp'] [data-pm-select='vp'] {
+:root[data-pm='uv'] [data-pm-select='uv'],
+:root[data-pm='pip'] [data-pm-select='pip'],
+:root[data-pm='poetry'] [data-pm-select='poetry'],
+:root[data-pm='pipenv'] [data-pm-select='pipenv'],
+:root[data-pm='conda'] [data-pm-select='conda'] {
   display: inline-block;
 }
 
-/* Fallback: when no data-pm is set, npm is selected by default */
-:root:not([data-pm]) .pm-select-content:not([data-pm-select='npm']) {
+/* Fallback: when no data-pm is set, uv is selected by default */
+:root:not([data-pm]) .pm-select-content:not([data-pm-select='uv']) {
   display: none;
 }
 </style>

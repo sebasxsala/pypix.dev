@@ -1,5 +1,30 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+describe('useSettings - PyPI settings', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    localStorage.clear()
+  })
+
+  it('defaults to Python-first install and file preferences', async () => {
+    const { useSettings } = await import('~/composables/useSettings')
+    const { settings } = useSettings()
+
+    expect(settings.value.pythonInstaller).toBe('uv')
+    expect(settings.value.pythonVersionStyle).toBe('unpinned')
+    expect(settings.value.pypiFilePreference).toBe('all')
+  })
+
+  it('keeps legacy npm settings available for stored preferences compatibility', async () => {
+    const { useSettings } = await import('~/composables/useSettings')
+    const { settings } = useSettings()
+
+    expect(settings.value.includeTypesInInstall).toBe(true)
+    expect(settings.value.hidePlatformPackages).toBe(true)
+    expect(settings.value.searchProvider).toBe('npm')
+  })
+})
+
 describe('useSettings - keyboardShortcuts', () => {
   beforeEach(() => {
     vi.resetModules()

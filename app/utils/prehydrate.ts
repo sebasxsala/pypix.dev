@@ -21,7 +21,7 @@ export function initPreferencesOnPrehydrate() {
     ] satisfies typeof ACCENT_COLOR_IDS)
 
     // Valid package manager IDs
-    const validPMs = new Set(['npm', 'pnpm', 'yarn', 'bun', 'deno', 'vlt', 'vp'])
+    const validPMs = new Set(['uv', 'pip', 'poetry', 'pipenv', 'conda'])
 
     // Read settings from localStorage
     const settings = JSON.parse(
@@ -39,13 +39,16 @@ export function initPreferencesOnPrehydrate() {
       document.documentElement.dataset.bgTheme = preferredBackgroundTheme
     }
 
-    let pm = 'npm'
+    let pm =
+      settings.pythonInstaller && validPMs.has(settings.pythonInstaller)
+        ? settings.pythonInstaller
+        : 'uv'
 
-    // Support package manager preference in query string (for example, ?pm=pnpm)
+    // Support package manager preference in query string (for example, ?pm=pip)
     const queryPM = new URLSearchParams(window.location.search).get('pm')
     if (queryPM && validPMs.has(queryPM)) {
-      pm = queryPM
-      localStorage.setItem('npmx-pm', pm)
+      pm = queryPM as typeof pm
+      localStorage.setItem('npmx-pm', JSON.stringify(pm))
     } else {
       // Read and apply package manager preference
       const storedPM = localStorage.getItem('npmx-pm')
@@ -59,7 +62,7 @@ export function initPreferencesOnPrehydrate() {
         } catch {
           // If parsing fails, check if it's a plain string (legacy format)
           if (validPMs.has(storedPM)) {
-            pm = storedPM
+            pm = storedPM as typeof pm
           }
         }
       }

@@ -235,9 +235,6 @@ useShortcuts({
         </LinkBase>
       </div>
     </div>
-    <div v-if="packageName" class="mt-4 max-w-xl">
-      <PyPIAdminActions :package-name="packageName" variant="contextual" />
-    </div>
   </div>
   <div
     ref="header"

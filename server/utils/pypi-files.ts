@@ -13,6 +13,8 @@ export interface PypiArchiveEntry {
   content?: Buffer
 }
 
+export type PypiFilePreference = 'all' | 'wheels' | 'sdist'
+
 function isInspectableFilename(filename: string | undefined): boolean {
   return (
     !!filename &&
@@ -25,18 +27,24 @@ function isInspectableFilename(filename: string | undefined): boolean {
 
 export function pickPypiInspectableFile(
   files: PypiProjectFile[] | undefined,
+  preference: PypiFilePreference = 'all',
 ): PypiProjectFile | undefined {
   if (!files?.length) return undefined
-  return (
-    files.find(
-      file => file.packagetype === 'sdist' && isInspectableFilename(file.filename) && file.url,
-    ) ??
-    files.find(
-      file =>
-        file.packagetype === 'bdist_wheel' && isInspectableFilename(file.filename) && file.url,
-    ) ??
-    files.find(file => isInspectableFilename(file.filename) && file.url)
+  const sdist = files.find(
+    file => file.packagetype === 'sdist' && isInspectableFilename(file.filename) && file.url,
   )
+  const wheel = files.find(
+    file => file.packagetype === 'bdist_wheel' && isInspectableFilename(file.filename) && file.url,
+  )
+
+  if (preference === 'sdist') {
+    return sdist ?? wheel ?? files.find(file => isInspectableFilename(file.filename) && file.url)
+  }
+  if (preference === 'wheels') {
+    return wheel ?? sdist ?? files.find(file => isInspectableFilename(file.filename) && file.url)
+  }
+
+  return sdist ?? wheel ?? files.find(file => isInspectableFilename(file.filename) && file.url)
 }
 
 function parseTarString(buffer: Buffer, start: number, length: number): string {
@@ -230,9 +238,10 @@ export function buildPypiFileTree(
 export async function fetchPypiArchiveEntries(
   packageName: string,
   version: string,
+  filePreference: PypiFilePreference = 'all',
 ): Promise<PypiArchiveEntry[]> {
   const project = await fetchPypiProject(packageName)
-  const selectedFile = pickPypiInspectableFile(project.releases?.[version])
+  const selectedFile = pickPypiInspectableFile(project.releases?.[version], filePreference)
 
   if (!selectedFile?.url || !selectedFile.filename) {
     throw createError({ statusCode: 404, message: 'No inspectable PyPI distribution found' })
@@ -245,8 +254,9 @@ export async function fetchPypiArchiveEntries(
 export async function getPypiPackageFileTree(
   packageName: string,
   version: string,
+  filePreference: PypiFilePreference = 'all',
 ): Promise<PackageFileTreeResponse> {
-  const entries = await fetchPypiArchiveEntries(packageName, version)
+  const entries = await fetchPypiArchiveEntries(packageName, version, filePreference)
   return {
     package: packageName,
     version,
@@ -258,8 +268,11 @@ export async function getPypiPackageFileContent(
   packageName: string,
   version: string,
   filePath: string,
+  filePreference: PypiFilePreference = 'all',
 ): Promise<PypiArchiveEntry> {
-  const entries = stripArchiveRoot(await fetchPypiArchiveEntries(packageName, version))
+  const entries = stripArchiveRoot(
+    await fetchPypiArchiveEntries(packageName, version, filePreference),
+  )
   const entry = entries.find(item => item.path === filePath)
   if (!entry?.content) {
     throw createError({ statusCode: 404, message: 'File not found' })

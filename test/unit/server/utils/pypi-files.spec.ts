@@ -54,6 +54,20 @@ describe('pypi-files utils', () => {
     expect(pickPypiInspectableFile(files)?.filename).toBe('demo-1.0.0.tar.gz')
   })
 
+  it('honors explicit wheel and source distribution preferences', () => {
+    const files: PypiProjectFile[] = [
+      {
+        filename: 'demo-1.0.0-py3-none-any.whl',
+        packagetype: 'bdist_wheel',
+        url: 'https://example.test/wheel',
+      },
+      { filename: 'demo-1.0.0.tar.gz', packagetype: 'sdist', url: 'https://example.test/sdist' },
+    ]
+
+    expect(pickPypiInspectableFile(files, 'wheels')?.filename).toBe('demo-1.0.0-py3-none-any.whl')
+    expect(pickPypiInspectableFile(files, 'sdist')?.filename).toBe('demo-1.0.0.tar.gz')
+  })
+
   it('strips the archive root and builds a nested file tree', () => {
     const entries = [
       { path: 'demo-1.0.0/src/demo/__init__.py', size: 12 },

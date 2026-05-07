@@ -16,6 +16,7 @@ export default defineNuxtPlugin({
   setup(nuxtApp) {
     // Only run on the server during SSR
     if (import.meta.client) return
+    if (import.meta.dev) return
 
     nuxtApp.hooks.hook('app:rendered', () => {
       const ssrContext = nuxtApp.ssrContext

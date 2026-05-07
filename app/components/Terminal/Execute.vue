@@ -20,7 +20,6 @@ function getExecutePartsForPM(pmId: PackageManagerId) {
   return getExecuteCommandParts({
     packageName: props.packageName,
     packageManager: pmId,
-    jsrInfo: props.jsrInfo,
     isBinaryOnly: true,
     isCreatePackage: props.isCreatePackage,
   })
@@ -31,7 +30,6 @@ function getFullExecuteCommand() {
   return getExecuteCommand({
     packageName: props.packageName,
     packageManager: selectedPM.value,
-    jsrInfo: props.jsrInfo,
     isBinaryOnly: true,
     isCreatePackage: props.isCreatePackage,
   })
@@ -89,18 +87,16 @@ const copyExecuteCommand = () => copyExecute(getFullExecuteCommand())
 }
 
 /* Show only the matching package manager command */
-:root[data-pm='npm'] [data-pm-cmd='npm'],
-:root[data-pm='pnpm'] [data-pm-cmd='pnpm'],
-:root[data-pm='yarn'] [data-pm-cmd='yarn'],
-:root[data-pm='bun'] [data-pm-cmd='bun'],
-:root[data-pm='deno'] [data-pm-cmd='deno'],
-:root[data-pm='vlt'] [data-pm-cmd='vlt'],
-:root[data-pm='vp'] [data-pm-cmd='vp'] {
+:root[data-pm='uv'] [data-pm-cmd='uv'],
+:root[data-pm='pip'] [data-pm-cmd='pip'],
+:root[data-pm='poetry'] [data-pm-cmd='poetry'],
+:root[data-pm='pipenv'] [data-pm-cmd='pipenv'],
+:root[data-pm='conda'] [data-pm-cmd='conda'] {
   display: flex;
 }
 
-/* Fallback: when no data-pm is set (SSR initial), show npm as default */
-:root:not([data-pm]) [data-pm-cmd]:not([data-pm-cmd='npm']) {
+/* Fallback: when no data-pm is set (SSR initial), show uv as default */
+:root:not([data-pm]) [data-pm-cmd]:not([data-pm-cmd='uv']) {
   display: none;
 }
 </style>

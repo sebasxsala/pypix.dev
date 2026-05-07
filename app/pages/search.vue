@@ -3,7 +3,6 @@ import type { FilterChip, SortKey } from '#shared/types/preferences'
 import { parseSortOption, PROVIDER_SORT_KEYS } from '#shared/types/preferences'
 import { onKeyDown } from '@vueuse/core'
 import { debounce } from 'perfect-debounce'
-import { isPlatformSpecificPackage } from '~/utils/platform-packages'
 import { normalizeSearchParam } from '#shared/utils/url'
 
 definePageMeta({
@@ -80,12 +79,9 @@ onMounted(() => {
 // Results to display (directly from incremental search)
 const rawVisibleResults = computed(() => results.value)
 
-// Settings for platform package filtering
-const { settings } = useSettings()
-
 /**
- * Reorder results to put exact package name match at the top,
- * and optionally filter out platform-specific packages or security holding packages.
+ * Reorder results to put exact package name match at the top and filter out
+ * security holding packages from the inherited npm/Algolia result contract.
  */
 const visibleResults = computed(() => {
   const raw = rawVisibleResults.value
@@ -95,11 +91,6 @@ const visibleResults = computed(() => {
 
   // Filter out "Security holding package" packages taken down by npm registry
   objects = objects.filter(r => !r.package.isSecurityHeld)
-
-  // Filter out platform-specific packages if setting is enabled
-  if (settings.value.hidePlatformPackages) {
-    objects = objects.filter(r => !isPlatformSpecificPackage(r.package.name))
-  }
 
   const q = query.value.trim().toLowerCase()
   if (!q) {
@@ -170,8 +161,9 @@ const isRelevanceSort = computed(
 
 // Maximum eager-load sizes per provider for client-side sorting.
 // Algolia supports up to 1000 with offset/length pagination.
-// npm supports pagination via `from` parameter (no hard cap, but diminishing relevance).
-const EAGER_LOAD_SIZE = { algolia: 500, npm: 500 } as const
+// PyPI search is server-ranked and partially hydrated, so avoid forcing broad
+// metadata work when client-side sorting is selected.
+const EAGER_LOAD_SIZE = { algolia: 500, npm: 100 } as const
 
 // Calculate how many results we need based on current page and preferred page size
 const requestedSize = computed(() => {
@@ -421,7 +413,7 @@ function handleResultsKeydown(e: KeyboardEvent) {
   }
   // If the active element is an input, navigate to exact match or wait for results
   if (e.key === 'Enter' && document.activeElement?.tagName === 'INPUT') {
-    // Get value directly from input (not from route query, which may be debounced)
+    // Get value directly from input; route updates can lag behind the active keystroke
     const inputValue = (document.activeElement as HTMLInputElement).value.trim()
     if (!inputValue) return
 

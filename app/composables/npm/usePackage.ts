@@ -151,7 +151,7 @@ export function usePackage(
   name: MaybeRefOrGetter<string>,
   requestedVersion?: MaybeRefOrGetter<string | null>,
 ) {
-  const asyncData = useLazyAsyncData(
+  const asyncData = useAsyncData(
     () => `package:${toValue(name)}:${toValue(requestedVersion) ?? ''}`,
     async (_, { signal }) => {
       const reqVer = toValue(requestedVersion)

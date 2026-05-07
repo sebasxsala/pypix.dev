@@ -212,6 +212,12 @@ useShortcuts({
           class="relative inline-flex items-center gap-1 py-2 header-logo font-mono text-lg font-medium text-fg hover:text-fg/90 transition-colors duration-200 me-4"
         >
           <AppLogo class="h-6 w-auto" />
+          <span
+            aria-hidden="true"
+            class="scale-35 transform-origin-br font-mono tracking-wide text-accent absolute bottom-0.75 end-2"
+          >
+            dev
+          </span>
         </NuxtLink>
       </LogoContextMenu>
 

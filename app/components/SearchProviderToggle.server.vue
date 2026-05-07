@@ -1,7 +1,10 @@
 <template>
   <div class="relative">
-    <div class="flex items-center justify-center w-8 h-8 rounded-md text-fg-subtle">
-      <span class="i-lucide:settings w-4 h-4" aria-hidden="true" />
+    <div
+      class="inline-flex items-center gap-2 h-8 px-2.5 rounded-md text-xs text-fg-muted bg-bg-subtle border border-border-subtle"
+    >
+      <span class="i-simple-icons:pypi w-4 h-4 text-accent" aria-hidden="true" />
+      <span>{{ $t('settings.pypi_search_provider') }}</span>
     </div>
   </div>
 </template>

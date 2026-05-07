@@ -8,7 +8,12 @@ export default defineCachedEventHandler(
     }
 
     try {
-      return await getPypiPackageFileTree(packageName, version)
+      const filePreference = getQuery(event).filePreference
+      return await getPypiPackageFileTree(
+        packageName,
+        version,
+        filePreference === 'wheels' || filePreference === 'sdist' ? filePreference : 'all',
+      )
     } catch (error: unknown) {
       handleApiError(error, {
         statusCode: 502,
@@ -19,7 +24,11 @@ export default defineCachedEventHandler(
   {
     maxAge: CACHE_MAX_AGE_ONE_YEAR,
     swr: true,
-    getKey: event =>
-      `pypi-files:v1:${getRouterParam(event, 'name')}/v/${getRouterParam(event, 'version')}`,
+    getKey: event => {
+      const filePreference = getQuery(event).filePreference
+      const preference =
+        filePreference === 'wheels' || filePreference === 'sdist' ? filePreference : 'all'
+      return `pypi-files:v1:${getRouterParam(event, 'name')}/v/${getRouterParam(event, 'version')}:${preference}`
+    },
   },
 )

@@ -1,72 +1,51 @@
-import type { JsrPackageInfo } from '#shared/types/jsr'
-import { getCreateShortName } from '#shared/utils/package-analysis'
+import type { PythonVersionStyle } from '~/composables/useSettings'
 
 // @unocss-include
 export const packageManagers = [
   {
-    id: 'npm',
-    label: 'npm',
+    id: 'uv',
+    label: 'uv',
+    action: 'add',
+    executeLocal: 'uv run',
+    executeRemote: 'uvx',
+    create: 'uvx',
+    icon: 'i-lucide:zap',
+  },
+  {
+    id: 'pip',
+    label: 'pip',
     action: 'install',
-    executeLocal: 'npx',
-    executeRemote: 'npx',
-    create: 'npm create',
-    icon: 'i-simple-icons:npm',
+    executeLocal: 'python -m',
+    executeRemote: 'python -m',
+    create: 'python -m',
+    icon: 'i-simple-icons:pypi',
   },
   {
-    id: 'pnpm',
-    label: 'pnpm',
+    id: 'poetry',
+    label: 'poetry',
     action: 'add',
-    executeLocal: 'pnpm exec',
-    executeRemote: 'pnpm dlx',
-    create: 'pnpm create',
-    icon: 'i-simple-icons:pnpm',
+    executeLocal: 'poetry run',
+    executeRemote: 'poetry run',
+    create: 'poetry run',
+    icon: 'i-lucide:music',
   },
   {
-    id: 'yarn',
-    label: 'yarn',
-    action: 'add',
-    // For both yarn v1 and v2+ support
-    // local exec defers to npx instead
-    executeLocal: 'npx',
-    executeRemote: 'yarn dlx',
-    create: 'yarn create',
-    icon: 'i-simple-icons:yarn',
-  },
-  {
-    id: 'bun',
-    label: 'bun',
-    action: 'add',
-    executeLocal: 'bunx',
-    executeRemote: 'bunx',
-    create: 'bun create',
-    icon: 'i-simple-icons:bun',
-  },
-  {
-    id: 'deno',
-    label: 'deno',
-    action: 'add',
-    executeLocal: 'deno run',
-    executeRemote: 'deno run',
-    create: 'deno create',
-    icon: 'i-simple-icons:deno',
-  },
-  {
-    id: 'vlt',
-    label: 'vlt',
+    id: 'pipenv',
+    label: 'pipenv',
     action: 'install',
-    executeLocal: 'vlx',
-    executeRemote: 'vlx',
-    create: 'vlx',
-    icon: 'i-custom-vlt',
+    executeLocal: 'pipenv run',
+    executeRemote: 'pipenv run',
+    create: 'pipenv run',
+    icon: 'i-lucide:box',
   },
   {
-    id: 'vp',
-    label: 'vp',
-    action: 'add',
-    executeLocal: 'vp exec',
-    executeRemote: 'vp dlx',
-    create: 'vp create',
-    icon: 'i-simple-icons:vite',
+    id: 'conda',
+    label: 'conda',
+    action: 'install',
+    executeLocal: 'conda run',
+    executeRemote: 'conda run',
+    create: 'conda run',
+    icon: 'i-lucide:blocks',
   },
 ] as const
 
@@ -76,80 +55,46 @@ export interface InstallCommandOptions {
   packageName: string
   packageManager: PackageManagerId
   version?: string | null
-  jsrInfo?: JsrPackageInfo | null
+  versionStyle?: PythonVersionStyle
   dev?: boolean
 }
 
-export function getDevDependencyFlag(packageManager: PackageManagerId): '-D' | '-d' {
-  return packageManager === 'bun' ? '-d' : '-D'
+export function getDevDependencyFlag(packageManager: PackageManagerId): '--dev' | null {
+  return packageManager === 'uv' || packageManager === 'poetry' || packageManager === 'pipenv'
+    ? '--dev'
+    : null
 }
 
-/**
- * Get the package specifier for a given package manager.
- * Handles jsr: prefix for deno (when available on JSR).
- */
 export function getPackageSpecifier(options: InstallCommandOptions): string {
-  const { packageName, packageManager, jsrInfo } = options
-
-  if (packageManager === 'deno') {
-    if (jsrInfo?.exists && jsrInfo.scope && jsrInfo.name) {
-      // Native JSR package: jsr:@scope/name
-      return `jsr:@${jsrInfo.scope}/${jsrInfo.name}`
-    }
-    // npm compatibility: npm:package
-    return `npm:${packageName}`
-  }
-
-  // Standard package managers (npm, pnpm, yarn, bun, vlt)
-  return packageName
+  const shouldPin = options.version && options.versionStyle === 'exact'
+  return shouldPin ? `${options.packageName}==${options.version}` : options.packageName
 }
 
-/**
- * Generate the full install command for a package.
- */
 export function getInstallCommand(options: InstallCommandOptions): string {
   return getInstallCommandParts(options).join(' ')
 }
 
-/**
- * Generate install command as an array of parts.
- * First element is the command (e.g., "npm"), rest are arguments.
- * Useful for rendering with different styling for command vs args.
- */
 export function getInstallCommandParts(options: InstallCommandOptions): string[] {
   const pm = packageManagers.find(p => p.id === options.packageManager)
   if (!pm) return []
 
+  const devFlag = options.dev ? getDevDependencyFlag(options.packageManager) : null
   const spec = getPackageSpecifier(options)
-  const version = options.version ? `@${options.version}` : ''
-  const devFlag = options.dev ? [getDevDependencyFlag(options.packageManager)] : []
 
-  return [pm.label, pm.action, ...devFlag, `${spec}${version}`]
+  if (pm.id === 'pip') {
+    return ['python', '-m', 'pip', pm.action, ...(devFlag ? [devFlag] : []), spec]
+  }
+
+  return [pm.label, pm.action, ...(devFlag ? [devFlag] : []), spec]
 }
 
 export interface ExecuteCommandOptions extends InstallCommandOptions {
   /** Whether this is a binary-only package (download & run vs local run) */
   isBinaryOnly?: boolean
-  /** Whether this is a create-* package (uses shorthand create command) */
+  /** Whether this is a create-* package */
   isCreatePackage?: boolean
-}
-
-function getCreatePackageSpecifier(options: ExecuteCommandOptions): string | null {
-  if (!options.isCreatePackage) {
-    return null
-  }
-
-  const shortName = getCreateShortName(options.packageName)
-  if (shortName === options.packageName) {
-    return null
-  }
-
-  if (options.packageManager === 'deno') {
-    // npm compatibility: npm:package-name
-    return `npm:${shortName}`
-  }
-
-  return shortName
+  /** Optional executable command exposed by the package */
+  command?: string
 }
 
 export function getExecuteCommand(options: ExecuteCommandOptions): string {
@@ -160,13 +105,19 @@ export function getExecuteCommandParts(options: ExecuteCommandOptions): string[]
   const pm = packageManagers.find(p => p.id === options.packageManager)
   if (!pm) return []
 
-  // For create-* packages, use the shorthand create command.
-  const createSpecifier = getCreatePackageSpecifier(options)
-  if (createSpecifier) {
-    return [...pm.create.split(' '), createSpecifier]
-  }
+  const executable = options.command || options.packageName
 
-  // Choose remote or local execute based on package type
-  const executeCmd = options.isBinaryOnly ? pm.executeRemote : pm.executeLocal
-  return [...executeCmd.split(' '), getPackageSpecifier(options)]
+  if (pm.id === 'uv') {
+    return options.isBinaryOnly ? ['uvx', executable] : ['uv', 'run', executable]
+  }
+  if (pm.id === 'pip') {
+    return ['python', '-m', executable]
+  }
+  if (pm.id === 'poetry') {
+    return ['poetry', 'run', executable]
+  }
+  if (pm.id === 'pipenv') {
+    return ['pipenv', 'run', executable]
+  }
+  return ['conda', 'run', executable]
 }

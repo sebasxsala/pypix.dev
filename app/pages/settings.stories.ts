@@ -9,7 +9,10 @@ const meta = {
   globals: {
     locale: 'en-US',
   },
-  beforeEach: () => localStorage.removeItem('npmx-settings'),
+  beforeEach: () => {
+    localStorage.removeItem('npmx-settings')
+    localStorage.removeItem('npmx-pm')
+  },
   parameters: {
     layout: 'fullscreen',
     msw: {
@@ -25,12 +28,12 @@ type Story = StoryObj<typeof meta>
 /** English locale (default). The Language section shows a GitHub link to help translate the site. */
 export const Default: Story = {}
 
-export const NpmRegistryDataSource: Story = {
+export const PythonInstallCommands: Story = {
   play: async ({ canvas, step }) => {
-    await step('Select npm registry as the data source', async () => {
-      const select = await canvas.findByRole('combobox', { name: /data source/i })
-      await userEvent.selectOptions(select, 'npm')
-      await expect(select).toHaveValue('npm')
+    await step('Select pip as the Python installer', async () => {
+      const select = await canvas.findByRole('combobox', { name: /python installer/i })
+      await userEvent.selectOptions(select, 'pip')
+      await expect(select).toHaveValue('pip')
     })
   },
 }

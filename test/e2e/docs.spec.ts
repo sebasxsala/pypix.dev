@@ -34,6 +34,15 @@ test.describe('API Documentation Pages', () => {
     await expect(tocSidebar.locator('a[href="#section-function"]')).toBeVisible()
   })
 
+  test('docs symbols are browser-contained for faster tab switching', async ({ page, goto }) => {
+    await goto('/package-docs/ufo/v/1.6.3', { waitUntil: 'networkidle' })
+
+    const symbol = page.locator('.docs-content .docs-symbol').first()
+    await expect(symbol).toBeVisible()
+    await expect(symbol).toHaveCSS('content-visibility', 'auto')
+    await expect(symbol).toHaveCSS('contain-intrinsic-size', /auto .+/)
+  })
+
   test('TOC links navigate to sections', async ({ page, goto }) => {
     await goto('/package-docs/ufo/v/1.6.3', { waitUntil: 'networkidle' })
 

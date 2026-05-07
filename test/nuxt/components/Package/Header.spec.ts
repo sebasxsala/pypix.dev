@@ -24,7 +24,7 @@ describe('PackageHeader', () => {
     expect(component.find('nav').text()).toContain('code')
   })
 
-  it('shows contextual official PyPI admin actions for the package', async () => {
+  it('does not show PyPI admin actions on the public package header', async () => {
     const wrapper = await mountSuspended(PackageHeader, {
       props: {
         pkg: null,
@@ -39,12 +39,12 @@ describe('PackageHeader', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Manage project')
-    expect(wrapper.text()).toContain('Publishing guide')
+    expect(wrapper.text()).not.toContain('Manage project')
+    expect(wrapper.text()).not.toContain('Publishing guide')
     expect(wrapper.text()).not.toContain('Configure Trusted Publisher')
 
     const links = wrapper.findAll('a').map(link => link.attributes('href'))
-    expect(links).toContain('https://pypi.org/manage/project/requests/')
-    expect(links).toContain('/publishing')
+    expect(links).not.toContain('https://pypi.org/manage/project/requests/')
+    expect(links).not.toContain('/publishing')
   })
 })

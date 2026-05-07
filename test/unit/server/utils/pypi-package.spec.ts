@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.stubGlobal('defineCachedFunction', (fn: Function) => fn)
 
-const { transformPypiProject } = await import('#server/utils/pypi-package')
+const { getPypiProjectCacheKey, transformPypiProject } = await import('#server/utils/pypi-package')
 
 describe('transformPypiProject', () => {
   it('maps PyPI JSON metadata into the package page data contract', () => {
@@ -137,5 +137,13 @@ describe('transformPypiProject', () => {
     expect(transformed.versions['1.0.0']?.deprecated).toBe('Bad wheel metadata')
     expect(transformed.requestedVersion?.deprecated).toBe('Bad wheel metadata')
     expect(transformed.securityVersions?.[0]?.deprecated).toBe('Bad wheel metadata')
+  })
+})
+
+describe('getPypiProjectCacheKey', () => {
+  it('normalizes PyPI project cache keys using PEP 503 rules', () => {
+    expect(getPypiProjectCacheKey(' Requests ')).toBe('requests')
+    expect(getPypiProjectCacheKey('zope.interface')).toBe('zope-interface')
+    expect(getPypiProjectCacheKey('my_package.name')).toBe('my-package-name')
   })
 })

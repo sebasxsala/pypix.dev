@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { getExecutableInfo, getRunCommand, getRunCommandParts } from '~/utils/run-command'
 import { isBinaryOnlyPackage, isCreatePackage } from '#shared/utils/binary-detection'
-import type { JsrPackageInfo } from '#shared/types/jsr'
 
 describe('executable detection and run commands', () => {
-  const jsrNotAvailable: JsrPackageInfo = { exists: false }
-
   describe('getExecutableInfo', () => {
     it('returns hasExecutable: false for undefined bin', () => {
       const info = getExecutableInfo('some-package', undefined)
@@ -75,36 +72,32 @@ describe('executable detection and run commands', () => {
   describe('getRunCommandParts', () => {
     // Default behavior uses local execute (for installed packages)
     it.each([
-      ['npm', ['npx', 'eslint']],
-      ['pnpm', ['pnpm', 'exec', 'eslint']],
-      ['yarn', ['npx', 'eslint']],
-      ['bun', ['bunx', 'eslint']],
-      ['deno', ['deno', 'run', 'npm:eslint']],
-      ['vlt', ['vlx', 'eslint']],
+      ['uv', ['uv', 'run', 'ruff']],
+      ['pip', ['python', '-m', 'ruff']],
+      ['poetry', ['poetry', 'run', 'ruff']],
+      ['pipenv', ['pipenv', 'run', 'ruff']],
+      ['conda', ['conda', 'run', 'ruff']],
     ] as const)('%s (local) → %s', (pm, expected) => {
       expect(
         getRunCommandParts({
-          packageName: 'eslint',
+          packageName: 'ruff',
           packageManager: pm,
-          jsrInfo: jsrNotAvailable,
         }),
       ).toEqual(expected)
     })
 
     // Binary-only packages use remote execute (download & run)
     it.each([
-      ['npm', ['npx', 'create-vite']],
-      ['pnpm', ['pnpm', 'dlx', 'create-vite']],
-      ['yarn', ['yarn', 'dlx', 'create-vite']],
-      ['bun', ['bunx', 'create-vite']],
-      ['deno', ['deno', 'run', 'npm:create-vite']],
-      ['vlt', ['vlx', 'create-vite']],
+      ['uv', ['uvx', 'ruff']],
+      ['pip', ['python', '-m', 'ruff']],
+      ['poetry', ['poetry', 'run', 'ruff']],
+      ['pipenv', ['pipenv', 'run', 'ruff']],
+      ['conda', ['conda', 'run', 'ruff']],
     ] as const)('%s (remote) → %s', (pm, expected) => {
       expect(
         getRunCommandParts({
-          packageName: 'create-vite',
+          packageName: 'ruff',
           packageManager: pm,
-          jsrInfo: jsrNotAvailable,
           isBinaryOnly: true,
         }),
       ).toEqual(expected)
@@ -113,29 +106,25 @@ describe('executable detection and run commands', () => {
     it('uses command name directly for multi-bin packages', () => {
       const parts = getRunCommandParts({
         packageName: 'typescript',
-        packageManager: 'npm',
+        packageManager: 'uv',
         command: 'tsserver',
-        jsrInfo: jsrNotAvailable,
       })
-      // npx tsserver runs the tsserver command (not npx typescript/tsserver)
-      expect(parts).toEqual(['npx', 'tsserver'])
+      expect(parts).toEqual(['uv', 'run', 'tsserver'])
     })
 
     it('uses base name directly when command matches package base name', () => {
       const parts = getRunCommandParts({
         packageName: '@scope/myapp',
-        packageManager: 'npm',
+        packageManager: 'uv',
         command: 'myapp',
-        jsrInfo: jsrNotAvailable,
       })
-      expect(parts).toEqual(['npx', '@scope/myapp'])
+      expect(parts).toEqual(['uv', 'run', '@scope/myapp'])
     })
 
     it('returns empty array for invalid package manager', () => {
       const parts = getRunCommandParts({
         packageName: 'eslint',
         packageManager: 'invalid' as any,
-        jsrInfo: jsrNotAvailable,
       })
       expect(parts).toEqual([])
     })
@@ -146,28 +135,25 @@ describe('executable detection and run commands', () => {
       expect(
         getRunCommand({
           packageName: 'eslint',
-          packageManager: 'npm',
-          jsrInfo: jsrNotAvailable,
+          packageManager: 'uv',
         }),
-      ).toBe('npx eslint')
+      ).toBe('uv run eslint')
     })
 
-    it('generates correct bun run command with specific command', () => {
+    it('generates correct pip run command with specific command', () => {
       expect(
         getRunCommand({
           packageName: 'typescript',
-          packageManager: 'bun',
+          packageManager: 'pip',
           command: 'tsserver',
-          jsrInfo: jsrNotAvailable,
         }),
-      ).toBe('bunx tsserver')
+      ).toBe('python -m tsserver')
     })
 
     it('joined parts match getRunCommand output', () => {
       const options = {
         packageName: 'eslint',
-        packageManager: 'pnpm' as const,
-        jsrInfo: jsrNotAvailable,
+        packageManager: 'poetry' as const,
       }
       const parts = getRunCommandParts(options)
       const command = getRunCommand(options)

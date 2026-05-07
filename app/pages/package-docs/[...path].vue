@@ -368,6 +368,8 @@ const docsLoadingSections = [
 /* Individual symbol articles */
 .docs-content .docs-symbol {
   @apply mb-10 pb-10 border-b border-border/30 last:border-0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 18rem;
 }
 
 .docs-content .docs-truncated {
