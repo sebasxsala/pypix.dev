@@ -1,4 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
+import { lookup } from 'node:dns/promises'
+
+vi.mock('node:dns/promises', () => ({
+  lookup: vi.fn(),
+}))
+
 import {
   isTrustedImageDomain,
   isAllowedImageUrl,
@@ -9,8 +15,18 @@ import {
 } from '#server/utils/image-proxy'
 
 const TEST_SECRET = 'test-secret-key-for-unit-tests'
+const lookupMock = vi.mocked(lookup) as unknown as Mock
 
 describe('Image Proxy Utils', () => {
+  beforeEach(() => {
+    lookupMock.mockReset()
+    lookupMock.mockImplementation(async (hostname: string) => {
+      if (hostname === 'example.com') return [{ address: '93.184.215.14', family: 4 }]
+      if (hostname === 'localhost') return [{ address: '127.0.0.1', family: 4 }]
+      throw new Error('mock DNS lookup failed')
+    })
+  })
+
   describe('isTrustedImageDomain', () => {
     it('trusts GitHub raw content URLs', () => {
       expect(
