@@ -9,8 +9,19 @@ vi.stubGlobal('PYPI_SIMPLE_API', 'https://pypi.org/simple')
 const fetchMock = vi.fn()
 vi.stubGlobal('$fetch', fetchMock)
 
+const storageItems = new Map<string, unknown>()
+const storageMock = {
+  getItem: vi.fn(async (key: string) => storageItems.get(key) ?? null),
+  setItem: vi.fn(async (key: string, value: unknown) => {
+    storageItems.set(key, value)
+  }),
+}
+const useStorageMock = vi.fn(() => storageMock)
+vi.stubGlobal('useStorage', useStorageMock)
+
 const { normalizePypiSearchTerm } = await import('#server/utils/pypi-search-index')
 const {
+  clearPypiSimpleProjectIndexCacheForTesting,
   filterPypiProjectNames,
   fetchPypiSimpleProjectIndex,
   getPypiSearchCacheKey,
@@ -57,15 +68,43 @@ describe('filterPypiProjectNames', () => {
 describe('searchPypiProjects', () => {
   beforeEach(() => {
     fetchMock.mockReset()
+    storageItems.clear()
+    storageMock.getItem.mockClear()
+    storageMock.setItem.mockClear()
+    useStorageMock.mockClear()
+    clearPypiSimpleProjectIndexCacheForTesting()
   })
 
-  it('caches the PyPI Simple project index through Nitro storage', () => {
-    expect(defineCachedFunctionMock).toHaveBeenCalledWith(expect.any(Function), {
-      maxAge: 86400,
-      swr: true,
-      name: 'pypi-simple-projects',
-      getKey: expect.any(Function),
+  it('stores the PyPI Simple project index in shared Nitro storage', async () => {
+    fetchMock.mockImplementationOnce(
+      async (_url: string, options?: { onResponse?: (context: unknown) => void }) => {
+        options?.onResponse?.({
+          response: {
+            status: 200,
+            headers: new Headers({
+              'etag': '"simple-etag"',
+              'x-pypi-last-serial': '24888689',
+              'last-modified': 'Sat, 09 May 2026 00:00:00 GMT',
+            }),
+          },
+        })
+        return {
+          meta: { '_last-serial': 24888689 },
+          projects: [{ name: 'requests' }],
+        }
+      },
+    )
+
+    const result = await fetchPypiSimpleProjectIndex()
+
+    expect(result).toMatchObject({
+      etag: '"simple-etag"',
+      lastModified: 'Sat, 09 May 2026 00:00:00 GMT',
+      lastSerial: '24888689',
+      projects: [{ name: 'requests' }],
     })
+    expect(useStorageMock).toHaveBeenCalledWith('pypi-simple-projects')
+    expect(storageMock.setItem).toHaveBeenCalledWith('all', result)
   })
 
   it('caches PyPI search results by normalized query and pagination for one hour', () => {
@@ -114,8 +153,10 @@ describe('searchPypiProjects', () => {
 
     expect(result).toEqual({
       etag: '"simple-etag"',
+      checkedAt: expect.any(Number),
       lastSerial: '24888689',
       projects: [{ name: 'requests' }],
+      updatedAt: expect.any(Number),
     })
     expect(fetchMock).toHaveBeenCalledWith(
       'https://pypi.org/simple/',
@@ -123,6 +164,66 @@ describe('searchPypiProjects', () => {
         onResponse: expect.any(Function),
       }),
     )
+  })
+
+  it('returns a shared cached Simple index without calling PyPI while it is fresh', async () => {
+    const cachedAt = Date.now()
+    storageItems.set('all', {
+      checkedAt: cachedAt,
+      updatedAt: cachedAt,
+      etag: '"cached-etag"',
+      lastSerial: '24880000',
+      projects: [{ name: 'django' }],
+    })
+
+    const result = await fetchPypiSimpleProjectIndex()
+
+    expect(result.projects).toEqual([{ name: 'django' }])
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(storageMock.getItem).toHaveBeenCalledWith('all')
+  })
+
+  it('revalidates stale Simple indexes conditionally and keeps projects on 304', async () => {
+    const cachedAt = Date.now() - 10 * 60 * 1000
+    storageItems.set('all', {
+      checkedAt: cachedAt,
+      updatedAt: cachedAt,
+      etag: '"cached-etag"',
+      lastModified: 'Sat, 09 May 2026 00:00:00 GMT',
+      lastSerial: '24880000',
+      projects: [{ name: 'django' }],
+    })
+    fetchMock.mockImplementationOnce(
+      async (
+        _url: string,
+        options?: {
+          headers?: Record<string, string>
+          onResponse?: (context: unknown) => void
+        },
+      ) => {
+        expect(options?.headers).toMatchObject({
+          'If-None-Match': '"cached-etag"',
+          'If-Modified-Since': 'Sat, 09 May 2026 00:00:00 GMT',
+        })
+        options?.onResponse?.({
+          response: {
+            status: 304,
+            headers: new Headers({
+              'etag': '"cached-etag"',
+              'x-pypi-last-serial': '24880000',
+            }),
+          },
+        })
+        return {}
+      },
+    )
+
+    const result = await fetchPypiSimpleProjectIndex()
+
+    expect(result.projects).toEqual([{ name: 'django' }])
+    expect(result.checkedAt).toBeGreaterThan(cachedAt)
+    expect(result.updatedAt).toBe(cachedAt)
+    expect(storageMock.setItem).toHaveBeenCalledWith('all', result)
   })
 
   it('puts exact package name matches first while keeping additional results', async () => {

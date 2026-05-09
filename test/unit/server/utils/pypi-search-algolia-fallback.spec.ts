@@ -13,12 +13,29 @@ vi.stubGlobal('PYPI_SIMPLE_API', 'https://pypi.org/simple')
 const fetchMock = vi.fn()
 vi.stubGlobal('$fetch', fetchMock)
 
-const { searchPypiProjects } = await import('#server/utils/pypi-search')
+const storageItems = new Map<string, unknown>()
+const storageMock = {
+  getItem: vi.fn(async (key: string) => storageItems.get(key) ?? null),
+  setItem: vi.fn(async (key: string, value: unknown) => {
+    storageItems.set(key, value)
+  }),
+}
+vi.stubGlobal(
+  'useStorage',
+  vi.fn(() => storageMock),
+)
+
+const { clearPypiSimpleProjectIndexCacheForTesting, searchPypiProjects } =
+  await import('#server/utils/pypi-search')
 
 describe('searchPypiProjects Algolia provider fallback', () => {
   beforeEach(() => {
     algoliaSearchMock.mockReset()
     fetchMock.mockReset()
+    storageItems.clear()
+    storageMock.getItem.mockClear()
+    storageMock.setItem.mockClear()
+    clearPypiSimpleProjectIndexCacheForTesting()
   })
 
   it('uses Algolia when configured server-side', async () => {

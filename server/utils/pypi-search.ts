@@ -1,5 +1,5 @@
 import type { NpmPerson, NpmSearchResponse, NpmSearchResult } from '#shared/types/npm-registry'
-import { CACHE_MAX_AGE_ONE_DAY, PYPI_SIMPLE_API } from '#shared/utils/constants'
+import { CACHE_MAX_AGE_FIVE_MINUTES, PYPI_SIMPLE_API } from '#shared/utils/constants'
 import { getPypiAlgoliaSearchConfig, searchPypiAlgolia } from './pypi-algolia'
 import {
   fetchPypiProject,
@@ -35,6 +35,27 @@ interface PypiSimpleProjectIndex {
   projects: PypiSimpleProject[]
   etag?: string
   lastSerial?: string
+  lastModified?: string
+  checkedAt?: number
+  updatedAt?: number
+}
+
+type PypiSimpleProjectIndexFetchResponse = {
+  meta?: { '_last-serial'?: number | string }
+  projects?: PypiSimpleProject[]
+}
+
+const PYPI_SIMPLE_PROJECT_INDEX_STORAGE = 'pypi-simple-projects'
+const PYPI_SIMPLE_PROJECT_INDEX_KEY = 'all'
+const PYPI_SIMPLE_PROJECT_INDEX_REVALIDATE_MS = CACHE_MAX_AGE_FIVE_MINUTES * 1000
+const PYPI_SIMPLE_PROJECT_INDEX_REVALIDATE_TIMEOUT_MS = 3000
+
+let memorySimpleProjectIndex: PypiSimpleProjectIndex | null = null
+let memorySimpleProjectIndexRefresh: Promise<PypiSimpleProjectIndex> | null = null
+
+export function clearPypiSimpleProjectIndexCacheForTesting() {
+  memorySimpleProjectIndex = null
+  memorySimpleProjectIndexRefresh = null
 }
 
 export function emptyPypiSearchResponse(): NpmSearchResponse {
@@ -60,6 +81,19 @@ export function normalizePypiSearchPagination(size: number, from = 0) {
 export function getPypiSearchCacheKey(query: string, size: number, from = 0) {
   const pagination = normalizePypiSearchPagination(size, from)
   return `${PYPI_SEARCH_INDEX_VERSION}:${normalizePypiSearchTerm(query)}:${pagination.size}:${pagination.from}`
+}
+
+function isFreshSimpleProjectIndex(index: PypiSimpleProjectIndex, now = Date.now()) {
+  return Boolean(index.checkedAt && now - index.checkedAt < PYPI_SIMPLE_PROJECT_INDEX_REVALIDATE_MS)
+}
+
+function getConditionalSimpleIndexHeaders(cached?: PypiSimpleProjectIndex | null) {
+  return {
+    'Accept': 'application/vnd.pypi.simple.v1+json',
+    'User-Agent': 'pypix.dev search migration MVP',
+    ...(cached?.etag ? { 'If-None-Match': cached.etag } : {}),
+    ...(cached?.lastModified ? { 'If-Modified-Since': cached.lastModified } : {}),
+  }
 }
 
 function normalizeKeywords(keywords: string | string[] | undefined): string[] | undefined {
@@ -127,24 +161,42 @@ export function filterPypiProjectNames(
   return scored.slice(from, from + size).map(({ project }) => project.name)
 }
 
-const fetchCachedPypiSimpleProjectIndex = defineCachedFunction(
-  async (): Promise<PypiSimpleProjectIndex> => {
-    let etag: string | undefined
-    let lastSerial: string | undefined
+async function refreshPypiSimpleProjectIndex(
+  cached?: PypiSimpleProjectIndex | null,
+): Promise<PypiSimpleProjectIndex> {
+  let etag: string | undefined
+  let lastSerial: string | undefined
+  let lastModified: string | undefined
+  let status: number | undefined
+  const now = Date.now()
 
-    const response = await $fetch<{
-      meta?: { '_last-serial'?: number | string }
-      projects: PypiSimpleProject[]
-    }>(`${PYPI_SIMPLE_API}/`, {
-      headers: {
-        'Accept': 'application/vnd.pypi.simple.v1+json',
-        'User-Agent': 'pypix.dev search migration MVP',
-      },
+  try {
+    const response = await $fetch<PypiSimpleProjectIndexFetchResponse>(`${PYPI_SIMPLE_API}/`, {
+      headers: getConditionalSimpleIndexHeaders(cached),
+      ignoreResponseError: true,
+      timeout: PYPI_SIMPLE_PROJECT_INDEX_REVALIDATE_TIMEOUT_MS,
       onResponse({ response }) {
+        status = response.status
         etag = response.headers.get('etag') ?? undefined
         lastSerial = response.headers.get('x-pypi-last-serial') ?? undefined
+        lastModified = response.headers.get('last-modified') ?? undefined
       },
     })
+
+    if (status === 304 && cached) {
+      return {
+        ...cached,
+        ...(etag && { etag }),
+        ...(lastSerial && { lastSerial }),
+        ...(lastModified && { lastModified }),
+        checkedAt: now,
+      }
+    }
+
+    if (!response.projects) {
+      if (cached) return { ...cached, checkedAt: now }
+      throw new Error('PyPI Simple API did not return a project list.')
+    }
 
     const metaSerial = response.meta?.['_last-serial']
     return {
@@ -153,18 +205,45 @@ const fetchCachedPypiSimpleProjectIndex = defineCachedFunction(
       ...(lastSerial || metaSerial !== undefined
         ? { lastSerial: lastSerial ?? String(metaSerial) }
         : {}),
+      ...(lastModified && { lastModified }),
+      checkedAt: now,
+      updatedAt: now,
     }
-  },
-  {
-    maxAge: CACHE_MAX_AGE_ONE_DAY,
-    swr: true,
-    name: 'pypi-simple-projects',
-    getKey: () => 'all',
-  },
-)
+  } catch (error) {
+    if (cached) {
+      return { ...cached, checkedAt: now }
+    }
+    throw error
+  }
+}
 
 export async function fetchPypiSimpleProjectIndex(): Promise<PypiSimpleProjectIndex> {
-  return await fetchCachedPypiSimpleProjectIndex()
+  const now = Date.now()
+  if (memorySimpleProjectIndex && isFreshSimpleProjectIndex(memorySimpleProjectIndex, now)) {
+    return memorySimpleProjectIndex
+  }
+
+  const storage = useStorage(PYPI_SIMPLE_PROJECT_INDEX_STORAGE)
+  const cached =
+    memorySimpleProjectIndex ??
+    (await storage.getItem<PypiSimpleProjectIndex>(PYPI_SIMPLE_PROJECT_INDEX_KEY))
+
+  if (cached && isFreshSimpleProjectIndex(cached, now)) {
+    memorySimpleProjectIndex = cached
+    return cached
+  }
+
+  memorySimpleProjectIndexRefresh ??= refreshPypiSimpleProjectIndex(cached)
+    .then(async index => {
+      memorySimpleProjectIndex = index
+      await storage.setItem(PYPI_SIMPLE_PROJECT_INDEX_KEY, index)
+      return index
+    })
+    .finally(() => {
+      memorySimpleProjectIndexRefresh = null
+    })
+
+  return await memorySimpleProjectIndexRefresh
 }
 
 export async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
