@@ -450,6 +450,36 @@ function prefixId(tagName: string, attribs: sanitizeHtml.Attributes) {
   return { tagName, attribs }
 }
 
+function removeNestedAnchors(html: string): string {
+  const anchorTagPattern = /<\/?a\b[^>]*>/gi
+  const anchorStack: Array<'a' | 'span'> = []
+  let result = ''
+  let lastIndex = 0
+
+  for (const match of html.matchAll(anchorTagPattern)) {
+    const tag = match[0]
+    const index = match.index ?? 0
+    result += html.slice(lastIndex, index)
+
+    if (/^<a\b/i.test(tag)) {
+      if (anchorStack.length > 0) {
+        result += '<span>'
+        anchorStack.push('span')
+      } else {
+        result += tag
+        anchorStack.push('a')
+      }
+    } else {
+      const activeTag = anchorStack.pop()
+      result += activeTag === 'span' ? '</span>' : '</a>'
+    }
+
+    lastIndex = index + tag.length
+  }
+
+  return result + html.slice(lastIndex)
+}
+
 // README h1 always becomes h3
 // For deeper levels, ensure sequential order
 // Don't allow jumping more than 1 level deeper than previous
@@ -794,8 +824,10 @@ ${html}
     },
   })
 
+  const validHtml = removeNestedAnchors(sanitized)
+
   return {
-    html: convertToEmoji(sanitized),
+    html: convertToEmoji(validHtml),
     mdExists: Boolean(content),
     playgroundLinks: collectedLinks,
     toc,

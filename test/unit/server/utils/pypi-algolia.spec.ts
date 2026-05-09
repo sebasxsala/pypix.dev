@@ -1,6 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-vi.stubGlobal('defineCachedFunction', (fn: Function) => fn)
+const defineCachedFunctionMock = vi.fn((fn: Function) => fn)
+
+vi.stubGlobal('defineCachedFunction', defineCachedFunctionMock)
 vi.stubGlobal('PYPI_JSON_API', 'https://pypi.org/pypi')
 vi.stubGlobal('PYPI_SIMPLE_API', 'https://pypi.org/simple')
 
@@ -127,10 +129,6 @@ describe('pypi algolia records', () => {
 })
 
 describe('searchPypiAlgolia', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   it('returns null when Algolia is not configured', async () => {
     const result = await searchPypiAlgolia(
       { provider: 'algolia', appId: '', searchApiKey: '', indexName: ALGOLIA_INDEX_NAME },
@@ -139,6 +137,15 @@ describe('searchPypiAlgolia', () => {
     )
 
     expect(result).toBeNull()
+  })
+
+  it('caches Algolia search results by normalized query and pagination', () => {
+    expect(defineCachedFunctionMock).toHaveBeenCalledWith(expect.any(Function), {
+      maxAge: 600,
+      swr: true,
+      name: 'pypi-algolia-search-results',
+      getKey: expect.any(Function),
+    })
   })
 
   it('returns null when Algolia search fails so callers can fallback locally', async () => {
@@ -208,6 +215,7 @@ describe('searchPypiAlgolia', () => {
       ],
     })
     expect(result?.objects.map(item => item.package.name)).toEqual(['requests'])
+    expect(result?.source).toBe('algolia')
     expect(result?.total).toBe(1)
   })
 })

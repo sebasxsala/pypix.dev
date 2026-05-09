@@ -23,6 +23,6 @@ export default defineCachedEventHandler(
   {
     maxAge: CACHE_MAX_AGE_ONE_HOUR,
     swr: true,
-    getKey: event => `pypi-readme:${getRouterParam(event, 'name') ?? ''}`,
+    getKey: event => `pypi-readme:v2:${getRouterParam(event, 'name') ?? ''}`,
   },
 )

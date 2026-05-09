@@ -102,12 +102,12 @@ export const SORT_KEYS: SortKeyConfig[] = [
 /**
  * Sort keys each search provider can meaningfully sort by.
  *
- * Both providers support: relevance (server-side order), updated, name.
+ * Both providers support: relevance (server-side order), name.
  *
  * Algolia: has `downloadsLast30Days` for download sorting.
  *
- * npm: the search API now includes `downloads.weekly` and `downloads.monthly`
- * directly in results, so download sorting works here too.
+ * npm: PyPI local search is a fast name index and only hydrates exact matches,
+ * so metadata-dependent sorting is intentionally hidden.
  *
  * Neither provider returns useful quality/popularity/maintenance/score values:
  * - npm returns 1 for all detail scores, and score.final === searchScore (= relevance)
@@ -115,7 +115,7 @@ export const SORT_KEYS: SortKeyConfig[] = [
  */
 export const PROVIDER_SORT_KEYS: Record<'algolia' | 'npm', Set<SortKey>> = {
   algolia: new Set<SortKey>(['relevance', 'downloads-week', 'updated', 'name']),
-  npm: new Set<SortKey>(['relevance', 'downloads-week', 'updated', 'name']),
+  npm: new Set<SortKey>(['relevance', 'name']),
 }
 
 /** All valid sort keys for validation */

@@ -5,10 +5,13 @@ import { describe, expect, it } from 'vitest'
 const rootDir = fileURLToPath(new URL('../../../', import.meta.url))
 
 describe('routeRules', () => {
-  it('does not cache PyPI search responses', () => {
+  it('caches PyPI search responses by search query inputs', () => {
     const config = readFileSync(`${rootDir}nuxt.config.ts`, 'utf8')
 
-    expect(config).toContain("'/api/pypi/search': { isr: false, cache: false }")
+    expect(config).toContain("'/api/pypi/search': {")
+    expect(config).toContain('passQuery: true')
+    expect(config).toContain("allowQuery: ['q', 'size', 'from', 'provider']")
+    expect(config).toContain("'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600'")
   })
 
   it('defines explicit cache rules for PyPI package-page APIs', () => {

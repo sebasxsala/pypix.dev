@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FilterChip, SortKey } from '#shared/types/preferences'
+import type { ColumnConfig, FilterChip, SortKey } from '#shared/types/preferences'
 import { parseSortOption, PROVIDER_SORT_KEYS } from '#shared/types/preferences'
 import { onKeyDown } from '@vueuse/core'
 import { debounce } from 'perfect-debounce'
@@ -29,6 +29,8 @@ const {
   toggleColumn,
   resetColumns,
 } = usePackageListPreferences()
+
+const PYPI_SEARCH_COLUMN_IDS = new Set(['name', 'updated'])
 
 // Debounced URL update for page (less aggressive to avoid too many URL changes)
 //Use History API directly to update URL without triggering Router's scroll-to-top
@@ -129,12 +131,6 @@ const ALL_SORT_KEYS: SortKey[] = [
   'name',
 ]
 
-// Disable sort keys the current provider can't meaningfully sort by
-const disabledSortKeys = computed<SortKey[]>(() => {
-  const supported = PROVIDER_SORT_KEYS[searchProvider.value]
-  return ALL_SORT_KEYS.filter(k => !supported.has(k))
-})
-
 // Minimal structured filters usage for search context (no client-side filtering)
 const {
   filters,
@@ -177,15 +173,6 @@ const requestedSize = computed(() => {
   return base
 })
 
-// Reset to relevance sort when switching to a provider that doesn't support the current sort key
-watch(searchProvider, provider => {
-  const { key } = parseSortOption(sortOption.value)
-  const supported = PROVIDER_SORT_KEYS[provider]
-  if (!supported.has(key)) {
-    sortOption.value = 'relevance-desc'
-  }
-})
-
 // Use incremental search with client-side caching + org/user suggestions
 // committedQuery only updates on Enter when instant search is off; otherwise, tracks query as user types
 const {
@@ -204,6 +191,39 @@ const {
   }),
   { suggestions: true },
 )
+
+const isPypiNameIndexSearch = computed(
+  () => searchProvider.value !== 'algolia' || visibleResults.value?.source === 'pypi',
+)
+
+// Disable sort keys the actual result source can't meaningfully sort by.
+const disabledSortKeys = computed<SortKey[]>(() => {
+  const provider = isPypiNameIndexSearch.value ? 'npm' : searchProvider.value
+  const supported = PROVIDER_SORT_KEYS[provider]
+  return ALL_SORT_KEYS.filter(k => !supported.has(k))
+})
+
+const displayColumns = computed<ColumnConfig[]>(() => {
+  if (!isPypiNameIndexSearch.value) return columns.value
+
+  return columns.value
+    .filter(column => PYPI_SEARCH_COLUMN_IDS.has(column.id))
+    .map(column => ({
+      ...column,
+      visible: true,
+      sortable: false,
+    }))
+})
+
+// Reset to relevance sort when the active source no longer supports the selected key.
+watch([searchProvider, isPypiNameIndexSearch], () => {
+  const { key } = parseSortOption(sortOption.value)
+  const provider = isPypiNameIndexSearch.value ? 'npm' : searchProvider.value
+  const supported = PROVIDER_SORT_KEYS[provider]
+  if (!supported.has(key)) {
+    sortOption.value = 'relevance-desc'
+  }
+})
 
 // Client-side sorted results for display
 // The search API already handles text filtering, so we only need to sort.
@@ -683,7 +703,7 @@ onBeforeUnmount(() => {
               :filters="filters"
               v-model:sort-option="sortOption"
               v-model:view-mode="viewMode"
-              :columns="columns"
+              :columns="displayColumns"
               v-model:pagination-mode="paginationMode"
               v-model:page-size="preferredPageSize"
               :total-count="effectiveTotal"
@@ -704,6 +724,9 @@ onBeforeUnmount(() => {
               @update:updated-within="setUpdatedWithin"
               @toggle-keyword="toggleKeyword"
             />
+            <p v-if="isPypiNameIndexSearch" class="mt-2 text-2xs font-mono text-amber-200/80">
+              {{ $t('settings.data_source.npm_description') }}
+            </p>
             <p
               v-if="viewMode === 'cards' && paginationMode === 'infinite'"
               class="text-fg-muted text-sm mt-4 font-mono"
@@ -782,7 +805,7 @@ onBeforeUnmount(() => {
             :page-size="preferredPageSize"
             :initial-page="initialPage"
             :view-mode="viewMode"
-            :columns="columns"
+            :columns="displayColumns"
             v-model:sort-option="sortOption"
             :pagination-mode="paginationMode"
             :current-page="currentPage"

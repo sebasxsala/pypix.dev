@@ -925,5 +925,25 @@ describe('Issue #1323 — single-pass rendering correctness', () => {
       expect(result.html).toContain('<p>Paragraph after code.</p>')
       expect(result.html).toContain('id="user-content-text"')
     })
+
+    it('removes nested anchors from malformed README badge HTML', async () => {
+      const md = [
+        '<p>',
+        '<a href="https://coverage.example/project">',
+        '<img src="https://img.example/coverage.svg" alt="Coverage" />',
+        '<a href="https://pypi.org/project/test-pkg">',
+        '<img src="https://img.example/version.svg" alt="Version" />',
+        '</a>',
+        '</a>',
+        '</p>',
+      ].join('\n')
+
+      const result = await renderReadmeHtml(md, 'test-pkg')
+
+      expect(result.html).toContain('href="https://coverage.example/project"')
+      expect(result.html).not.toMatch(/<a\b[^>]*>[\s\S]*<a\b/i)
+      expect(result.html).toContain('<span>')
+      expect(result.html).toContain('alt="Version"')
+    })
   })
 })

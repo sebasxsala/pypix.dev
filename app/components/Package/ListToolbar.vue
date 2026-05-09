@@ -70,8 +70,10 @@ const availableSortKeys = computed(() => {
   })
 
   if (props.searchContext) {
-    // In search context: show relevance + non-disabled sorts (downloads, updated, name)
-    return SORT_KEYS.filter(k => !k.searchOnly || k.key === 'relevance').map(applyDisabled)
+    // In search context: hide provider-unsupported sorts rather than showing unusable options.
+    return SORT_KEYS.filter(
+      k => (!k.searchOnly || k.key === 'relevance') && !disabledSet.value.has(k.key),
+    ).map(applyDisabled)
   }
   // In org/user context: hide search-only sorts
   return SORT_KEYS.filter(k => !k.searchOnly).map(applyDisabled)

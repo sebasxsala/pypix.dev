@@ -10,7 +10,13 @@ const fetchMock = vi.fn()
 vi.stubGlobal('$fetch', fetchMock)
 
 const { normalizePypiSearchTerm } = await import('#server/utils/pypi-search-index')
-const { filterPypiProjectNames, searchPypiProjects } = await import('#server/utils/pypi-search')
+const {
+  filterPypiProjectNames,
+  fetchPypiSimpleProjectIndex,
+  getPypiSearchCacheKey,
+  normalizePypiSearchPagination,
+  searchPypiProjects,
+} = await import('#server/utils/pypi-search')
 
 describe('normalizePypiSearchTerm', () => {
   it('normalizes spaces and PyPI separators to canonical hyphens', () => {
@@ -62,13 +68,61 @@ describe('searchPypiProjects', () => {
     })
   })
 
-  it('caches PyPI search results by normalized query and pagination', () => {
+  it('caches PyPI search results by normalized query and pagination for one hour', () => {
     expect(defineCachedFunctionMock).toHaveBeenCalledWith(expect.any(Function), {
-      maxAge: 600,
+      maxAge: 3600,
       swr: true,
       name: 'pypi-search-results',
       getKey: expect.any(Function),
     })
+  })
+
+  it('normalizes PyPI search cache keys and caps pagination inputs', () => {
+    expect(getPypiSearchCacheKey(' Better_Auth ', 500, -10)).toBe('v2:better-auth:100:0')
+    expect(getPypiSearchCacheKey('requests', Number.NaN, Number.POSITIVE_INFINITY)).toBe(
+      'v2:requests:25:1000',
+    )
+  })
+
+  it('normalizes pagination before searching PyPI locally', async () => {
+    expect(normalizePypiSearchPagination(500, -5)).toEqual({ size: 100, from: 0 })
+    expect(normalizePypiSearchPagination(Number.NaN, Number.POSITIVE_INFINITY)).toEqual({
+      size: 25,
+      from: 1000,
+    })
+  })
+
+  it('stores PyPI Simple index ETag and serial metadata with the cached project list', async () => {
+    fetchMock.mockImplementationOnce(
+      async (_url: string, options?: { onResponse?: (context: unknown) => void }) => {
+        options?.onResponse?.({
+          response: {
+            headers: new Headers({
+              'etag': '"simple-etag"',
+              'x-pypi-last-serial': '24888689',
+            }),
+          },
+        })
+        return {
+          meta: { '_last-serial': 24888689 },
+          projects: [{ name: 'requests' }],
+        }
+      },
+    )
+
+    const result = await fetchPypiSimpleProjectIndex()
+
+    expect(result).toEqual({
+      etag: '"simple-etag"',
+      lastSerial: '24888689',
+      projects: [{ name: 'requests' }],
+    })
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://pypi.org/simple/',
+      expect.objectContaining({
+        onResponse: expect.any(Function),
+      }),
+    )
   })
 
   it('puts exact package name matches first while keeping additional results', async () => {
@@ -216,12 +270,12 @@ describe('searchPypiProjects', () => {
     expect(fetchMock.mock.calls.some(([url]) => String(url).includes('pypistats.org'))).toBe(false)
   })
 
-  it('hydrates only the first visible results instead of faning out to every match', async () => {
+  it('hydrates only the exact match for PyPI local search', async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === 'https://pypi.org/simple/') {
         return {
           projects: Array.from({ length: 120 }, (_, index) => ({
-            name: `auth-package-${index.toString().padStart(2, '0')}`,
+            name: index === 60 ? 'auth' : `auth-package-${index.toString().padStart(2, '0')}`,
           })),
         }
       }
@@ -247,9 +301,28 @@ describe('searchPypiProjects', () => {
     )
 
     expect(result.objects).toHaveLength(100)
-    expect(jsonFetches).toHaveLength(10)
-    expect(result.objects[0]?.package.description).toBe('Metadata for auth-package-00')
-    expect(result.objects[10]?.package.description).toBeUndefined()
+    expect(jsonFetches).toHaveLength(1)
+    expect(result.objects[0]?.package.name).toBe('auth')
+    expect(result.objects[0]?.package.description).toBe('Metadata for auth')
+    expect(result.objects[1]?.package.description).toBeUndefined()
+  })
+
+  it('does not hydrate metadata when PyPI local search has no exact match', async () => {
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url === 'https://pypi.org/simple/') {
+        return { projects: [{ name: 'auth-core' }, { name: 'auth-extra' }] }
+      }
+
+      throw new Error(`Unexpected URL: ${url}`)
+    })
+
+    const result = await searchPypiProjects('auth', 25)
+
+    expect(result.objects.map(item => item.package.name)).toEqual(['auth-core', 'auth-extra'])
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/pypi/'))).toBe(false)
+    expect(result.source).toBe('pypi')
+    expect(result.objects[0]?.package.date).toBe('')
+    expect(result.objects[0]?.package.description).toBeUndefined()
   })
 
   it('skips package metadata hydration for short prefix searches', async () => {

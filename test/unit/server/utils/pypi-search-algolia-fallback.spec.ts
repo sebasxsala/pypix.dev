@@ -97,6 +97,7 @@ describe('searchPypiProjects Algolia provider fallback', () => {
     const result = await searchPypiProjects('requests', 25, 0, 'algolia')
 
     expect(result.objects.map(item => item.package.name)).toEqual(['requests'])
+    expect(result.source).toBe('pypi')
     expect(fetchMock).toHaveBeenCalledWith('https://pypi.org/simple/', expect.any(Object))
   })
 
@@ -138,6 +139,7 @@ describe('searchPypiProjects Algolia provider fallback', () => {
     const result = await searchPypiProjects('fastapi', 25, 0, 'algolia')
 
     expect(result.objects.map(item => item.package.name)).toEqual(['fastapi'])
+    expect(result.source).toBe('pypi')
     expect(fetchMock).toHaveBeenCalledWith('https://pypi.org/simple/', expect.any(Object))
   })
 })

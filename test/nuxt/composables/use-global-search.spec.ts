@@ -17,6 +17,7 @@ describe('useGlobalSearch', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   it('does not persist the inherited npm provider marker for PyPI search URLs', async () => {
@@ -86,11 +87,21 @@ describe('useGlobalSearch', () => {
       { route: '/package/django' },
     )
 
+    const router = useRouter()
+    const push = vi.spyOn(router, 'push').mockResolvedValue(undefined)
+
     search!.model.value = 'requests'
     await nextTick()
 
-    await vi.waitFor(() => expect(useRoute().path).toBe('/search'))
-    expect(useRoute().query.q).toBe('requests')
+    await vi.waitFor(() =>
+      expect(push).toHaveBeenCalledWith({
+        name: 'search',
+        query: {
+          q: 'requests',
+          p: undefined,
+        },
+      }),
+    )
   })
 
   it('debounces the committed query while instant search is typing', async () => {

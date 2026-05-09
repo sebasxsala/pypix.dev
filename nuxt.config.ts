@@ -6,7 +6,7 @@ const isStorybook = process.env.STORYBOOK === 'true' || process.env.VITEST_STORY
 
 export default defineNuxtConfig({
   modules: [
-    '@vercel/speed-insights',
+    ...(isTest ? [] : ['@vercel/speed-insights']),
     '@unocss/nuxt',
     'nuxt-og-image',
     '@nuxtjs/html-validator',
@@ -99,7 +99,15 @@ export default defineNuxtConfig({
   routeRules: {
     // API routes
     '/api/**': { isr: 300 },
-    '/api/pypi/search': { isr: false, cache: false },
+    '/api/pypi/search': {
+      isr: {
+        expiration: 300,
+        passQuery: true,
+        allowQuery: ['q', 'size', 'from', 'provider'],
+      },
+      cache: { maxAge: 300 },
+      headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600' },
+    },
     '/api/pypi/package/**': { isr: 300 },
     '/api/pypi/version/**': { isr: 300 },
     '/api/pypi/timeline/**': {

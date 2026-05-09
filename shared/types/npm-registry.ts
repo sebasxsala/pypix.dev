@@ -126,6 +126,8 @@ export interface NpmPerson {
  */
 export interface NpmSearchResponse {
   isStale: boolean
+  /** Actual backend used for the response. PyPI is the minimal fallback/name-index source. */
+  source?: 'algolia' | 'pypi'
   objects: NpmSearchResult[]
   total: number
   time: string

@@ -14,9 +14,11 @@ import {
   type PypiSimpleProject,
 } from './pypi-search-index'
 
-const SEARCH_METADATA_HYDRATION_LIMIT = 10
 const SEARCH_METADATA_MIN_QUERY_LENGTH = 3
-const SEARCH_RESULT_CACHE_TTL = 60 * 10
+const SEARCH_RESULT_CACHE_TTL = 60 * 60
+const DEFAULT_SEARCH_SIZE = 25
+const MAX_SEARCH_SIZE = 100
+const MAX_SEARCH_FROM = 1000
 
 interface SearchPypiProjectsOptions {
   signal?: AbortSignal
@@ -29,13 +31,35 @@ type PypiSearchProjectJson = PypiProjectJson & {
   }
 }
 
+interface PypiSimpleProjectIndex {
+  projects: PypiSimpleProject[]
+  etag?: string
+  lastSerial?: string
+}
+
 export function emptyPypiSearchResponse(): NpmSearchResponse {
   return {
     isStale: false,
+    source: 'pypi',
     objects: [],
     total: 0,
     time: new Date().toISOString(),
   }
+}
+
+export function normalizePypiSearchPagination(size: number, from = 0) {
+  const normalizedSize = Number.isFinite(size) ? Math.trunc(size) : DEFAULT_SEARCH_SIZE
+  const normalizedFrom = Number.isFinite(from) ? Math.trunc(from) : MAX_SEARCH_FROM
+
+  return {
+    size: Math.min(MAX_SEARCH_SIZE, Math.max(0, normalizedSize)),
+    from: Math.min(MAX_SEARCH_FROM, Math.max(0, normalizedFrom)),
+  }
+}
+
+export function getPypiSearchCacheKey(query: string, size: number, from = 0) {
+  const pagination = normalizePypiSearchPagination(size, from)
+  return `${PYPI_SEARCH_INDEX_VERSION}:${normalizePypiSearchTerm(query)}:${pagination.size}:${pagination.from}`
 }
 
 function normalizeKeywords(keywords: string | string[] | undefined): string[] | undefined {
@@ -103,16 +127,33 @@ export function filterPypiProjectNames(
   return scored.slice(from, from + size).map(({ project }) => project.name)
 }
 
-const fetchCachedPypiSimpleProjects = defineCachedFunction(
-  async (): Promise<PypiSimpleProject[]> => {
-    const response = await $fetch<{ projects: PypiSimpleProject[] }>(`${PYPI_SIMPLE_API}/`, {
+const fetchCachedPypiSimpleProjectIndex = defineCachedFunction(
+  async (): Promise<PypiSimpleProjectIndex> => {
+    let etag: string | undefined
+    let lastSerial: string | undefined
+
+    const response = await $fetch<{
+      meta?: { '_last-serial'?: number | string }
+      projects: PypiSimpleProject[]
+    }>(`${PYPI_SIMPLE_API}/`, {
       headers: {
         'Accept': 'application/vnd.pypi.simple.v1+json',
         'User-Agent': 'pypix.dev search migration MVP',
       },
+      onResponse({ response }) {
+        etag = response.headers.get('etag') ?? undefined
+        lastSerial = response.headers.get('x-pypi-last-serial') ?? undefined
+      },
     })
 
-    return response.projects
+    const metaSerial = response.meta?.['_last-serial']
+    return {
+      projects: response.projects,
+      ...(etag && { etag }),
+      ...(lastSerial || metaSerial !== undefined
+        ? { lastSerial: lastSerial ?? String(metaSerial) }
+        : {}),
+    }
   },
   {
     maxAge: CACHE_MAX_AGE_ONE_DAY,
@@ -122,8 +163,12 @@ const fetchCachedPypiSimpleProjects = defineCachedFunction(
   },
 )
 
+export async function fetchPypiSimpleProjectIndex(): Promise<PypiSimpleProjectIndex> {
+  return await fetchCachedPypiSimpleProjectIndex()
+}
+
 export async function fetchPypiSimpleProjects(): Promise<PypiSimpleProject[]> {
-  return await fetchCachedPypiSimpleProjects()
+  return (await fetchPypiSimpleProjectIndex()).projects
 }
 
 async function fetchPypiProjectJson(
@@ -178,17 +223,16 @@ async function fetchPypiProjectResult(
 }
 
 function createMinimalSearchResult(name: string): NpmSearchResult {
-  const date = new Date(0).toISOString()
   return {
     package: {
       name,
       version: '',
-      date,
+      date: '',
       links: {
         npm: `https://pypi.org/project/${encodeURIComponent(name)}/`,
       },
     },
-    updated: date,
+    updated: '',
   }
 }
 
@@ -205,21 +249,24 @@ async function searchPypiProjectsUncached(
   from = 0,
   options: SearchPypiProjectsOptions = {},
 ): Promise<NpmSearchResponse> {
+  const pagination = normalizePypiSearchPagination(size, from)
   const projects = await fetchPypiSimpleProjects()
   const index = await getPypiSearchIndex(projects)
-  const { names, total } = searchPypiIndex(index, query, { size, from })
+  const { names, total } = searchPypiIndex(index, query, pagination)
   const normalizedQuery = normalizePypiSearchTerm(query)
-  const hydrateCount =
+  const exactMatchIndex =
     normalizedQuery.length >= SEARCH_METADATA_MIN_QUERY_LENGTH
-      ? Math.min(SEARCH_METADATA_HYDRATION_LIMIT, names.length)
-      : 0
-  const hydrated = await Promise.all(
-    names.slice(0, hydrateCount).map(name => hydrateSearchResult(name, options)),
-  )
-  const objects = [...hydrated, ...names.slice(hydrateCount).map(createMinimalSearchResult)]
+      ? names.findIndex(name => normalizePypiSearchTerm(name) === normalizedQuery)
+      : -1
+  const objects = names.map(createMinimalSearchResult)
+
+  if (exactMatchIndex >= 0) {
+    objects[exactMatchIndex] = await hydrateSearchResult(names[exactMatchIndex]!, options)
+  }
 
   return {
     isStale: false,
+    source: 'pypi',
     objects,
     total,
     time: new Date().toISOString(),
@@ -230,8 +277,7 @@ const searchCachedPypiProjects = defineCachedFunction(searchPypiProjectsUncached
   maxAge: SEARCH_RESULT_CACHE_TTL,
   swr: true,
   name: 'pypi-search-results',
-  getKey: (query: string, size: number, from = 0) =>
-    `${PYPI_SEARCH_INDEX_VERSION}:${normalizePypiSearchTerm(query)}:${Math.max(0, size)}:${Math.max(0, from)}`,
+  getKey: getPypiSearchCacheKey,
 })
 
 export async function searchPypiProjects(
@@ -241,12 +287,14 @@ export async function searchPypiProjects(
   provider: 'local' | 'algolia' = 'local',
   options: SearchPypiProjectsOptions = {},
 ): Promise<NpmSearchResponse> {
+  const pagination = normalizePypiSearchPagination(size, from)
+
   if (provider === 'algolia') {
     const algoliaResult = await searchPypiAlgolia(
       { ...getPypiAlgoliaSearchConfig(), provider: 'algolia' },
       query,
-      size,
-      from,
+      pagination.size,
+      pagination.from,
     )
     if (algoliaResult && algoliaResult.objects.length > 0) return algoliaResult
   }
@@ -257,5 +305,5 @@ export async function searchPypiProjects(
     from?: number,
     options?: SearchPypiProjectsOptions,
   ) => Promise<NpmSearchResponse>
-  return await searchProjects(query, size, from, options)
+  return await searchProjects(query, pagination.size, pagination.from, options)
 }

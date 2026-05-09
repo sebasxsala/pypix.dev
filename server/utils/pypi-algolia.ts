@@ -5,6 +5,7 @@ import {
   pypiAlgoliaHitToSearchResult,
   type PypiAlgoliaRecord,
 } from './pypi-algolia-record'
+import { normalizePypiSearchTerm } from './pypi-search-index'
 
 export type PypiSearchProvider = 'local' | 'algolia'
 
@@ -47,6 +48,8 @@ export const PYPI_ALGOLIA_ATTRIBUTES_TO_RETRIEVE = [
   'popularRank',
 ]
 
+const ALGOLIA_SEARCH_RESULT_CACHE_TTL = 60 * 10
+
 export function getPypiAlgoliaSearchConfig(): PypiAlgoliaSearchConfig {
   const runtimeConfig =
     typeof useRuntimeConfig === 'function'
@@ -74,7 +77,23 @@ function isConfigured(config: PypiAlgoliaSearchConfig) {
   )
 }
 
-export async function searchPypiAlgolia(
+function normalizeAlgoliaPaginationValue(value: number, fallback: number, minimum: number) {
+  const normalized = Number.isFinite(value) ? Math.trunc(value) : fallback
+  return Math.max(minimum, normalized)
+}
+
+function getPypiAlgoliaSearchCacheKey(
+  config: PypiAlgoliaSearchConfig,
+  query: string,
+  size: number,
+  from = 0,
+) {
+  const normalizedSize = normalizeAlgoliaPaginationValue(size, 25, 1)
+  const normalizedFrom = normalizeAlgoliaPaginationValue(from, 0, 0)
+  return `${config.indexName}:${normalizePypiSearchTerm(query)}:${normalizedSize}:${normalizedFrom}`
+}
+
+async function searchPypiAlgoliaUncached(
   config: PypiAlgoliaSearchConfig,
   query: string,
   size: number,
@@ -103,6 +122,7 @@ export async function searchPypiAlgolia(
 
     return {
       isStale: false,
+      source: 'algolia',
       objects: result.hits.map(pypiAlgoliaHitToSearchResult),
       total: result.nbHits ?? result.hits.length,
       time: new Date().toISOString(),
@@ -110,4 +130,26 @@ export async function searchPypiAlgolia(
   } catch {
     return null
   }
+}
+
+const searchCachedPypiAlgolia = defineCachedFunction(searchPypiAlgoliaUncached, {
+  maxAge: ALGOLIA_SEARCH_RESULT_CACHE_TTL,
+  swr: true,
+  name: 'pypi-algolia-search-results',
+  getKey: getPypiAlgoliaSearchCacheKey,
+})
+
+export async function searchPypiAlgolia(
+  config: PypiAlgoliaSearchConfig,
+  query: string,
+  size: number,
+  from = 0,
+): Promise<NpmSearchResponse | null> {
+  const searchAlgolia = searchCachedPypiAlgolia as (
+    config: PypiAlgoliaSearchConfig,
+    query: string,
+    size: number,
+    from?: number,
+  ) => Promise<NpmSearchResponse | null>
+  return await searchAlgolia(config, query, size, from)
 }

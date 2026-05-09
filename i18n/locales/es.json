@@ -139,7 +139,7 @@
     "data_source": {
       "label": "Fuente de datos",
       "description": "Elige de dónde obtiene pypix los datos de búsqueda. Las páginas de paquetes individuales usan PyPI directamente.",
-      "npm_description": "Usa el índice local construido desde los endpoints oficiales de PyPI.",
+      "npm_description": "Índice rápido de nombres de PyPI. Abre un paquete para ver metadata completa o usa Algolia para resultados enriquecidos.",
       "pypi_search": "Búsqueda PyPI",
       "algolia": "Algolia",
       "algolia_search": "Búsqueda Algolia",

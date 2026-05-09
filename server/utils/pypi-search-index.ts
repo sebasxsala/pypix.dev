@@ -20,7 +20,7 @@ export interface PypiSearchIndexResult {
   total: number
 }
 
-export const PYPI_SEARCH_INDEX_VERSION = 'v1'
+export const PYPI_SEARCH_INDEX_VERSION = 'v2'
 
 const POPULAR_PACKAGES = [
   'requests',
