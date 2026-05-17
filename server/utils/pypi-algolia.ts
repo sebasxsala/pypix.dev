@@ -1,5 +1,6 @@
 import { algoliasearch } from 'algoliasearch'
 import type { NpmSearchResponse } from '#shared/types/npm-registry'
+import { CACHE_MAX_AGE_ONE_DAY } from '#shared/utils/constants'
 import {
   ALGOLIA_INDEX_NAME,
   pypiAlgoliaHitToSearchResult,
@@ -48,7 +49,7 @@ export const PYPI_ALGOLIA_ATTRIBUTES_TO_RETRIEVE = [
   'popularRank',
 ]
 
-const ALGOLIA_SEARCH_RESULT_CACHE_TTL = 60 * 10
+const ALGOLIA_SEARCH_RESULT_CACHE_TTL = CACHE_MAX_AGE_ONE_DAY
 
 export function getPypiAlgoliaSearchConfig(): PypiAlgoliaSearchConfig {
   const runtimeConfig =

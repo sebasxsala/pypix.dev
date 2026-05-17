@@ -1,5 +1,9 @@
 import type { NpmPerson, NpmSearchResponse, NpmSearchResult } from '#shared/types/npm-registry'
-import { CACHE_MAX_AGE_FIVE_MINUTES, PYPI_SIMPLE_API } from '#shared/utils/constants'
+import {
+  CACHE_MAX_AGE_FIVE_MINUTES,
+  CACHE_MAX_AGE_ONE_DAY,
+  PYPI_SIMPLE_API,
+} from '#shared/utils/constants'
 import { getPypiAlgoliaSearchConfig, searchPypiAlgolia } from './pypi-algolia'
 import {
   fetchPypiProject,
@@ -15,7 +19,7 @@ import {
 } from './pypi-search-index'
 
 const SEARCH_METADATA_MIN_QUERY_LENGTH = 3
-const SEARCH_RESULT_CACHE_TTL = 60 * 60
+const SEARCH_RESULT_CACHE_TTL = CACHE_MAX_AGE_ONE_DAY
 const DEFAULT_SEARCH_SIZE = 25
 const MAX_SEARCH_SIZE = 100
 const MAX_SEARCH_FROM = 1000

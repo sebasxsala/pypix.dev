@@ -101,12 +101,14 @@ export default defineNuxtConfig({
     '/api/**': { isr: 300 },
     '/api/pypi/search': {
       isr: {
-        expiration: 300,
+        expiration: 86400,
         passQuery: true,
         allowQuery: ['q', 'size', 'from', 'provider'],
       },
-      cache: { maxAge: 300 },
-      headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600' },
+      cache: { maxAge: 86400 },
+      headers: {
+        'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=86400',
+      },
     },
     '/api/pypi/package/**': { isr: 300 },
     '/api/pypi/version/**': { isr: 300 },
