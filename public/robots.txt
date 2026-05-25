@@ -1,3 +1,4 @@
+User-agent: *
 Allow: /$
 Allow: /about$
 Allow: /accessibility$
@@ -35,7 +36,7 @@ Disallow: /docs/
 Disallow: /api/
 
 # OpenSearch endpoint
-Disallow: /opensearch.xml
+Allow: /opensearch.xml$
 
 # Vercel internal proxy routes
 Disallow: /_v/

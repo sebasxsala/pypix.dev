@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     ...(isTest ? [] : ['@vercel/speed-insights']),
     '@unocss/nuxt',
     'nuxt-og-image',
+    '@vercel/analytics',
     '@nuxtjs/html-validator',
     '@nuxt/scripts',
     '@nuxt/a11y',
